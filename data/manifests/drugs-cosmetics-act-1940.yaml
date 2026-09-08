@@ -1,0 +1,22 @@
+source_id: drugs-cosmetics-act-1940
+title: The Drugs and Cosmetics Act, 1940 and Rules, 1945 (ASU drugs — Ayurveda, Siddha, Unani)
+authority: Legislative Department / India Code; Ministry of Ayush
+jurisdiction: IN
+ip_types:
+  - regulatory
+landing_url: https://www.indiacode.nic.in/
+alt_urls:
+  - https://cdsco.gov.in/          # CDSCO — drug regulation
+  - https://ayush.gov.in/          # Ministry of Ayush — ASU drug licensing
+download_url: ""
+locator_status: pending
+retrieved_at: ""
+effective_from: "1940-04-10"
+effective_status: amended
+reuse_basis: public-statute
+sha256: ""
+reviewer: ""
+notes: >
+  Chapter IVA and the ASU drug provisions (Sections 33C-33-O) plus Schedule T
+  (GMP for ASU drugs) and Schedule E(1) are the Ayurveda-relevant parts.
+  Obtain the consolidated amended Act + Rules from indiacode.nic.in.

@@ -1,0 +1,22 @@
+source_id: trips-agreement
+title: Agreement on Trade-Related Aspects of Intellectual Property Rights (TRIPS)
+authority: World Trade Organization (WTO)
+jurisdiction: INT
+ip_types:
+  - patents
+  - gi
+  - trademarks
+landing_url: https://www.wto.org/english/docs_e/legal_e/27-trips_01_e.htm
+alt_urls: []
+download_url: ""
+locator_status: pending
+retrieved_at: ""
+effective_from: "1995-01-01"
+effective_status: current
+reuse_basis: official-open
+sha256: ""
+reviewer: ""
+notes: >
+  WTO minimum standards for IP protection. Relevant articles: 22-24 (GI),
+  27-34 (patents), 39 (undisclosed information). India is a WTO member and
+  amended the Patents Act (2005) to comply. Official text from wto.org.

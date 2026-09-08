@@ -1,0 +1,22 @@
+source_id: nagoya-protocol
+title: Nagoya Protocol on Access to Genetic Resources and the Fair and Equitable Sharing of Benefits (ABS)
+authority: Convention on Biological Diversity (CBD) Secretariat, United Nations
+jurisdiction: INT
+ip_types:
+  - biodiversity
+  - traditional-knowledge
+landing_url: https://www.cbd.int/abs/
+alt_urls:
+  - https://nbaindia.org/   # India's ABS implementation via NBA
+download_url: ""
+locator_status: pending
+retrieved_at: ""
+effective_from: "2014-10-12"
+effective_status: current
+reuse_basis: official-open
+sha256: ""
+reviewer: ""
+notes: >
+  International ABS framework supplementing the CBD. India is a party; domestic
+  implementation is through the Biological Diversity Act 2002 and NBA. Official
+  English text available from cbd.int (UN treaty — freely reproducible).

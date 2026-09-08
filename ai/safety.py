@@ -137,3 +137,31 @@ def check_input(question: str) -> tuple[bool, str]:
     """
     result = check(question)
     return result.ok, result.reason
+
+
+def check_output(answer: str) -> tuple[bool, str]:
+    """
+    Safety gate for the MODEL'S generated answer (not the user's question).
+
+    Unlike check_input, this does NOT run prompt-injection or minimum-length
+    rules — a short answer (e.g. an abstention) is legitimate. It guards against
+    empty output and accidental PII leakage in the generated text.
+
+    Returns (is_safe, reason). reason is "" when safe.
+    """
+    if not answer or not answer.strip():
+        return False, "empty_output"
+
+    # Generous cap — legal answers can be long, but block runaway generations.
+    if len(answer) > MAX_LENGTH * 4:
+        return False, "too_long"
+
+    # PII must never appear in a returned answer.
+    if _RE_EMAIL.search(answer):
+        return False, "pii_email"
+    if _RE_AADHAAR_PLAIN.search(answer) or _RE_AADHAAR_SEP.search(answer):
+        return False, "pii_aadhaar"
+    if _RE_PHONE.search(answer):
+        return False, "pii_phone"
+
+    return True, ""

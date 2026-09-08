@@ -1,0 +1,24 @@
+source_id: tkdl
+title: Traditional Knowledge Digital Library (TKDL) — overview & defensive-protection framework
+authority: CSIR & Ministry of Ayush, Government of India
+jurisdiction: IN
+ip_types:
+  - traditional-knowledge
+landing_url: https://www.tkdl.res.in/
+alt_urls: []
+download_url: ""
+locator_status: pending
+retrieved_at: ""
+effective_from: "2001-01-01"
+effective_status: current
+reuse_basis: verify-and-record
+sha256: ""
+reviewer: ""
+notes: >
+  TKDL is a defensive database documenting codified Indian traditional
+  knowledge (Ayurveda, Siddha, Unani, Yoga) to prevent wrongful patents
+  (bio-piracy). Access to the full TKDL database is restricted (access
+  agreements with patent offices). Only use PUBLIC descriptive material
+  (about pages, published papers, access-agreement summaries) — NOT the
+  proprietary formulation records. reuse_basis=verify-and-record: confirm
+  the licence of each captured page before ingestion.

@@ -4,7 +4,9 @@ authority: Legislative Department / India Code
 jurisdiction: IN
 ip_types:
   - patents
-landing_url: https://indiacode.gov.in/
+landing_url: https://www.indiacode.nic.in/
+alt_urls:
+  - https://ipindia.gov.in/   # Patent rules, forms, InPASS public search
 download_url: ""
 locator_status: pending
 retrieved_at: ""

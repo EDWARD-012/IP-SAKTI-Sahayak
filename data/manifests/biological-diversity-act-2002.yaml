@@ -5,7 +5,9 @@ jurisdiction: IN
 ip_types:
   - biodiversity
   - traditional-knowledge
-landing_url: https://indiacode.gov.in/
+landing_url: https://www.indiacode.nic.in/
+alt_urls:
+  - https://nbaindia.org/   # National Biodiversity Authority — ABS guidelines & forms
 download_url: ""
 locator_status: pending
 retrieved_at: ""
