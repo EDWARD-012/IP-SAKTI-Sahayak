@@ -302,6 +302,80 @@
   flex-wrap: wrap;
 }
 
+/* ── 8b. Dark hero variant (navy gradient + 3D canvas) ────── */
+.gov-hero--dark {
+  position: relative;
+  overflow: hidden;
+  min-height: 360px;
+  background: linear-gradient(135deg, #001a4d 0%, #003087 55%, #0a4aa8 100%);
+  border-bottom: 4px solid var(--gov-saffron);
+}
+.gov-hero--dark::after {                /* subtle tricolor glow at the base */
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 120px;
+  background: linear-gradient(to top, rgba(19, 136, 8, 0.12), transparent);
+  pointer-events: none;
+}
+.gov-hero__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.gov-hero__canvas canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+.gov-hero--dark .gov-hero__text,
+.gov-hero--dark .gov-chakra-hero {
+  position: relative;
+  z-index: 1;
+}
+.gov-hero--dark.hero3d-active .gov-chakra-hero { display: none; }
+.gov-hero__kicker {
+  font-size: 0.78rem;
+  color: #9fb6d9;
+  margin: 0 0 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.gov-hero--dark .gov-hero__title {
+  color: #ffffff;
+  font-size: 2.4rem;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+.gov-hero--dark .gov-hero__subtitle { color: var(--gov-saffron); }
+.gov-hero--dark .gov-hero__desc     { color: #c9d7ec; }
+.gov-btn-secondary--onDark {
+  border-color: rgba(255, 255, 255, 0.75) !important;
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+.gov-btn-secondary--onDark:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border-color: #ffffff !important;
+}
+
+/* ── 8c. Motion utilities ─────────────────────────────────── */
+.chakra-spin  { animation: chakra-spin 26s linear infinite; }
+@keyframes chakra-spin { to { transform: rotate(360deg); } }
+.chakra-invert { filter: brightness(0) invert(1); opacity: 0.9; }
+
+.reveal-pending {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.is-revealed { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .chakra-spin   { animation: none; }
+  .reveal-pending { opacity: 1; transform: none; transition: none; }
+}
+
 
 /* ── 9. Section divider with saffron accent ──────────────── */
 .gov-section-title {
@@ -440,6 +514,8 @@
   .gov-navbar__links a { padding: 10px 12px; font-size: 0.8rem; }
   .gov-hero { flex-direction: column; padding: 24px 16px; gap: 24px; }
   .gov-hero__title { font-size: 1.5rem; }
+  .gov-hero--dark { min-height: 300px; }
+  .gov-hero--dark .gov-hero__title { font-size: 1.7rem; }
   .gov-chakra-hero { width: 160px; height: 160px; }
   .gov-a11y-bar { font-size: 0.65rem; }
 }

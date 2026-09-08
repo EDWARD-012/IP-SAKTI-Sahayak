@@ -59,7 +59,7 @@ def test_ask_requires_htmx(client):
         reverse('chat:ask'),
         data={
             'question': 'What is a trademark?',
-            'jurisdiction': 'IN',
+            'jurisdiction': 'india',
             'request_id': str(uuid.uuid4()),
         },
         # Deliberately omit the HX-Request header
@@ -78,7 +78,7 @@ def test_ask_demo_mode(client, settings):
         reverse('chat:ask'),
         data={
             'question': 'What is the process for filing a trademark application in India?',
-            'jurisdiction': 'IN',
+            'jurisdiction': 'india',
             'request_id': str(uuid.uuid4()),
         },
         HTTP_HX_REQUEST='true',          # Simulate HTMX header

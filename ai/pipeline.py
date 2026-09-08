@@ -47,18 +47,18 @@ class PipelineResult:
 _DEMO_ANSWER = """\
 This is a demonstration response from IP-SAKTI Sahayak.
 
-**What IP-SAKTI Sahayak does:**
+What IP-SAKTI Sahayak does —
 In live mode, this system retrieves relevant sections from verified Indian statutes (Patents Act 1970, \
 Geographical Indications Act 1999, Biological Diversity Act 2002, Drugs & Cosmetics Act 1940, etc.) \
 and generates source-cited answers using the local Qwen2.5-7B model via Ollama.
 
-**How to enable live responses:**
-1. Install Ollama: `winget install Ollama.Ollama` (Windows) or https://ollama.ai
-2. Pull the model: `ollama pull qwen2.5:7b-instruct-q4_K_M`
-3. Download and index the legal corpus (see QUICKSTART.md §5)
-4. Set `DEMO_MODE=False` in your `.env` file
+How to enable live responses —
+1. Install Ollama: winget install Ollama.Ollama (Windows) or https://ollama.ai
+2. Pull the model: ollama pull qwen2.5:7b-instruct-q4_K_M
+3. Download and index the legal corpus (see QUICKSTART.md, section 5)
+4. Set DEMO_MODE=False in your .env file
 
-**Example of what a live answer looks like:**
+Example of what a live answer looks like —
 For a question about patenting an Ayurvedic formulation based on classical texts, \
 the system would cite Section 3(p) of the Patents Act 1970 which excludes inventions \
 that are traditional knowledge or aggregation of known properties of traditionally known components.

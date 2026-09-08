@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
+  <meta name="color-scheme" content="light" />
   <title>{% block title %}IP-SAKTI Sahayak — Ministry of Ayush{% endblock %}</title>
 
   {% load static %}
@@ -17,9 +18,8 @@
 
   {# Noto Sans multilingual fonts are bundled offline via css/fonts.css — see core/static/fonts/FONTS.md #}
 
-  {# ── dotLottie player (self-hosted, offline-safe) ── #}
-  {# Download: https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs → core/static/js/ #}
-  <script type="module" src="{% static 'js/dotlottie-player.mjs' %}" defer></script>
+  {# ── Favicon (Ashoka Chakra) ── #}
+  <link rel="icon" type="image/svg+xml" href="{% static 'images/ashoka-chakra.svg' %}" />
 
   {# ── HTMX ── #}
   <script src="{% static 'js/htmx.min.js' %}" defer></script>

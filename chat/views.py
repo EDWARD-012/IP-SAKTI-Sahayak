@@ -136,7 +136,9 @@ def ask(request: HttpRequest) -> HttpResponse:
         }, status=422)
 
     question: str = form.cleaned_data["question"]
-    jurisdiction: str = form.cleaned_data["jurisdiction"]
+    # Template sends lowercase slugs; pipeline + audit use short codes.
+    _juri_map = {"india": "IN", "international": "INT", "both": "BOTH"}
+    jurisdiction: str = _juri_map.get(form.cleaned_data["jurisdiction"], "IN")
     language_code: str = request.session.get("django_language", "en")
     corpus_version: str = _active_corpus_version()
 

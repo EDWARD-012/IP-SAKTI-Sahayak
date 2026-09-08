@@ -5,20 +5,13 @@
 
 {% block content %}
 
-{# ── Hero section ── #}
-<section class="gov-hero ip-fade-in" aria-labelledby="hero-title">
-  {# Ashoka Chakra decorative element #}
-  <div class="gov-chakra-hero" aria-hidden="true">
-    <img src="{% static 'images/ashoka-chakra.svg' %}"
-         alt=""
-         width="220" height="220"
-         style="opacity:0.85;" />
-  </div>
+{# ── Hero section (dark navy + 3D scene) ── #}
+<section class="gov-hero gov-hero--dark ip-fade-in" aria-labelledby="hero-title">
+  {# Three.js canvas layer — fills the hero background #}
+  <div class="gov-hero__canvas" id="hero3d" aria-hidden="true"></div>
 
   <div class="gov-hero__text">
-    <p style="font-size:0.8rem; color:var(--color-text-muted); margin:0 0 4px; letter-spacing:0.05em; text-transform:uppercase; font-weight:600;">
-      SIH26045 · AIIA / Ministry of Ayush
-    </p>
+    <p class="gov-hero__kicker">SIH26045 · AIIA / Ministry of Ayush</p>
     <h1 id="hero-title" class="gov-hero__title">IP-SAKTI Sahayak</h1>
     <p class="gov-hero__subtitle">
       Multilingual IPR Assistant for Ayurveda &amp; Traditional Knowledge
@@ -33,12 +26,20 @@
       <a href="{% url 'chat:chat' %}" class="gov-btn-primary">
         Ask a Question
       </a>
-      <a href="{% url 'wizard:start' %}" class="gov-btn-secondary">
+      <a href="{% url 'wizard:start' %}" class="gov-btn-secondary gov-btn-secondary--onDark">
         Formulation Wizard
       </a>
     </div>
   </div>
+
+  {# CSS fallback chakra — hidden automatically when the 3D scene is active #}
+  <div class="gov-chakra-hero" aria-hidden="true">
+    <img src="{% static 'images/ashoka-chakra.svg' %}"
+         alt="" width="220" height="220"
+         class="chakra-spin chakra-invert" />
+  </div>
 </section>
+<script type="module" src="{% static 'js/hero3d.js' %}" defer></script>
 
 {# ── Quick-access cards ── #}
 <section style="padding: 32px 24px;" aria-labelledby="services-title">

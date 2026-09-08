@@ -6,9 +6,9 @@ from __future__ import annotations
 from django import forms
 
 JURISDICTION_CHOICES = [
-    ("IN",   "India"),
-    ("INT",  "International"),
-    ("BOTH", "India + International"),
+    ("india",         "India"),
+    ("international", "International"),
+    ("both",          "India + International"),
 ]
 
 

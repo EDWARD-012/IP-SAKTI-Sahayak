@@ -115,36 +115,12 @@
   --z-modal:   200;
 }
 
-/* ── Dark mode ── */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-primary:        #4a8abf;
-    --color-primary-hover:  #5a9fcf;
-    --color-primary-light:  #0f1e2e;
-    --color-accent:         #e09a38;
-    --color-accent-light:   #1e1200;
-    --color-success:        #4caf7a;
-    --color-success-bg:     #0a2015;
-    --color-warning:        #e0a040;
-    --color-warning-bg:     #1a1000;
-    --color-danger:         #e05050;
-    --color-danger-bg:      #1a0808;
-    --color-muted:          #8a9aaa;
-    --color-bg:             #0d1117;
-    --color-surface:        #161b22;
-    --color-surface-raised: #1c2230;
-    --color-border:         #2a3545;
-    --color-border-strong:  #3d4f63;
-    --color-text:           #e6edf3;
-    --color-text-secondary: #adbbc8;
-    --color-text-muted:     #7a8ea0;
-    --color-text-inverse:   #0d1117;
-  }
-}
+/* GOI portals are light-only (GIGW). Dark-mode overrides removed deliberately —
+   browser dark mode must NOT invert the official palette. */
 
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; scroll-behavior: smooth; }
+html { font-size: 16px; scroll-behavior: smooth; color-scheme: light; }
 body {
   font-family: var(--font-sans);
   font-size: var(--text-base);

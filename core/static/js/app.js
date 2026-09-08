@@ -25,25 +25,11 @@ let gsap = null;
  * @returns {Promise<object|null>}
  */
 async function loadGsap() {
-  // ① Local vendor copy (placed by a build / vendor-copy step)
-  try {
-    const mod = await import('/static/js/vendor/gsap.esm.js');
-    return mod.gsap ?? mod.default ?? null;
-  } catch { /* not available locally */ }
-
-  // ② Skypack CDN ES module
-  try {
-    const mod = await import('https://cdn.skypack.dev/gsap@3.12.5?min');
-    return mod.gsap ?? mod.default ?? null;
-  } catch { /* CDN blocked or offline */ }
-
-  // ③ Classic script-tag injection → window.gsap
+  // Local self-hosted UMD build → window.gsap (offline-safe, no CDN)
   await new Promise((resolve) => {
     if (window.gsap) { resolve(); return; }
     const s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js';
-    s.crossOrigin = 'anonymous';
-    s.referrerPolicy = 'no-referrer';
+    s.src = '/static/js/gsap.min.js';
     s.onload = resolve;
     s.onerror = resolve;
     document.head.appendChild(s);
@@ -213,33 +199,61 @@ function setupRequestId() {
   });
 }
 
-// ── dotLottie player initialisation ─────────────────────────────────────────
+// ── 3D card tilt ─────────────────────────────────────────────────────────────
 
 /**
- * Waits for the `dotlottie-player` custom element to be registered, then
- * calls `.load(src)` on every `<dotlottie-player data-src="…">` in the page.
+ * Adds a perspective tilt-on-hover effect to every `.gov-card`.
+ * Skipped for touch devices and when prefers-reduced-motion is set.
  */
-function initLottie() {
-  const players = /** @type {NodeListOf<HTMLElement>} */ (
-    document.querySelectorAll('dotlottie-player[data-src]')
-  );
-  if (!players.length) return;
+function setupCardTilt() {
+  if (prefersReducedMotion()) return;
+  if (window.matchMedia?.('(hover: none)').matches) return;
 
-  const tryInit = () => {
-    if (customElements.get('dotlottie-player')) {
-      players.forEach((player) => {
-        const src = /** @type {string|undefined} */ (player.dataset.src);
-        if (src && typeof (/** @type {any} */ (player)).load === 'function') {
-          /** @type {any} */ (player).load(src);
-        }
-      });
-    } else {
-      // Custom element not yet defined — retry on the next animation frame
-      requestAnimationFrame(tryInit);
-    }
-  };
+  document.querySelectorAll('.gov-card').forEach((card) => {
+    card.style.transformStyle = 'preserve-3d';
+    card.style.willChange = 'transform';
 
-  tryInit();
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width - 0.5;
+      const py = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform =
+        `perspective(800px) rotateY(${px * 8}deg) rotateX(${py * -8}deg) translateY(-4px) scale(1.015)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transition = 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)';
+      card.style.transform = 'perspective(800px) rotateY(0) rotateX(0) translateY(0) scale(1)';
+      setTimeout(() => { card.style.transition = ''; }, 500);
+    });
+  });
+}
+
+// ── Scroll reveal ────────────────────────────────────────────────────────────
+
+/**
+ * Fades in elements marked `.reveal-on-scroll` (and `.gov-card`) as they
+ * enter the viewport, with a small stagger per sibling group.
+ */
+function setupScrollReveal() {
+  if (prefersReducedMotion()) return;
+
+  const targets = document.querySelectorAll('.reveal-on-scroll, .gov-card');
+  if (!targets.length || !('IntersectionObserver' in window)) return;
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-revealed');
+      io.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  targets.forEach((el, i) => {
+    el.classList.add('reveal-pending');
+    el.style.transitionDelay = `${Math.min(i % 6, 5) * 60}ms`;
+    io.observe(el);
+  });
 }
 
 // ── Boot ─────────────────────────────────────────────────────────────────────
@@ -249,5 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupHtmxListeners();
   setupFontSizeControls();
   setupRequestId();
-  initLottie();
+  setupCardTilt();
+  setupScrollReveal();
 });

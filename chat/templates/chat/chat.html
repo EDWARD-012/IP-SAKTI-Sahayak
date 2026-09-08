@@ -140,13 +140,9 @@
       {# Empty state — replaced by HTMX on first ask #}
       <div class="chat-empty-state ip-fade-in" id="chat-empty-state">
         <div class="chat-empty-state__lottie" aria-hidden="true">
-          {# dotLottie idle animation — falls back gracefully if JS missing #}
-          <dotlottie-player
-            src="{% static 'lottie/ip-idle.lottie' %}"
-            autoplay loop
-            style="width:140px;height:140px;"
-            aria-hidden="true">
-          </dotlottie-player>
+          <img src="{% static 'images/ashoka-chakra.svg' %}"
+               alt="" class="chakra-spin"
+               style="width:120px;height:120px;opacity:0.85;" />
         </div>
         <h2 class="chat-empty-state__title">Ask IP-SAKTI a question</h2>
         <p class="chat-empty-state__hint">
@@ -183,7 +179,7 @@
             class="chat-textarea"
             placeholder="e.g. Can an Ayurvedic formulation derived from a classical text be patented in India?"
             rows="2"
-            maxlength="2000"
+            maxlength="1000"
             aria-label="Type your legal question here"
             aria-describedby="chat-input-hint"
             required
@@ -213,7 +209,7 @@
 
         <div class="chat-input-hint" id="chat-input-hint">
           <span>Corpus: <strong>{{ active_corpus_version|default:"none" }}</strong> &middot; Answers cite verified Indian statutes only</span>
-          <span id="char-counter" aria-live="polite" aria-atomic="true">0 / 2000</span>
+          <span id="char-counter" aria-live="polite" aria-atomic="true">0 / 1000</span>
         </div>
       </form>
     </div>
@@ -241,7 +237,7 @@
     var ta      = document.getElementById('chat-question');
     var counter = document.getElementById('char-counter');
     if (!ta || !counter) return;
-    function update() { counter.textContent = ta.value.length + ' / 2000'; }
+    function update() { counter.textContent = ta.value.length + ' / 1000'; }
     ta.addEventListener('input', update);
     update();
   })();
