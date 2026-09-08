@@ -5,41 +5,63 @@
 
 {% block content %}
 
-{# ── Hero section (dark navy + 3D scene) ── #}
-<section class="gov-hero gov-hero--dark ip-fade-in" aria-labelledby="hero-title">
-  {# Three.js canvas layer — fills the hero background #}
-  <div class="gov-hero__canvas" id="hero3d" aria-hidden="true"></div>
+{# ── Cinematic hero (full-viewport 3D) ── #}
+<section class="gov-hero gov-hero--cinematic ip-fade-in" aria-labelledby="hero-title">
+  <div class="gov-hero__canvas" id="hero3d" data-scene3d="hero" aria-hidden="true"></div>
+  <div class="gov-hero__orb gov-hero__orb--saffron" aria-hidden="true"></div>
+  <div class="gov-hero__orb gov-hero__orb--green" aria-hidden="true"></div>
+  <div class="gov-hero__vignette" aria-hidden="true"></div>
 
-  <div class="gov-hero__text">
-    <p class="gov-hero__kicker">SIH26045 · AIIA / Ministry of Ayush</p>
-    <h1 id="hero-title" class="gov-hero__title">IP-SAKTI Sahayak</h1>
+  <div class="gov-hero__glass">
+    <p class="gov-hero__kicker">SIH26045 · AIIA · Ministry of Ayush</p>
+    <h1 id="hero-title" class="gov-hero__title">
+      IP-SAKTI<br /><span>Sahayak</span>
+    </h1>
     <p class="gov-hero__subtitle">
       Multilingual IPR Assistant for Ayurveda &amp; Traditional Knowledge
     </p>
     <p class="gov-hero__desc">
-      Source-cited answers to questions on Intellectual Property Rights,
-      Biodiversity &amp; ABS, and regulatory classification for Ayurveda —
-      using verified Indian statutes, rules and international treaties.
-      No hallucinations. Every claim backed by a cited source.
+      Source-cited answers on patents, GI, biodiversity &amp; ABS, and Ayurveda
+      regulation — from verified Indian statutes and treaties. No cloud APIs.
+      Every claim backed by a cited source.
     </p>
     <div class="gov-hero__actions">
-      <a href="{% url 'chat:chat' %}" class="gov-btn-primary">
+      <a href="{% url 'chat:chat' %}" class="gov-btn-primary gov-btn-glow js-magnetic">
         Ask a Question
       </a>
-      <a href="{% url 'wizard:start' %}" class="gov-btn-secondary gov-btn-secondary--onDark">
+      <a href="{% url 'wizard:start' %}" class="gov-btn-secondary gov-btn-secondary--onDark js-magnetic">
         Formulation Wizard
       </a>
     </div>
+    <ul class="gov-hero__stats" aria-label="Platform highlights">
+      <li><strong>22</strong> Indian languages</li>
+      <li><strong>On-device</strong> RAG · Qwen 3B</li>
+      <li><strong>Cited</strong> statutes only</li>
+    </ul>
   </div>
 
-  {# CSS fallback chakra — hidden automatically when the 3D scene is active #}
   <div class="gov-chakra-hero" aria-hidden="true">
     <img src="{% static 'images/ashoka-chakra.svg' %}"
          alt="" width="220" height="220"
          class="chakra-spin chakra-invert" />
   </div>
 </section>
-<script type="module" src="{% static 'js/hero3d.js' %}" defer></script>
+<script type="module" src="{% static 'js/scene3d.js' %}"></script>
+
+<div class="gov-marquee" aria-hidden="true">
+  <div class="gov-marquee__track">
+    <span>Patents Act 1970</span><span>Section 3(p)</span><span>GI Act 1999</span>
+    <span>Biological Diversity Act 2002</span><span>NBA · ABS</span>
+    <span>Drugs &amp; Cosmetics Act 1940</span><span>Schedule T</span>
+    <span>Ayurveda Aahara 2022</span><span>Nagoya Protocol</span>
+    <span>TRIPS</span><span>TKDL</span><span>WIPO GRATK</span>
+    <span>Patents Act 1970</span><span>Section 3(p)</span><span>GI Act 1999</span>
+    <span>Biological Diversity Act 2002</span><span>NBA · ABS</span>
+    <span>Drugs &amp; Cosmetics Act 1940</span><span>Schedule T</span>
+    <span>Ayurveda Aahara 2022</span><span>Nagoya Protocol</span>
+    <span>TRIPS</span><span>TKDL</span><span>WIPO GRATK</span>
+  </div>
+</div>
 
 {# ── Quick-access cards ── #}
 <section class="gov-section" aria-labelledby="services-title">
@@ -48,7 +70,7 @@
   <div class="gov-card-grid">
 
     {# Card 1 — Patents #}
-    <article class="gov-card ip-fade-in">
+    <article class="gov-card gov-card--glass ip-fade-in">
       <div class="gov-card__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24"><path d="M9 12h6M9 16h6M9 8h6M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg>
       </div>
@@ -60,7 +82,7 @@
     </article>
 
     {# Card 2 — GI Tags #}
-    <article class="gov-card ip-fade-in">
+    <article class="gov-card gov-card--glass ip-fade-in">
       <div class="gov-card__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
       </div>
@@ -72,7 +94,7 @@
     </article>
 
     {# Card 3 — Biodiversity & ABS #}
-    <article class="gov-card ip-fade-in">
+    <article class="gov-card gov-card--glass ip-fade-in">
       <div class="gov-card__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
       </div>
@@ -84,7 +106,7 @@
     </article>
 
     {# Card 4 — Regulatory Classification #}
-    <article class="gov-card ip-fade-in">
+    <article class="gov-card gov-card--glass ip-fade-in">
       <div class="gov-card__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
       </div>
@@ -96,7 +118,7 @@
     </article>
 
     {# Card 5 — TKDL #}
-    <article class="gov-card ip-fade-in">
+    <article class="gov-card gov-card--glass ip-fade-in">
       <div class="gov-card__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
@@ -108,7 +130,7 @@
     </article>
 
     {# Card 6 — International IP #}
-    <article class="gov-card ip-fade-in">
+    <article class="gov-card gov-card--glass ip-fade-in">
       <div class="gov-card__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       </div>

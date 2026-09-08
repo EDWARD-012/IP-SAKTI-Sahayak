@@ -139,10 +139,8 @@
 
       {# Empty state — replaced by HTMX on first ask #}
       <div class="chat-empty-state ip-fade-in" id="chat-empty-state">
-        <div class="chat-empty-state__lottie" aria-hidden="true">
-          <img src="{% static 'images/ashoka-chakra.svg' %}"
-               alt="" class="chakra-spin"
-               style="width:120px;height:120px;opacity:0.85;" />
+        <div class="chat-empty-state__stage" aria-hidden="true">
+          <div class="chat-empty-state__canvas" id="chat3d" data-scene3d="chat"></div>
         </div>
         <h2 class="chat-empty-state__title">Ask IP-SAKTI a question</h2>
         <p class="chat-empty-state__hint">
@@ -220,6 +218,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script type="module" src="{% static 'js/scene3d.js' %}"></script>
 <script>
   /* ── Jurisdiction toggle ── */
   function setJurisdiction(btn, value) {
