@@ -85,3 +85,7 @@ def test_ask_demo_mode(client, settings):
         HTTP_HX_TARGET='answer-area',
     )
     assert response.status_code == 200
+    html = response.content.decode()
+    assert "answer-card" in html
+    assert "ev-label" in html
+    assert "demonstration" in html.lower() or "Patents Act" in html

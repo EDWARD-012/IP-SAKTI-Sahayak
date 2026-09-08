@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="{% static 'css/chat.css' %}" />
 {% endblock %}
 
+{% block body_class %}chat-lock{% endblock %}
 {% block main_class %}site-main chat-page{% endblock %}
 
 {% block content %}
@@ -83,8 +84,8 @@
               {{ turn.question|truncatechars:60 }}
             </span>
             <span class="chat-history-item__meta">
-              <span class="ev-label ev-label--{{ turn.outcome|outcome_css_class }}" aria-label="Evidence: {{ turn.outcome|outcome_label }}">
-                {{ turn.outcome|outcome_label }}
+              <span class="ev-label ev-label--{{ turn.state|outcome_css_class }}" aria-label="Evidence: {{ turn.state|outcome_label }}">
+                {{ turn.state|outcome_label }}
               </span>
             </span>
           </li>
@@ -142,14 +143,10 @@
         <div class="chat-empty-state__stage" aria-hidden="true">
           <div class="chat-empty-state__canvas" id="chat3d" data-scene3d="chat"></div>
         </div>
-        <h2 class="chat-empty-state__title">Ask IP-SAKTI a question</h2>
+        <h2 class="chat-empty-state__title">Ask IP-SAKTI</h2>
         <p class="chat-empty-state__hint">
-          Type your question about patents, GI, biodiversity, traditional knowledge,
-          or regulatory classification. Every answer cites verified sources.
+          Patents, GI, biodiversity, traditional knowledge — every answer cites a source.
         </p>
-        <a href="{% url 'core:help' %}" class="gov-btn-secondary" style="font-size:var(--text-sm);">
-          See example questions →
-        </a>
       </div>
 
     </div>
@@ -162,7 +159,8 @@
             hx-target="#answer-area"
             hx-swap="innerHTML"
             hx-indicator="#thinking-indicator"
-            hx-on::after-request="document.getElementById('chat-empty-state')?.remove()"
+            hx-disabled-elt="find .chat-submit-btn"
+            hx-on::after-request="onAskDone(event)"
             novalidate
             aria-label="Ask a question">
         {% csrf_token %}
@@ -171,17 +169,18 @@
 
         <div class="chat-textarea-row">
           <label for="chat-question" class="sr-only">Your question</label>
-          <textarea
+          <input
+            type="text"
             id="chat-question"
             name="question"
             class="chat-textarea"
-            placeholder="e.g. Can an Ayurvedic formulation derived from a classical text be patented in India?"
-            rows="2"
+            placeholder="Ask about patents, GI, biodiversity, TKDL…"
             maxlength="1000"
+            autocomplete="off"
             aria-label="Type your legal question here"
             aria-describedby="chat-input-hint"
             required
-          >{% if form.question.value %}{{ form.question.value }}{% endif %}</textarea>
+          />
 
           {# Submit button #}
           <button type="submit"
@@ -240,6 +239,18 @@
     ta.addEventListener('input', update);
     update();
   })();
+
+  /* ── After a successful ask: clear the composer ── */
+  function onAskDone(evt) {
+    var ok = evt.detail && (evt.detail.successful || (evt.detail.xhr && evt.detail.xhr.status === 200));
+    if (!ok) return;
+    var ta = document.getElementById('chat-question');
+    if (ta) {
+      ta.value = '';
+      ta.dispatchEvent(new Event('input'));
+      ta.focus();
+    }
+  }
 
   /* ── Auto-scroll answer area after HTMX swap ── */
   document.body.addEventListener('htmx:afterSwap', function (evt) {

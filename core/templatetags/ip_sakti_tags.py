@@ -28,6 +28,7 @@ def outcome_label(outcome: str) -> str:
         "conflict":               "Conflicting sources",
         "busy":                   "Service busy — please retry",
         "unavailable":            "Service unavailable",
+        "demo":                   "Demo response",
     }
     return LABELS.get(outcome, outcome.replace("_", " ").title())
 
@@ -36,15 +37,16 @@ def outcome_label(outcome: str) -> str:
 def outcome_css_class(outcome: str) -> str:
     """Return CSS modifier class for the ev-label component."""
     MAP = {
-        "grounded":         "ev-label--strong",
-        "evidence_only":    "ev-label--limited",
-        "unable_to_answer": "ev-label--unable",
-        "out_of_scope":     "ev-label--unable",
-        "conflict":         "ev-label--limited",
-        "busy":             "ev-label--unable",
-        "unavailable":      "ev-label--unable",
+        "grounded":         "strong",
+        "evidence_only":    "limited",
+        "unable_to_answer": "unable",
+        "out_of_scope":     "unable",
+        "conflict":         "limited",
+        "busy":             "unable",
+        "unavailable":      "unable",
+        "demo":             "limited",
     }
-    return MAP.get(outcome, "ev-label--unable")
+    return MAP.get(outcome, "unable")
 
 
 @register.simple_tag
