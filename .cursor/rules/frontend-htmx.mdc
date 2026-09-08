@@ -41,7 +41,9 @@ static/
 - 4px base grid; spacing scale: 4, 8, 12, 16, 24, 32, 48, 64px
 - GOI component classes: `.gov-card`, `.gov-btn-primary`, `.gov-btn-secondary`, `.gov-section-title`, `.ev-label`
 - GOI tricolor stripe always at top of page (`.gov-tricolor-bar`)
-- Flat surfaces — no decorative box-shadow (only subtle hover shadows on cards via `.gov-card:hover`)
+- Theme is opt-in: `html[data-theme="dark"]` + `#theme-toggle`. Never `prefers-color-scheme`.
+- Header/footer use `--color-chrome` (stays navy). Page surfaces use `--color-bg` / `--color-surface`.
+- Subtle card hover shadow via `--shadow-card-hover` — not decorative drop-shadows elsewhere
 
 ## Animation rules
 - Loading state: `#thinking-dots` uses CSS keyframe `bounce-dots`

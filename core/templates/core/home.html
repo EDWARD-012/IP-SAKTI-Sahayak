@@ -42,10 +42,10 @@
 <script type="module" src="{% static 'js/hero3d.js' %}" defer></script>
 
 {# ── Quick-access cards ── #}
-<section style="padding: 32px 24px;" aria-labelledby="services-title">
+<section class="gov-section" aria-labelledby="services-title">
   <h2 id="services-title" class="gov-section-title">What can IP-SAKTI help with?</h2>
 
-  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;">
+  <div class="gov-card-grid">
 
     {# Card 1 — Patents #}
     <article class="gov-card ip-fade-in">
@@ -123,7 +123,7 @@
 </section>
 
 {# ── Corpus info strip ── #}
-<section style="background:var(--color-primary-light); border-top:1px solid var(--color-border); border-bottom:1px solid var(--color-border); padding:16px 24px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+<section class="gov-corpus-strip" aria-label="Verified corpus">
   <div>
     <p style="margin:0; font-size:0.8rem; color:var(--color-text-muted); text-transform:uppercase; letter-spacing:0.05em; font-weight:600;">Verified Corpus</p>
     <p style="margin:2px 0 0; font-size:0.875rem; color:var(--color-text-secondary);">
@@ -137,7 +137,7 @@
 </section>
 
 {# ── Disclaimer notice (GIGW requirement) ── #}
-<div role="note" style="background:var(--color-warning-bg); border-left:4px solid var(--gov-saffron); padding:12px 20px; font-size:0.8rem; color:var(--color-text-secondary); margin:0;">
+<div role="note" class="gov-note">
   <strong>Note:</strong> IP-SAKTI Sahayak provides <em>general information only</em>, not legal advice.
   Verify with official sources. Consult a qualified IP practitioner or legal professional before acting on any information.
 </div>

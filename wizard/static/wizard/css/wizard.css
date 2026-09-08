@@ -187,7 +187,7 @@
 }
 .wizard-option__input:checked + .wizard-option__card {
   border-color: var(--gov-saffron);
-  background: #fff4e0;
+  background: var(--color-accent-light);
   box-shadow: 0 0 0 3px rgba(255,153,51,0.18);
 }
 .wizard-option__icon {
@@ -245,7 +245,7 @@
   transform: rotate(45deg) translateY(-1px);
 }
 .wizard-option__input:checked ~ .wizard-option__check::after {
-  border-color: #fff;
+  border-color: var(--color-text-inverse);
 }
 
 /* ── Step navigation buttons ─────────────────────────────── */

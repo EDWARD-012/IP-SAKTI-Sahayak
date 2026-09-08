@@ -18,23 +18,23 @@
 /* ── 2. Accessibility bar ────────────────────────────────── */
 .gov-a11y-bar {
   background: var(--color-a11y-bar);
-  border-bottom: 1px solid #ddd;
-  padding: 3px 16px;
+  border-bottom: 1px solid var(--color-border);
+  padding: 4px 16px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 0;
   font-size: 0.72rem;
-  color: #333;
+  color: var(--color-text-secondary);
 }
 .gov-a11y-bar__sep {
-  color: #999;
+  color: var(--color-text-muted);
   margin: 0 8px;
   user-select: none;
 }
 .gov-a11y-bar a,
 .gov-a11y-bar button {
-  color: #003087;
+  color: var(--color-link);
   text-decoration: none;
   background: none;
   border: none;
@@ -51,15 +51,44 @@
   align-items: baseline;
 }
 .gov-a11y-bar__font-btns button { font-weight: 600; }
-.gov-a11y-bar__font-btns button:nth-child(1) { font-size: 0.8rem; }
-.gov-a11y-bar__font-btns button:nth-child(2) { font-size: 0.7rem; }
-.gov-a11y-bar__font-btns button:nth-child(3) { font-size: 0.6rem; }
+.gov-a11y-bar__font-btns button.active {
+  color: var(--gov-saffron-dark);
+  text-decoration: none;
+}
+
+/* ── Theme toggle (a11y bar) ─────────────────────────────── */
+.gov-theme-toggle {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 999px !important;
+  background: var(--color-surface) !important;
+  color: var(--color-text) !important;
+  font-weight: 600;
+  text-decoration: none !important;
+  line-height: 1;
+}
+.gov-theme-toggle:hover {
+  border-color: var(--gov-saffron) !important;
+  text-decoration: none !important;
+}
+.gov-theme-toggle__icon {
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+}
+.gov-theme-toggle__icon svg { width: 14px; height: 14px; }
+.gov-theme-toggle__moon { display: none; }
+html[data-theme="dark"] .gov-theme-toggle__sun { display: none; }
+html[data-theme="dark"] .gov-theme-toggle__moon { display: inline-flex; }
 
 
 /* ── 3. Main government header ───────────────────────────── */
 .gov-header {
-  background: var(--color-primary);     /* #003087 navy */
-  color: var(--color-text-inverse);
+  background: var(--color-chrome);
+  color: #ffffff;
   padding: 12px 20px;
   display: flex;
   align-items: center;
@@ -117,13 +146,13 @@
 
 /* ── 4. Navigation bar ───────────────────────────────────── */
 .gov-navbar {
-  background: var(--color-nav);          /* #1a4a8a */
+  background: var(--color-nav);
   display: flex;
   align-items: center;
   padding: 0 20px;
   gap: 0;
   position: relative;
-  border-bottom: 3px solid var(--gov-saffron); /* saffron accent line */
+  border-bottom: 3px solid var(--gov-saffron);
 }
 .gov-navbar__links {
   display: flex;
@@ -169,7 +198,7 @@
   cursor: pointer;
   font-family: inherit;
 }
-.gov-navbar__lang select option { background: var(--color-primary); color: #fff; }
+.gov-navbar__lang select option { background: var(--color-chrome); color: #fff; }
 
 
 /* ── 5. Ashoka Chakra decorative element ─────────────────── */
@@ -185,13 +214,15 @@
 .gov-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-top: 4px solid var(--gov-saffron);   /* saffron top border */
-  border-radius: 4px;
-  padding: 20px;
-  transition: box-shadow 0.15s;
+  border-top: 4px solid var(--gov-saffron);
+  border-radius: var(--radius-lg);
+  padding: 22px 20px;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.2s var(--ease-out), transform 0.2s var(--ease-out), border-color 0.2s;
 }
 .gov-card:hover {
-  box-shadow: 0 2px 12px rgba(0,48,135,0.10);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--color-border-strong);
 }
 .gov-card__icon {
   width: 40px;
@@ -230,19 +261,19 @@
   align-items: center;
   gap: 6px;
   background: var(--gov-saffron);
-  color: #1a1f2e;                          /* dark text on saffron */
+  color: #1a1f2e;
   border: none;
-  border-radius: 4px;
-  padding: 10px 22px;
+  border-radius: var(--radius-md);
+  padding: 11px 24px;
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
   letter-spacing: 0.01em;
-  transition: background 0.15s;
+  transition: background 0.15s, transform 0.15s;
   text-decoration: none;
 }
-.gov-btn-primary:hover  { background: var(--gov-saffron-dark); }
+.gov-btn-primary:hover  { background: var(--gov-saffron-dark); transform: translateY(-1px); }
 
 .gov-btn-secondary {
   display: inline-flex;
@@ -251,8 +282,8 @@
   background: transparent;
   color: var(--color-primary);
   border: 2px solid var(--color-primary);
-  border-radius: 4px;
-  padding: 8px 20px;
+  border-radius: var(--radius-md);
+  padding: 9px 20px;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
@@ -409,9 +440,9 @@
   border-radius: 3px;
   letter-spacing: 0.02em;
 }
-.ev-label--strong  { color: #0a4d1c; background: #d4edda; border: 1px solid #b7dfbe; }
-.ev-label--limited { color: #7a5200; background: #fff3cd; border: 1px solid #ffe08a; }
-.ev-label--unable  { color: #555;    background: #f0f0f0; border: 1px solid #ccc; }
+.ev-label--strong  { color: var(--color-success); background: var(--color-success-bg); border: 1px solid var(--color-success); }
+.ev-label--limited { color: var(--color-warning); background: var(--color-warning-bg); border: 1px solid var(--gov-saffron); }
+.ev-label--unable  { color: var(--color-muted);   background: var(--color-surface-raised); border: 1px solid var(--color-border); }
 
 
 /* ── 11. Corpus version badge ────────────────────────────── */
@@ -430,7 +461,7 @@
 
 /* ── 12. Footer ──────────────────────────────────────────── */
 .gov-footer {
-  background: var(--color-primary);
+  background: var(--color-chrome);
   color: rgba(255,255,255,0.80);
   padding: 16px 24px;
   font-size: 0.78rem;
@@ -471,7 +502,7 @@
   font-size: 0.9rem;
 }
 .chat-bubble--bot {
-  background: #fff;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-left: 3px solid var(--gov-saffron);
   border-radius: 0 8px 8px 8px;
@@ -506,7 +537,37 @@
 }
 
 
-/* ── 15. Responsive adjustments ──────────────────────────── */
+/* ── 15. Page sections ───────────────────────────────────── */
+.gov-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+.gov-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+}
+.gov-corpus-strip {
+  background: var(--color-primary-light);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.gov-note {
+  background: var(--color-warning-bg);
+  border-left: 4px solid var(--gov-saffron);
+  padding: 12px 20px;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* ── 16. Responsive adjustments ──────────────────────────── */
 @media (max-width: 768px) {
   .gov-header { padding: 10px 12px; gap: 10px; }
   .gov-header__emblem { width: 52px; height: 52px; }

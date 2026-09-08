@@ -5,10 +5,12 @@
 
 :root {
   /* ── GOI Brand palette (NIC / DBIM standard) ── */
-  --color-primary:        #003087;   /* GOI deep navy — used on NIC portals */
+  --color-chrome:         #003087;   /* header / footer — never inverts */
+  --color-primary:        #003087;   /* titles, links, icons */
   --color-primary-hover:  #002060;
   --color-primary-light:  #e8f0f9;   /* tint for backgrounds */
   --color-nav:            #1a4a8a;   /* slightly lighter for nav bar */
+  --color-link:           #003087;
 
   /* ── Indian tricolor tokens ── */
   --gov-saffron:          #FF9933;   /* India flag saffron — accents, borders */
@@ -95,11 +97,13 @@
   --max-width-page:  960px;
   --sidebar-width:   280px;
   --radius-sm:  2px;
-  --radius-md:  4px;
-  --radius-lg:  8px;
+  --radius-md:  6px;
+  --radius-lg:  12px;
 
-  /* ── Elevation (border-only, no box-shadow) ── */
+  /* ── Elevation ── */
   --border-width:    1px;
+  --shadow-card:     0 1px 2px rgba(0, 48, 135, 0.06);
+  --shadow-card-hover: 0 8px 24px rgba(0, 48, 135, 0.12);
 
   /* ── Animation ── */
   --duration-fast:   150ms;
@@ -115,12 +119,67 @@
   --z-modal:   200;
 }
 
-/* GOI portals are light-only (GIGW). Dark-mode overrides removed deliberately —
-   browser dark mode must NOT invert the official palette. */
+/*
+ * Theme is OPT-IN via html[data-theme="dark"], never via prefers-color-scheme.
+ * OS dark mode must not invert the GOI chrome (header stays navy).
+ */
+html[data-theme="dark"] {
+  --color-chrome:         #00245f;
+  --color-primary:        #8bb6ff;
+  --color-primary-hover:  #b3ceff;
+  --color-primary-light:  #152a4a;
+  --color-nav:            #0f2d5c;
+  --color-link:           #8bb6ff;
+
+  --gov-saffron:          #FF9933;
+  --gov-saffron-dark:     #ffb056;
+  --gov-green:            #3dcc5a;
+  --gov-green-dark:       #2ea84a;
+  --gov-chakra:           #8bb6ff;
+
+  --color-accent:         #FF9933;
+  --color-accent-light:   #2a1c08;
+
+  --color-success:        #3dcc5a;
+  --color-success-bg:     #0d2414;
+  --color-warning:        #ffc857;
+  --color-warning-bg:     #2a1f08;
+  --color-danger:         #ff6b6b;
+  --color-danger-bg:      #2a1010;
+  --color-muted:          #8a9bb0;
+
+  --color-bg:             #0b1220;
+  --color-surface:        #121c2e;
+  --color-surface-raised: #1a2740;
+  --color-border:         #2a3d5c;
+  --color-border-strong:  #3d5578;
+  --color-a11y-bar:       #0a1424;
+
+  --color-text:           #e8eef6;
+  --color-text-secondary: #b7c4d6;
+  --color-text-muted:     #8494ab;
+  --color-text-inverse:   #ffffff;
+
+  --evidence-strong-color: var(--color-success);
+  --evidence-strong-bg:    var(--color-success-bg);
+  --evidence-limited-color: var(--color-warning);
+  --evidence-limited-bg:   var(--color-warning-bg);
+  --evidence-unable-color: var(--color-muted);
+  --evidence-unable-bg:    var(--color-surface-raised);
+
+  --shadow-card:       0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-card-hover: 0 10px 28px rgba(0, 0, 0, 0.45);
+}
 
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; color-scheme: light; }
+html[data-theme="dark"] { color-scheme: dark; }
+html.theme-ready,
+html.theme-ready body {
+  transition: background-color var(--duration-base) var(--ease-out),
+              color var(--duration-base) var(--ease-out);
+}
 body {
   font-family: var(--font-sans);
   font-size: var(--text-base);
@@ -128,7 +187,7 @@ body {
   color: var(--color-text);
   background: var(--color-bg);
 }
-a { color: var(--color-primary); text-decoration: underline; }
+a { color: var(--color-link); text-decoration: underline; }
 a:hover { color: var(--color-primary-hover); }
 code, pre { font-family: var(--font-mono); font-size: var(--text-sm); }
 

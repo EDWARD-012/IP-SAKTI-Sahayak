@@ -256,9 +256,38 @@ function setupScrollReveal() {
   });
 }
 
-// ── Boot ─────────────────────────────────────────────────────────────────────
+// ── Theme toggle (light / dark, opt-in, localStorage) ────────────────────────
+
+const THEME_LS_KEY = 'ipSaktiTheme';
+
+function currentTheme() {
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+}
+
+function applyTheme(theme) {
+  const next = theme === 'dark' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem(THEME_LS_KEY, next); } catch { /* private browsing */ }
+
+  const btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  const isDark = next === 'dark';
+  btn.setAttribute('aria-pressed', String(isDark));
+  btn.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+  const label = btn.querySelector('.gov-theme-toggle__text');
+  if (label) label.textContent = isDark ? 'Light' : 'Dark';
+}
+
+function setupThemeToggle() {
+  applyTheme(currentTheme());
+  document.documentElement.classList.add('theme-ready');
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    applyTheme(currentTheme() === 'dark' ? 'light' : 'dark');
+  });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
+  setupThemeToggle();
   pageEntrance();
   setupHtmxListeners();
   setupFontSizeControls();
