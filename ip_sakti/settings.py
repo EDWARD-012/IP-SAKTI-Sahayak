@@ -27,7 +27,26 @@ SECRET_KEY: str = os.environ.get(
 DEBUG: bool = os.environ.get("DEBUG", "True").lower() in ("true", "1", "yes")
 ALLOWED_HOSTS: list[str] = [
     h.strip() for h in os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+    if h.strip()
 ]
+# Railway / PaaS public hostnames
+for _host_key in ("RAILWAY_PUBLIC_DOMAIN", "RAILWAY_STATIC_URL", "RENDER_EXTERNAL_HOSTNAME"):
+    _h = os.environ.get(_host_key, "").strip().removeprefix("https://").removeprefix("http://").split("/")[0]
+    if _h and _h not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(_h)
+if os.environ.get("RAILWAY_ENVIRONMENT") and ".up.railway.app" not in ",".join(ALLOWED_HOSTS):
+    ALLOWED_HOSTS.append(".up.railway.app")
+
+_csrf_origins = [
+    o.strip() for o in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()
+]
+for _h in ALLOWED_HOSTS:
+    if _h and not _h.startswith(".") and _h not in ("localhost", "127.0.0.1", "0.0.0.0", "*"):
+        for _scheme in ("https", "http"):
+            _origin = f"{_scheme}://{_h}"
+            if _origin not in _csrf_origins:
+                _csrf_origins.append(_origin)
+CSRF_TRUSTED_ORIGINS: list[str] = _csrf_origins
 
 # ── Application definition ─────────────────────────────────────
 INSTALLED_APPS: list[str] = [
@@ -164,9 +183,12 @@ SECURE_BROWSER_XSS_FILTER: bool = True
 X_FRAME_OPTIONS: str = "DENY"
 SECURE_CONTENT_TYPE_NOSNIFF: bool = True
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    # SIH Waitress demo is HTTP on localhost — only force HTTPS when explicitly enabled.
+    SECURE_SSL_REDIRECT = os.environ.get("SECURE_SSL_REDIRECT", "false").lower() in (
+        "true", "1", "yes",
+    )
+    SECURE_HSTS_SECONDS = 31536000 if SECURE_SSL_REDIRECT else 0
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = bool(SECURE_SSL_REDIRECT)
 
 # Content-Security-Policy (django-csp)
 CSP_DEFAULT_SRC = ("'self'",)
@@ -184,6 +206,8 @@ RATE_LIMIT_ASK_PER_MIN: int = int(os.environ.get("RATE_LIMIT_ASK_PER_MIN", "10")
 OLLAMA_BASE_URL: str = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
 OLLAMA_MODEL: str    = os.environ.get("OLLAMA_MODEL",    "qwen2.5:3b-instruct-q4_K_M")
 OLLAMA_TIMEOUT: float = float(os.environ.get("OLLAMA_TIMEOUT", "45"))
+# Translation: ollama (demo-safe) | auto (IndicTrans then Ollama) | indictrans
+TRANSLATE_BACKEND: str = os.environ.get("TRANSLATE_BACKEND", "auto").strip().lower()
 
 EMBED_MODEL: str  = os.environ.get("EMBED_MODEL",  "BAAI/bge-m3")
 EMBED_DEVICE: str = os.environ.get("EMBED_DEVICE", "cpu")

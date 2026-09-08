@@ -8,13 +8,13 @@ from django import forms
 
 # ── Step 1: Product type ────────────────────────────────────────
 PRODUCT_CHOICES = [
-    ("classical",     "Classical Ayurvedic formulation (texts-based)"),
-    ("novel",         "Novel Ayurvedic formulation (own recipe)"),
-    ("plant",         "Medicinal plant / herbal ingredient"),
-    ("extract",       "Standardised plant extract"),
-    ("cosmetic",      "Ayurvedic cosmetic product"),
-    ("food",          "Ayurvedic food / nutraceutical"),
-    ("other",         "Other / unsure"),
+    ("classical_generic",    "Classical / generic Ayurvedic medicine"),
+    ("patent_proprietary",   "Patent / proprietary medicine"),
+    ("new_nonclassical",     "New / non-classical drug"),
+    ("phytopharmaceutical",  "Phytopharmaceutical"),
+    ("ayurveda_aahara",      "Ayurveda Aahara / nutraceutical"),
+    ("cosmetic",             "Cosmetic"),
+    ("unsure",               "Other / not sure"),
 ]
 
 # ── Step 2: Intent ──────────────────────────────────────────────

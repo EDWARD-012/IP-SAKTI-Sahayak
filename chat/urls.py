@@ -11,4 +11,5 @@ urlpatterns = [
     path("ask/",    views.ask,       name="ask"),
     path("cancel/", views.cancel,    name="cancel"),
     path("session-clear/", views.session_clear, name="session_clear"),
+    path("feedback/", views.feedback, name="feedback"),
 ]

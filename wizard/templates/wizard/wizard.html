@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}Formulation Wizard — IP-SAKTI Sahayak{% endblock %}
+{% block title %}{% trans "Formulation Wizard" %} — IP-SAKTI Sahayak{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'wizard/css/wizard.css' %}" />
@@ -13,28 +14,27 @@
 
     {# ── Wizard page header ── #}
     <header class="wizard-header">
-      <p class="wizard-header__eyebrow">Formulation Wizard</p>
-      <h1 class="wizard-header__title">IP Protection Pathway Finder</h1>
+      <p class="wizard-header__eyebrow">{% trans "Formulation Wizard" %}</p>
+      <h1 class="wizard-header__title">{% trans "IP Protection Pathway Finder" %}</h1>
       <p class="wizard-header__subtitle">
-        Answer 4 short questions about your Ayurvedic formulation to receive
-        tailored IP protection recommendations.
+        {% blocktrans %}Answer 4 short questions about your Ayurvedic formulation to receive tailored IP protection recommendations.{% endblocktrans %}
       </p>
     </header>
 
     {# ── Progress bar (reflects current step from context) ── #}
-    <div class="wizard-progress" aria-label="Wizard progress">
+    <div class="wizard-progress" aria-label="{% trans 'Wizard progress' %}">
       <div class="wizard-progress__labels" aria-hidden="true">
         <span class="wizard-progress__step-label {% if wizard_step >= 1 %}{% if wizard_step == 1 %}active{% else %}done{% endif %}{% endif %}">
-          1. Formulation
+          1. {% trans "Formulation" %}
         </span>
         <span class="wizard-progress__step-label {% if wizard_step >= 2 %}{% if wizard_step == 2 %}active{% else %}done{% endif %}{% endif %}">
-          2. Novelty
+          2. {% trans "Novelty" %}
         </span>
         <span class="wizard-progress__step-label {% if wizard_step >= 3 %}{% if wizard_step == 3 %}active{% else %}done{% endif %}{% endif %}">
-          3. Disclosure
+          3. {% trans "Disclosure" %}
         </span>
         <span class="wizard-progress__step-label {% if wizard_step >= 4 %}{% if wizard_step == 4 %}active{% else %}done{% endif %}{% endif %}">
-          4. Intent
+          4. {% trans "Intent" %}
         </span>
       </div>
 
@@ -42,13 +42,13 @@
            aria-valuenow="{{ wizard_step|default:1 }}"
            aria-valuemin="1"
            aria-valuemax="4"
-           aria-label="Step {{ wizard_step|default:1 }} of 4">
+           aria-label="{% blocktrans with n=wizard_step|default:1 %}Step {{ n }} of 4{% endblocktrans %}">
         <div class="wizard-progress__fill"
              style="width:{% widthratio wizard_step|default:1 4 100 %}%;"></div>
       </div>
 
       <div class="wizard-progress__text" aria-hidden="true">
-        Step {{ wizard_step|default:1 }} of 4
+        {% blocktrans with n=wizard_step|default:1 %}Step {{ n }} of 4{% endblocktrans %}
       </div>
 
       <div class="wizard-progress__dots" aria-hidden="true">

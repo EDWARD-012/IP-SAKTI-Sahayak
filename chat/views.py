@@ -6,6 +6,7 @@ Endpoints:
   POST /assistant/ask/     → ask        (HTMX partial, runs RAG pipeline)
   DELETE /assistant/cancel/→ cancel     (HTMX, marks request cancelled)
   POST /assistant/session-clear/ → session_clear
+  POST /assistant/feedback/ → feedback
 """
 from __future__ import annotations
 
@@ -20,11 +21,13 @@ from urllib.parse import parse_qs
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.views.decorators.http import require_POST
 
 from ai import generate as ai_generate
 from ai import pipeline as ai_pipeline
 from chat.forms import ChatForm
-from chat.models import AnswerAudit
+from chat.models import AnswerAudit, Feedback
 
 logger = logging.getLogger("ip_sakti")
 
@@ -97,14 +100,20 @@ def chat_view(request: HttpRequest) -> HttpResponse:
     GET /assistant/ — main chat interface.
 
     Template context:
-      form            – blank ChatForm
+      form            – ChatForm (optionally prefilled from ?q=)
       session_history – last _MAX_HISTORY turns from session
       request_id      – fresh UUID for the next question
     """
+    initial = {}
+    q = request.GET.get("q", "").strip()
+    if q:
+        initial["question"] = q
+
     return render(request, "chat/chat.html", {
-        "form": ChatForm(),
+        "form": ChatForm(initial=initial),
         "session_history": _get_history(request),
         "request_id": str(uuid.uuid4()),
+        "prefilled_query": q,
     })
 
 
@@ -236,20 +245,51 @@ def session_clear(request: HttpRequest) -> HttpResponse:
     """
     POST /assistant/session-clear/ — wipe chat history from the current session.
 
-    HTMX requests receive an empty chat-history div swap.
-    Plain POST requests are redirected to the chat page.
+    HTMX: 204 + HX-Redirect to chat page.
+    Non-HTMX: redirect to chat page.
     """
     if request.method != "POST":
         return HttpResponse(status=405)
 
     request.session.pop(_HISTORY_KEY, None)
     request.session.pop(_RL_KEY, None)
+    request.session.modified = True
 
-    if getattr(request, "htmx", None):
-        # Return an empty container so HTMX can swap out the history list
-        return HttpResponse(
-            '<div id="chat-history" class="chat-history chat-history--empty">'
-            "</div>",
-            content_type="text/html",
-        )
+    is_htmx = bool(getattr(request, "htmx", False)) or (
+        request.headers.get("HX-Request", "").lower() == "true"
+    )
+    if is_htmx:
+        response = HttpResponse(status=204)
+        response["HX-Redirect"] = reverse("chat:chat")
+        return response
     return redirect("chat:chat")
+
+
+@require_POST
+def feedback(request: HttpRequest) -> HttpResponse:
+    """
+    POST /assistant/feedback/ (HTMX only) — record thumbs up/down on an answer.
+    """
+    if not getattr(request, "htmx", None):
+        return HttpResponse(status=405)
+
+    rating = (request.POST.get("rating") or "").strip().lower()
+    if rating not in ("up", "down"):
+        return HttpResponse("Invalid rating.", status=422)
+
+    request_id_str = (request.POST.get("request_id") or "").strip()
+    try:
+        rid = uuid.UUID(request_id_str)
+    except (ValueError, TypeError):
+        return HttpResponse("Invalid request_id.", status=422)
+
+    category = (request.POST.get("category") or "").strip()[:64]
+    comment = (request.POST.get("comment") or "").strip()[:2000]
+
+    Feedback.objects.create(
+        request_id=rid,
+        rating=rating,
+        category=category,
+        comment=comment,
+    )
+    return HttpResponse(status=204)

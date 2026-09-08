@@ -197,7 +197,26 @@ def generate(
         finally:
             _semaphore.release()
 
+    except TimeoutError as exc:
+        logger.error("Ollama generate timed out: %s", exc)
+        return {
+            "state": "timeout",
+            "answer": "",
+            "citations": [],
+            "confidence_note": "Model generate timed out — caller may fall back to evidence_only.",
+        }
     except OSError as exc:
+        # urllib raises URLError (OSError subclass); socket timeouts often surface here.
+        err_name = type(exc).__name__
+        err_low = str(exc).lower()
+        if "timed out" in err_low or "timeout" in err_low or err_name == "TimeoutError":
+            logger.error("Ollama generate timed out (OSError): %s", exc)
+            return {
+                "state": "timeout",
+                "answer": "",
+                "citations": [],
+                "confidence_note": "Model generate timed out — caller may fall back to evidence_only.",
+            }
         logger.error("Ollama connection error: %s", exc)
         return {
             "state": "unavailable",
@@ -206,6 +225,15 @@ def generate(
             "confidence_note": "",
         }
     except Exception as exc:
+        err_low = str(exc).lower()
+        if "timed out" in err_low or "timeout" in err_low:
+            logger.error("Ollama generate timed out: %s", exc)
+            return {
+                "state": "timeout",
+                "answer": "",
+                "citations": [],
+                "confidence_note": "Model generate timed out — caller may fall back to evidence_only.",
+            }
         logger.exception("Ollama unexpected error: %s", exc)
         return {
             "state": "unavailable",

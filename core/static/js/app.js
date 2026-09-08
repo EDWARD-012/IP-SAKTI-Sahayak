@@ -179,6 +179,33 @@ function setupFontSizeControls() {
   });
 }
 
+// ── CSRF for HTMX (buttons outside forms, e.g. Clear Session) ─────────────────
+
+/**
+ * Reads the CSRF token from cookie or a form hidden input and attaches it to
+ * every HTMX request as X-CSRFToken (required by Django for POST/DELETE).
+ */
+function setupCsrfForHtmx() {
+  function readCsrfToken() {
+    const match = document.cookie.match(/(?:^|; )csrftoken=([^;]+)/);
+    if (match) {
+      try {
+        return decodeURIComponent(match[1]);
+      } catch {
+        return match[1];
+      }
+    }
+    const input = document.querySelector('input[name="csrfmiddlewaretoken"]');
+    return input ? input.value : '';
+  }
+
+  document.body.addEventListener('htmx:configRequest', (evt) => {
+    const token = readCsrfToken();
+    if (!token) return;
+    evt.detail.headers['X-CSRFToken'] = token;
+  });
+}
+
 // ── Request-ID injection ─────────────────────────────────────────────────────
 
 /**
@@ -199,31 +226,36 @@ function setupRequestId() {
   });
 }
 
-// ── 3D card tilt ─────────────────────────────────────────────────────────────
-
-/**
- * Adds a perspective tilt-on-hover effect to every `.gov-card`.
- * Skipped for touch devices and when prefers-reduced-motion is set.
- */
+// ── 3D card tilt & Specular cursor tracking ──────────────────────────────
 function setupCardTilt() {
   if (prefersReducedMotion()) return;
   if (window.matchMedia?.('(hover: none)').matches) return;
 
-  document.querySelectorAll('.gov-card').forEach((card) => {
+  const targets = document.querySelectorAll('.gov-card, [data-tilt]');
+  targets.forEach((card) => {
     card.style.transformStyle = 'preserve-3d';
     card.style.willChange = 'transform';
 
+    const isHero = card.classList.contains('gov-hero__glass-center');
+    const maxTilt = isHero ? 3.5 : 8;
+
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
-      const px = (e.clientX - rect.left) / rect.width - 0.5;
-      const py = (e.clientY - rect.top) / rect.height - 0.5;
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const px = x / rect.width - 0.5;
+      const py = y / rect.height - 0.5;
+
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+
       card.style.transform =
-        `perspective(800px) rotateY(${px * 8}deg) rotateX(${py * -8}deg) translateY(-4px) scale(1.015)`;
+        `perspective(1000px) rotateY(${px * maxTilt}deg) rotateX(${py * -maxTilt}deg) translateY(${isHero ? -2 : -5}px) scale(${isHero ? 1.005 : 1.018})`;
     });
 
     card.addEventListener('mouseleave', () => {
       card.style.transition = 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)';
-      card.style.transform = 'perspective(800px) rotateY(0) rotateX(0) translateY(0) scale(1)';
+      card.style.transform = 'perspective(1000px) rotateY(0) rotateX(0) translateY(0) scale(1)';
       setTimeout(() => { card.style.transition = ''; }, 500);
     });
   });
@@ -329,6 +361,7 @@ function setupMagneticButtons() {
 document.addEventListener('DOMContentLoaded', () => {
   setupThemeToggle();
   pageEntrance();
+  setupCsrfForHtmx();
   setupHtmxListeners();
   setupFontSizeControls();
   setupRequestId();

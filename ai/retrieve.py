@@ -19,10 +19,23 @@ _chroma_client: Any = None
 _embed_lock = None  # threading.Lock, initialised on first use
 
 
+def _get_embed_lock():
+    """Process-wide lock so concurrent first requests load the model once."""
+    global _embed_lock
+    if _embed_lock is None:
+        import threading
+        _embed_lock = threading.Lock()
+    return _embed_lock
+
+
 def _get_embed_model() -> Any:
-    """Lazy-load sentence_transformers embedding model (bge-m3)."""
+    """Lazy-load sentence_transformers embedding model (bge-m3); cached in-process."""
     global _embed_model
-    if _embed_model is None:
+    if _embed_model is not None:
+        return _embed_model
+    with _get_embed_lock():
+        if _embed_model is not None:
+            return _embed_model
         try:
             from sentence_transformers import SentenceTransformer
             logger.info("Loading embedding model: %s on %s", settings.EMBED_MODEL, settings.EMBED_DEVICE)

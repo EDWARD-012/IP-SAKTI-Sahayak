@@ -14,7 +14,8 @@ Flow (DEMO_MODE=False):
   8. Return PipelineResult
 
 Flow (DEMO_MODE=True):
-  - Skip steps 2-7, return rich placeholder PipelineResult immediately.
+  - Honest refusal for foreign domestic-law / personalised-advice probes
+  - Otherwise skip steps 2-7, return rich placeholder PipelineResult immediately.
 """
 from __future__ import annotations
 
@@ -93,6 +94,28 @@ _DEMO_CITATIONS = [
     },
 ]
 
+_FOREIGN_LAW_KEYWORDS = (
+    "uspto",
+    "epo",
+    "us patent filing fees",
+    "china patent",
+    "foreign counsel filing deadline",
+)
+
+_PERSONALISED_KEYWORDS = (
+    "should i file",
+    "will i win",
+    "my aadhaar",
+    "for my company named",
+)
+
+_DEMO_REFUSAL = (
+    "IP-SAKTI Sahayak cannot answer this in demo mode. "
+    "It provides general information on Indian IP / Ayush-related law from a verified corpus — "
+    "not foreign domestic filing advice, and not personalised legal advice for your specific case. "
+    "Please rephrase as a general India-focused question, or consult a qualified professional."
+)
+
 
 def _demo_result(corpus_version: str) -> PipelineResult:
     """Return a rich placeholder result for demo mode."""
@@ -106,6 +129,29 @@ def _demo_result(corpus_version: str) -> PipelineResult:
         corpus_version=corpus_version,
         demo_mode=True,
     )
+
+
+def _demo_refusal(corpus_version: str) -> PipelineResult:
+    """Honest out-of-scope refusal for foreign-law / personalised probes in demo."""
+    return PipelineResult(
+        request_id=str(uuid.uuid4()),
+        state="out_of_scope",
+        answer=_DEMO_REFUSAL,
+        citations=[],
+        confidence_note="Demo mode — refused foreign domestic law or personalised advice probe.",
+        latency_ms=12,
+        corpus_version=corpus_version,
+        demo_mode=True,
+    )
+
+
+def _should_refuse_demo(question: str) -> bool:
+    q = (question or "").lower()
+    if any(k in q for k in _FOREIGN_LAW_KEYWORDS):
+        return True
+    if any(k in q for k in _PERSONALISED_KEYWORDS):
+        return True
+    return False
 
 
 # ── Live pipeline ─────────────────────────────────────────────
@@ -129,6 +175,8 @@ def process_question(
         PipelineResult
     """
     if getattr(settings, "DEMO_MODE", True):
+        if _should_refuse_demo(question):
+            return _demo_refusal(corpus_version)
         return _demo_result(corpus_version)
 
     start = time.monotonic()
@@ -197,6 +245,34 @@ def process_question(
             answer=raw.get("answer", ""),
             corpus_version=corpus_version,
             latency_ms=int((time.monotonic() - start) * 1000),
+        )
+
+    # Generate timed out but we have retrieved evidence → honest evidence_only card.
+    if raw.get("state") == "timeout":
+        ev_citations = [
+            {
+                "chunk_id": c.get("chunk_id", ""),
+                "source_id": c.get("source_id", ""),
+                "title": c.get("title", ""),
+                "section": c.get("section_ref", ""),
+                "effective_from": c.get("effective_from", ""),
+                "quote": (c.get("text") or "")[:400],
+            }
+            for c in chunks[:5]
+        ]
+        return PipelineResult(
+            request_id=request_id,
+            state="evidence_only",
+            answer=(
+                "The language model did not finish in time on this machine. "
+                "Below are the most relevant verified corpus excerpts for your question. "
+                "This is general information, not legal advice."
+            ),
+            citations=ev_citations,
+            confidence_note="evidence_only — Ollama generate timed out; showing retrieved sources only.",
+            latency_ms=int((time.monotonic() - start) * 1000),
+            corpus_version=corpus_version,
+            demo_mode=False,
         )
 
     # ── 6. Validate citations ─────────────────────────────────

@@ -183,7 +183,25 @@ def _build_recommendations(answers: dict[str, Any]) -> list[dict[str, Any]]:
     step2 = answers.get("step_2", {})
     step3 = answers.get("step_3", {})
 
-    product_type = step1.get("product_type", "other")
+    raw_product = step1.get("product_type", "unsure")
+    # Map §3.1 product keys onto legacy recommendation buckets.
+    _PRODUCT_ALIASES = {
+        "classical_generic": "classical",
+        "patent_proprietary": "novel",
+        "new_nonclassical": "novel",
+        "phytopharmaceutical": "extract",
+        "ayurveda_aahara": "food",
+        "cosmetic": "cosmetic",
+        "unsure": "other",
+        # legacy keys (if any old sessions remain)
+        "classical": "classical",
+        "novel": "novel",
+        "plant": "plant",
+        "extract": "extract",
+        "food": "food",
+        "other": "other",
+    }
+    product_type = _PRODUCT_ALIASES.get(raw_product, "other")
     intent       = step2.get("intent",       "other")
     jurisdiction = step3.get("jurisdiction", "IN")
 
@@ -200,7 +218,7 @@ def _build_recommendations(answers: dict[str, Any]) -> list[dict[str, Any]]:
                 "under the Patents Act, 1970, if it is novel, inventive, and industrially applicable. "
                 "Note that classical Ayurvedic formulations may be excluded under Section 3(p)."
             ),
-            "suggested_question": f"Can I patent a novel {product_type.replace('_', ' ')} under the Patents Act 1970?",
+            "suggested_question": f"Can I patent a novel {raw_product.replace('_', ' ')} under the Patents Act 1970?",
             "relevant_law": "Patents Act 1970, Section 3(p), Section 2(1)(j)",
         })
 

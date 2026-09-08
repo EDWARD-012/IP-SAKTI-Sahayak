@@ -1,23 +1,24 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}Help — IP-SAKTI Sahayak{% endblock %}
+{% block title %}{% trans "Help" %} — IP-SAKTI Sahayak{% endblock %}
 
 {% block content %}
 <div class="page-inner" style="padding-top:32px; padding-bottom:48px;">
 
   <nav aria-label="Breadcrumb" style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:20px;">
-    <a href="{% url 'core:home' %}" style="color:var(--color-primary);">Home</a>
+    <a href="{% url 'core:home' %}" style="color:var(--color-primary);">{% trans "Home" %}</a>
     <span style="margin:0 6px;">›</span>
-    <span>Help</span>
+    <span>{% trans "Help" %}</span>
   </nav>
 
-  <h1 class="gov-section-title ip-fade-in" style="font-size:1.6rem; margin-bottom:24px;">Help &amp; Guide</h1>
+  <h1 class="gov-section-title ip-fade-in" style="font-size:1.6rem; margin-bottom:24px;">{% trans "Help & Guide" %}</h1>
 
   {# ── How to use the Chat ── #}
   <section class="gov-card ip-fade-in" style="margin-bottom:20px;" aria-labelledby="h-chat">
     <h2 id="h-chat" style="font-size:1rem; color:var(--color-primary); margin-top:0;">
-      How to Use the Ask IP-SAKTI Chat
+      {% trans "How to Use the Ask IP-SAKTI Chat" %}
     </h2>
     <ol style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.8; padding-left:20px;">
       <li>Go to <a href="{% url 'chat:chat' %}" style="color:var(--color-primary);">Ask IP-SAKTI</a>.</li>
@@ -32,7 +33,7 @@
   {# ── Evidence Labels ── #}
   <section class="gov-card ip-fade-in" style="margin-bottom:20px;" aria-labelledby="h-evidence">
     <h2 id="h-evidence" style="font-size:1rem; color:var(--color-primary); margin-top:0;">
-      Understanding Evidence Labels
+      {% trans "Understanding Evidence Labels" %}
     </h2>
     <div style="display:flex; flex-direction:column; gap:12px;">
       <div style="display:flex; align-items:flex-start; gap:12px;">
@@ -62,7 +63,7 @@
   {# ── Citations ── #}
   <section class="gov-card ip-fade-in" style="margin-bottom:20px;" aria-labelledby="h-citations">
     <h2 id="h-citations" style="font-size:1rem; color:var(--color-primary); margin-top:0;">
-      How to Read Citations
+      {% trans "How to Read Citations" %}
     </h2>
     <p style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.7;">
       Each citation shows:

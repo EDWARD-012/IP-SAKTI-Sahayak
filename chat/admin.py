@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import AnswerAudit
+from .models import AnswerAudit, Feedback
 
 
 @admin.register(AnswerAudit)
@@ -32,3 +32,11 @@ class AnswerAuditAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         # Audit records are immutable.
         return False
+
+
+@admin.register(Feedback)
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = ["request_id", "rating", "category", "created_at"]
+    list_filter = ["rating", "created_at"]
+    search_fields = ["request_id", "comment"]
+    readonly_fields = ["created_at"]

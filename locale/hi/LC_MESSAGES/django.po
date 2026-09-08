@@ -1,0 +1,517 @@
+# Hindi translations for IP-SAKTI Sahayak (nav + home hero).
+msgid ""
+msgstr ""
+"Project-Id-Version: IP-SAKTI Sahayak 0.2\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Home"
+msgstr "होम"
+
+msgid "Formulation Wizard"
+msgstr "फॉर्मूलेशन विज़ार्ड"
+
+msgid "Ask IP-SAKTI"
+msgstr "IP-SAKTI से पूछें"
+
+msgid "About Corpus"
+msgstr "कॉर्पस के बारे में"
+
+msgid "Ask"
+msgstr "पूछें"
+
+msgid "Privacy:"
+msgstr "गोपनीयता:"
+
+msgid ""
+"Do not paste personal or confidential data (names, Aadhaar, medical records, client files).\n"
+"  Under India’s DPDP Act, this demo stores only ephemeral session history and HMAC audit fingerprints — not your question text in the database."
+msgstr ""
+"व्यक्तिगत या गोपनीय डेटा (नाम, आधार, चिकित्सा रिकॉर्ड, क्लाइंट फ़ाइलें) "
+"पेस्ट न करें। यह डेमो केवल अल्पकालिक सत्र इतिहास और HMAC ऑडिट फ़िंगरप्रिंट "
+"संग्रहित करता है।"
+
+msgid "IP-SAKTI Sahayak — IPR Assistant for Ayurveda | Ministry of Ayush"
+msgstr "IP-SAKTI सहाय्क — आयुर्वेद के लिए IPR सहायक | आयुष मंत्रालय"
+
+msgid "Ministry of Ayush"
+msgstr "आयुष मंत्रालय"
+
+msgid "Multilingual IPR Assistant for Ayurveda & Traditional Knowledge"
+msgstr "आयुर्वेद और पारंपरिक ज्ञान के लिए बहुभाषी IPR सहायक"
+
+msgid ""
+"Source-cited guidance on patents, GI, biodiversity & ABS, and Ayurveda "
+"regulation — from verified Indian statutes and treaties."
+msgstr ""
+"पेटेंट, GI, जैव विविधता व ABS, और आयुर्वेद विनियमन पर स्रोत-उद्धृत "
+"मार्गदर्शन — सत्यापित भारतीय अधिनियमों और संधियों से।"
+
+msgid "Ask a Question"
+msgstr "प्रश्न पूछें"
+
+msgid "Sample questions"
+msgstr "नमूना प्रश्न"
+
+msgid "Quick suggestions"
+msgstr "त्वरित सुझाव"
+
+msgid "Patenting herbal formulations"
+msgstr "हर्बल फॉर्मूलेशन का पेटेंट"
+
+msgid "Section 3(p) TK exclusions"
+msgstr "धारा 3(प) TK अपवाद"
+
+msgid "NBA approval for ABS"
+msgstr "ABS के लिए NBA अनुमोदन"
+
+msgid "Platform highlights"
+msgstr "मुख्य विशेषताएँ"
+
+msgid "Indian languages"
+msgstr "भारतीय भाषाएँ"
+
+msgid "On-device RAG"
+msgstr "ऑन-डिवाइस RAG"
+
+msgid "Local model"
+msgstr "स्थानीय मॉडल"
+
+msgid "Cited statutes"
+msgstr "उद्धृत अधिनियम"
+
+msgid "Statutory intelligence"
+msgstr "वैधानिक जानकारी"
+
+msgid "What can IP-SAKTI help you with?"
+msgstr "IP-SAKTI आपकी कैसे मदद कर सकता है?"
+
+msgid ""
+"Guidance across Indian traditional medicine and intellectual property — "
+"always with source citations."
+msgstr ""
+"भारतीय पारंपरिक चिकित्सा और बौद्धिक संपदा पर मार्गदर्शन — हमेशा स्रोत "
+"उद्धरणों के साथ।"
+
+msgid "Patent guidance"
+msgstr "पेटेंट मार्गदर्शन"
+
+msgid ""
+"Patentability under the Patents Act 1970, Section 3(p) traditional-knowledge"
+" exclusions, and filing orientation."
+msgstr ""
+"पेटेंट अधिनियम 1970 के अंतर्गत पेटेंट योग्यता, धारा 3(प) पारंपरिक ज्ञान "
+"अपवाद, और फाइलिंग मार्गदर्शन।"
+
+msgid "Geographical Indications"
+msgstr "भौगोलिक संकेतक"
+
+msgid ""
+"GI registration under the GI Act 1999 — eligibility, process, and "
+"authorised-user basics."
+msgstr ""
+"GI अधिनियम 1999 के अंतर्गत GI पंजीकरण — पात्रता, प्रक्रिया और अधिकृत "
+"उपयोगकर्ता।"
+
+msgid "Biodiversity & ABS"
+msgstr "जैव विविधता और ABS"
+
+msgid ""
+"Access and Benefit Sharing under the Biological Diversity Act 2002 and NBA "
+"approval orientation."
+msgstr ""
+"जैव विविधता अधिनियम 2002 के अंतर्गत पहुँच और लाभ-साझाकरण तथा NBA अनुमोदन।"
+
+msgid "Regulatory classification"
+msgstr "नियामक वर्गीकरण"
+
+msgid ""
+"Drugs & Cosmetics Act pathways, Ayurveda Aahara, and related Ayush "
+"regulatory demarcation."
+msgstr ""
+"औषधि एवं प्रसाधन सामग्री अधिनियम मार्ग, आयुर्वेद आहार, और संबंधित आयुष "
+"नियामक सीमाएँ।"
+
+msgid "Traditional Knowledge"
+msgstr "पारंपरिक ज्ञान"
+
+msgid ""
+"TKDL’s public role and defensive prior-art orientation against bio-piracy "
+"claims."
+msgstr "TKDL की सार्वजनिक भूमिका और जैव-चोरी के विरुद्ध रक्षात्मक पूर्व-कला।"
+
+msgid "International treaties"
+msgstr "अंतरराष्ट्रीय संधियाँ"
+
+msgid ""
+"Treaty-level orientation on TRIPS, CBD, Nagoya, and WIPO GRATK — not foreign"
+" domestic filing advice."
+msgstr ""
+"TRIPS, CBD, नागोया और WIPO GRATK पर संधि-स्तरीय जानकारी — विदेशी घरेलू "
+"फाइलिंग सलाह नहीं।"
+
+msgid "Verified corpus"
+msgstr "सत्यापित कॉर्पस"
+
+msgid "Statutory integrity"
+msgstr "वैधानिक अखंडता"
+
+msgid ""
+"Answers drawn from verified statutes and treaties. Corpus version: %(ver)s"
+msgstr ""
+"उत्तर सत्यापित अधिनियमों और संधियों से लिए जाते हैं। कॉर्पस संस्करण: %(ver)s"
+
+msgid "Browse source corpus"
+msgstr "स्रोत कॉर्पस देखें"
+
+msgid "Legal notice"
+msgstr "कानूनी सूचना"
+
+msgid ""
+"IP-SAKTI Sahayak provides general information only, not legal advice. Verify"
+" with official sources and a qualified professional before acting."
+msgstr ""
+"IP-SAKTI सहाय्क केवल सामान्य जानकारी देता है, कानूनी सलाह नहीं। कार्य से "
+"पहले आधिकारिक स्रोतों और योग्य पेशेवर से पुष्टि करें।"
+
+msgid "Jurisdiction and language settings"
+msgstr "न्यायाधिकार क्षेत्र और भाषा सेटिंग्स"
+
+msgid "Jurisdiction"
+msgstr "न्यायाधिकार क्षेत्र"
+
+msgid "Select jurisdiction"
+msgstr "न्यायाधिकार क्षेत्र चुनें"
+
+msgid "India jurisdiction"
+msgstr "भारत न्यायाधिकार क्षेत्र"
+
+msgid "India"
+msgstr "भारत"
+
+msgid "International jurisdiction"
+msgstr "अंतरराष्ट्रीय न्यायाधिकार क्षेत्र"
+
+msgid "International"
+msgstr "अंतरराष्ट्रीय"
+
+msgid "Both India and International jurisdiction"
+msgstr "भारत और अंतरराष्ट्रीय दोनों"
+
+msgid "Both"
+msgstr "दोनों"
+
+msgid "Current language"
+msgstr "वर्तमान भाषा"
+
+msgid "Language: %(LANGUAGE_CODE)s"
+msgstr "भाषा: %(LANGUAGE_CODE)s"
+
+msgid "Chat sidebar"
+msgstr "चैट साइडबार"
+
+msgid "Corpus"
+msgstr "कॉर्पस"
+
+msgid "Active version:"
+msgstr "सक्रिय संस्करण:"
+
+msgid "Learn about the legal corpus"
+msgstr "कानूनी कॉर्पस के बारे में जानें"
+
+msgid "About this corpus"
+msgstr "इस कॉर्पस के बारे में"
+
+msgid "Session History"
+msgstr "सत्र इतिहास"
+
+msgid "Recent questions in this session"
+msgstr "इस सत्र के हाल के प्रश्न"
+
+msgid "No questions asked yet in this session."
+msgstr "इस सत्र में अभी तक कोई प्रश्न नहीं पूछा गया।"
+
+msgid "Clear all session data? This cannot be undone."
+msgstr "सभी सत्र डेटा साफ़ करें? यह वापस नहीं लिया जा सकता।"
+
+msgid "Clear chat session history"
+msgstr "चैट सत्र इतिहास साफ़ करें"
+
+msgid "Clear Session"
+msgstr "सत्र साफ़ करें"
+
+msgid "How to use IP-SAKTI"
+msgstr "IP-SAKTI कैसे उपयोग करें"
+
+msgid "IP-SAKTI chat"
+msgstr "IP-SAKTI चैट"
+
+msgid "Answer area"
+msgstr "उत्तर क्षेत्र"
+
+msgid ""
+"Patents, GI, biodiversity, traditional knowledge — every answer cites a "
+"source."
+msgstr ""
+"पेटेंट, जीआई, जैव विविधता, पारंपरिक ज्ञान — प्रत्येक उत्तर स्रोत उद्धृत करता"
+" है।"
+
+msgid "Example questions"
+msgstr "उदाहरण प्रश्न"
+
+msgid "Section 3(p) TK"
+msgstr "धारा 3(प) पारंपरिक ज्ञान"
+
+msgid "GI registration"
+msgstr "जीआई पंजीकरण"
+
+msgid "NBA / ABS"
+msgstr "एनबीए / एबीएस"
+
+msgid "Ayurveda Aahara"
+msgstr "आयुर्वेद आहार"
+
+msgid "Ask about patents, GI, biodiversity, TKDL…"
+msgstr "पेटेंट, जीआई, जैव विविधता, TKDL के बारे में पूछें…"
+
+msgid "Cancel"
+msgstr "रद्द करें"
+
+msgid "Help & Guide"
+msgstr "सहायता और मार्गदर्शिका"
+
+msgid "Help"
+msgstr "सहायता"
+
+msgid "How to Use the Ask IP-SAKTI Chat"
+msgstr "Ask IP-SAKTI चैट का उपयोग कैसे करें"
+
+msgid "Understanding Evidence Labels"
+msgstr "साक्ष्य लेबल समझें"
+
+msgid "How to Read Citations"
+msgstr "उद्धरण कैसे पढ़ें"
+
+msgid "Type your legal question here"
+msgstr "अपना कानूनी प्रश्न यहाँ लिखें"
+
+msgid "Submit question to IP-SAKTI"
+msgstr "IP-SAKTI को प्रश्न भेजें"
+
+msgid "Cancel ongoing request"
+msgstr "चल रहे अनुरोध को रद्द करें"
+
+msgid ""
+"Corpus: <strong>%(ver)s</strong> · Answers cite verified Indian statutes "
+"only"
+msgstr ""
+"कॉर्पस: <strong>%(ver)s</strong> · उत्तर केवल सत्यापित भारतीय कानूनों से "
+"उद्धृत"
+
+msgid "About the Corpus"
+msgstr "कॉर्पस के बारे में"
+
+msgid "Privacy Policy"
+msgstr "गोपनीयता नीति"
+
+msgid "Terms of Use"
+msgstr "उपयोग की शर्तें"
+
+msgid "Contact Us"
+msgstr "संपर्क करें"
+
+msgid "Screen Reader Access"
+msgstr "स्क्रीन रीडर एक्सेस"
+
+msgid "IP Protection Pathway Finder"
+msgstr "आईपी संरक्षण मार्ग खोजक"
+
+msgid ""
+"Answer 4 short questions about your Ayurvedic formulation to receive "
+"tailored IP protection recommendations."
+msgstr ""
+"अपने आयुर्वेदिक फॉर्मूलेशन के बारे में 4 छोटे प्रश्नों के उत्तर दें और "
+"अनुकूलित आईपी संरक्षण सुझाव प्राप्त करें।"
+
+msgid "About the Legal Corpus"
+msgstr "कानूनी कॉर्पस के बारे में"
+
+msgid "Corpus Information"
+msgstr "कॉर्पस जानकारी"
+
+msgid ""
+"IP-SAKTI Sahayak answers questions exclusively from a curated, version-"
+"controlled corpus of verified Indian statutes, rules, and international "
+"treaties. All answers cite their source."
+msgstr ""
+"IP-SAKTI सहायक् केवल सत्यापित भारतीय कानूनों, नियमों और अंतरराष्ट्रीय "
+"संधियों के संस्करण-नियंत्रित कॉर्पस से उत्तर देता है। सभी उत्तर स्रोत उद्धृत"
+" करते हैं।"
+
+msgid "Active Corpus Version"
+msgstr "सक्रिय कॉर्पस संस्करण"
+
+msgid "Wizard progress"
+msgstr "विज़ार्ड प्रगति"
+
+msgid "Formulation"
+msgstr "फॉर्मूलेशन"
+
+msgid "Novelty"
+msgstr "नवीनता"
+
+msgid "Disclosure"
+msgstr "प्रकटीकरण"
+
+msgid "Intent"
+msgstr "उद्देश्य"
+
+msgid "Step %(n)s of 4"
+msgstr "चरण %(n)s / 4"
+
+msgid "Version"
+msgstr "संस्करण"
+
+msgid "Indexed Chunks"
+msgstr "इंडेक्स किए गए खंड"
+
+msgid "Last Updated"
+msgstr "अंतिम अद्यतन"
+
+msgid "Source Documents"
+msgstr "स्रोत दस्तावेज़"
+
+msgid "Corpus not yet indexed"
+msgstr "कॉर्पस अभी इंडेक्स नहीं हुआ"
+
+msgid ""
+"No active corpus version was found. The system requires an indexed vector "
+"store to answer questions."
+msgstr ""
+"कोई सक्रिय कॉर्पस संस्करण नहीं मिला। प्रश्नों के उत्तर के लिए इंडेक्स किया "
+"हुआ वेक्टर स्टोर आवश्यक है।"
+
+msgid "To set up the corpus:"
+msgstr "कॉर्पस सेटअप करने के लिए:"
+
+msgid "Obtain the SourceManifest list from <code>corpus/fixtures/</code>"
+msgstr "SourceManifest सूची <code>corpus/fixtures/</code> से प्राप्त करें"
+
+msgid "Run <code>python manage.py ingest_corpus --all</code>"
+msgstr "<code>python manage.py ingest_corpus --all</code> चलाएँ"
+
+msgid "Activate the resulting corpus version in the admin panel"
+msgstr "परिणामी कॉर्पस संस्करण को एडमिन पैनल में सक्रिय करें"
+
+msgid "Source Priority Tiers"
+msgstr "स्रोत प्राथमिकता स्तर"
+
+msgid ""
+"Sources are ranked by authority. P0 sources (primary legislation) are always "
+"preferred over P1 (secondary legislation, guidelines)."
+msgstr ""
+"स्रोतों को प्राधिकार के अनुसार क्रम दिया गया है। P0 स्रोत (प्राथमिक "
+"कानून) सदैव P1 (द्वितीयक कानून, दिशानिर्देश) से ऊपर रखे जाते हैं।"
+
+msgid "Corpus source priority tiers"
+msgstr "कॉर्पस स्रोत प्राथमिकता स्तर"
+
+msgid "Tier"
+msgstr "स्तर"
+
+msgid "Source"
+msgstr "स्रोत"
+
+msgid "Authority"
+msgstr "प्राधिकार"
+
+msgid "IP Types"
+msgstr "IP प्रकार"
+
+msgid "Status"
+msgstr "स्थिति"
+
+msgid "P0 — Primary Legislation (Highest Authority)"
+msgstr "P0 — प्राथमिक कानून (सर्वोच्च प्राधिकार)"
+
+msgid "P1 — Secondary Legislation, Rules & International Treaties"
+msgstr "P1 — द्वितीयक कानून, नियम और अंतरराष्ट्रीय संधियाँ"
+
+msgid "✓ Active"
+msgstr "✓ सक्रिय"
+
+msgid "Pending"
+msgstr "लंबित"
+
+msgid "No P0 sources configured."
+msgstr "कोई P0 स्रोत कॉन्फ़िगर नहीं।"
+
+msgid "No P1 sources configured."
+msgstr "कोई P1 स्रोत कॉन्फ़िगर नहीं।"
+
+msgid "View Full Source List →"
+msgstr "पूर्ण स्रोत सूची देखें →"
+
+msgid "Corpus Coverage & Limitations"
+msgstr "कॉर्पस कवरेज और सीमाएँ"
+
+msgid "Important limitations to note:"
+msgstr "ध्यान देने योग्य महत्वपूर्ण सीमाएँ:"
+
+msgid ""
+"The corpus is periodically updated but may not reflect the very latest "
+"amendments or notifications."
+msgstr ""
+"कॉर्पस समय-समय पर अद्यतन होता है, परंतु नवीनतम संशोधन या अधिसूचनाएँ तुरंत "
+"प्रतिबिंबित न हों।"
+
+msgid ""
+"State-level regulations, departmental circulars, and unpublished guidelines "
+"are <strong>not</strong> included."
+msgstr ""
+"राज्य-स्तरीय विनियम, विभागीय परिपत्र और अप्रकाशित दिशानिर्देश "
+"<strong>शामिल नहीं</strong> हैं।"
+
+msgid ""
+"Court judgments, case law, and tribunal orders are not part of the corpus."
+msgstr ""
+"न्यायालय के निर्णय, केस लॉ और ट्रिब्यूनल आदेश कॉर्पस का भाग नहीं हैं।"
+
+msgid ""
+"Questions outside the covered subject matter will receive an \"Unable to "
+"answer\" response — this is by design."
+msgstr ""
+"कवर किए गए विषय से बाहर के प्रश्नों पर \"उत्तर देने में असमर्थ\" प्रतिक्रिया "
+"मिलेगी — यह डिज़ाइन के अनुसार है।"
+
+msgid ""
+"IP-SAKTI does <strong>not</strong> provide legal advice. Always verify with "
+"official GOI sources and consult a qualified practitioner."
+msgstr ""
+"IP-SAKTI <strong>कानूनी सलाह नहीं</strong> देता। सदैव आधिकारिक भारत सरकार "
+"स्रोतों से सत्यापित करें और योग्य विशेषज्ञ से परामर्श लें।"
+
+msgid ""
+"IP-SAKTI Sahayak provides <strong>general information only</strong>, not "
+"legal advice. Always verify with official sources and consult a qualified "
+"professional before acting."
+msgstr ""
+"IP-SAKTI सहायक् केवल <strong>सामान्य जानकारी</strong> देता है, कानूनी सलाह "
+"नहीं। कार्य करने से पहले आधिकारिक स्रोतों से सत्यापित करें और योग्य "
+"व्यावसायिक से परामर्श लें।"
+
+msgid "Corpus version:"
+msgstr "कॉर्पस संस्करण:"
+
+msgid "Ministry of Ayush, Government of India."
+msgstr "आयुष मंत्रालय, भारत सरकार।"
+
+msgid ""
+"Content on this website is published and managed by All India Institute of "
+"Ayurveda (AIIA)."
+msgstr ""
+"इस वेबसाइट की सामग्री अखिल भारतीय आयुर्वेद संस्थान (AIIA) द्वारा प्रकाशित "
+"और प्रबंधित है।"

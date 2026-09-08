@@ -1,89 +1,108 @@
 {% load ip_sakti_tags %}
-{# _answer.html — HTMX partial swapped into #answer-area.
-   Context: result (PipelineResult uses .state), question #}
 
-<div class="answer-card ip-fade-in" role="region" aria-label="Answer from IP-SAKTI">
+<div class="chat-turn ip-fade-in"
+     id="chat-answer-turn"
+     role="region"
+     tabindex="-1"
+     aria-label="Answer from IP-SAKTI"
+     data-evidence="{{ result.state|outcome_label }}">
 
-  <div class="answer-card__header">
-    <span class="ev-label ev-label--{{ result.state|outcome_css_class }}"
-          aria-label="Evidence quality: {{ result.state|outcome_label }}">
-      {{ result.state|outcome_label }}
-    </span>
-
-    {% if question %}
-    <p class="answer-card__question" aria-label="Your question">
-      "{{ question|truncatechars:120 }}"
-    </p>
-    {% endif %}
+  {% if question %}
+  <div class="chat-user-msg">
+    <span class="chat-user-msg__label">You asked</span>
+    <p class="chat-user-msg__text">{{ question }}</p>
   </div>
+  {% endif %}
 
-  <div class="answer-card__body">
-    <div class="answer-prose" role="article" aria-label="Answer text">
-      {{ result.answer|linebreaks }}
+  <div class="answer-card">
+
+    <div class="answer-card__header">
+      <span class="ev-label ev-label--{{ result.state|outcome_css_class }}"
+            aria-label="Evidence quality: {{ result.state|outcome_label }}">
+        {{ result.state|outcome_label }}
+      </span>
     </div>
 
-    {% if result.citations %}
-    <div class="citations-section" aria-label="Source citations">
-      <button class="citations-toggle"
-              type="button"
-              aria-expanded="false"
-              aria-controls="citations-list-{{ result.request_id|default:'0' }}"
-              aria-label="Show {{ result.citations|length }} source citation{{ result.citations|length|pluralize }}">
-        {{ result.citations|length }} Source Citation{{ result.citations|length|pluralize }}
-        <svg class="citations-toggle__chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-          <path d="M6 9l6 6 6-6"/>
-        </svg>
-      </button>
+    <div class="answer-card__body">
+      <div class="answer-prose" role="article" aria-label="Answer text">
+        {{ result.answer|linebreaks }}
+      </div>
 
-      <ul class="citations-list"
-          id="citations-list-{{ result.request_id|default:'0' }}"
-          hidden
-          role="list"
-          aria-label="Source citations">
-        {% for citation in result.citations %}
-        <li class="citation-card" role="listitem">
-          <div class="citation-card__source">
-            {{ citation.title|default:citation.source_id }}
-          </div>
-          {% if citation.section %}
-          <div class="citation-card__section">
-            Section: {{ citation.section }}
-          </div>
-          {% endif %}
-          {% if citation.quote %}
-          <blockquote class="citation-card__quote">
-            {{ citation.quote|truncatechars:400 }}
-          </blockquote>
-          {% endif %}
-          {% if citation.effective_from %}
-          <div class="citation-card__date">
-            Effective: {{ citation.effective_from }}
-          </div>
-          {% endif %}
-        </li>
-        {% endfor %}
-      </ul>
+      {% if result.citations %}
+      <div class="citations-section" aria-label="Source citations">
+        <button class="citations-toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="citations-list-{{ result.request_id|default:'0' }}"
+                aria-label="Show {{ result.citations|length }} source citation{{ result.citations|length|pluralize }}">
+          {{ result.citations|length }} Source Citation{{ result.citations|length|pluralize }}
+          <svg class="citations-toggle__chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </button>
+
+        <ul class="citations-list"
+            id="citations-list-{{ result.request_id|default:'0' }}"
+            hidden
+            role="list"
+            aria-label="Source citations">
+          {% for citation in result.citations %}
+          <li class="citation-card" role="listitem">
+            <div class="citation-card__source">
+              {{ citation.title|default:citation.source_id }}
+            </div>
+            {% if citation.section %}
+            <div class="citation-card__section">
+              Section: {{ citation.section }}
+            </div>
+            {% endif %}
+            {% if citation.quote %}
+            <blockquote class="citation-card__quote">
+              {{ citation.quote|truncatechars:400 }}
+            </blockquote>
+            {% endif %}
+            {% if citation.effective_from %}
+            <div class="citation-card__date">
+              Effective: {{ citation.effective_from }}
+            </div>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% elif result.state == 'unable_to_answer' or result.state == 'out_of_scope' %}
+      <p style="font-size:var(--text-xs); color:var(--color-text-muted); margin-top:var(--space-4);">
+        No matching sources were found in the corpus for this question.
+      </p>
+      {% endif %}
     </div>
-    {% elif result.state|outcome_css_class == 'unable' %}
-    <p style="font-size:var(--text-xs); color:var(--color-text-muted); margin-top:var(--space-4);">
-      No matching sources were found in the corpus for this question.
-    </p>
+
+    {% if result.state != 'unavailable' and result.state != 'busy' %}
+    <div class="answer-feedback" aria-label="Answer feedback">
+      <span class="answer-feedback__label">Was this helpful?</span>
+      <button type="button" class="feedback-btn"
+              hx-post="{% url 'chat:feedback' %}"
+              hx-vals='{"request_id": "{{ result.request_id|default:'' }}", "rating": "up"}'
+              hx-swap="none"
+              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+              hx-on::after-request="this.disabled=true; this.classList.add('active'); this.closest('.answer-feedback').querySelectorAll('.feedback-btn').forEach(function(b){b.disabled=true;})"
+              aria-label="Mark answer helpful">Yes</button>
+      <button type="button" class="feedback-btn"
+              hx-post="{% url 'chat:feedback' %}"
+              hx-vals='{"request_id": "{{ result.request_id|default:'' }}", "rating": "down"}'
+              hx-swap="none"
+              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+              hx-on::after-request="this.disabled=true; this.classList.add('active'); this.closest('.answer-feedback').querySelectorAll('.feedback-btn').forEach(function(b){b.disabled=true;})"
+              aria-label="Mark answer not helpful">No</button>
+    </div>
     {% endif %}
-  </div>
 
-  <div class="answer-feedback" aria-label="Answer feedback">
-    <span class="answer-feedback__label">Was this helpful?</span>
-    <button type="button" class="feedback-btn" data-feedback="up"
-            data-request-id="{{ result.request_id|default:'' }}">Yes</button>
-    <button type="button" class="feedback-btn" data-feedback="down"
-            data-request-id="{{ result.request_id|default:'' }}">No</button>
-  </div>
+    <div class="answer-disclaimer" role="note">
+      <span>
+        <strong>Not legal advice.</strong>
+        General information from verified corpus sources. Verify with official publications.
+      </span>
+    </div>
 
-  <div class="answer-disclaimer" role="note">
-    <span>
-      <strong>Not legal advice.</strong>
-      General information from verified corpus sources. Verify with official publications.
-    </span>
   </div>
-
 </div>

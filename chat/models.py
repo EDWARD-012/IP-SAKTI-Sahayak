@@ -1,5 +1,5 @@
 """
-chat/models.py — AnswerAudit
+chat/models.py — AnswerAudit + Feedback
 
 DPDP-aligned audit log. Never stores the raw question text.
 Stores only a keyed HMAC fingerprint of the query.
@@ -62,3 +62,27 @@ class AnswerAudit(models.Model):
 
     def __str__(self) -> str:
         return f"[{self.outcome}] {self.request_id} @ {self.created_at:%Y-%m-%d %H:%M}"
+
+
+class Feedback(models.Model):
+    """User thumbs-up / thumbs-down on an assistant answer."""
+
+    RATING_CHOICES = [
+        ("up", "Helpful"),
+        ("down", "Not helpful"),
+    ]
+
+    request_id = models.UUIDField(db_index=True)
+    rating = models.CharField(max_length=8, choices=RATING_CHOICES)
+    category = models.CharField(max_length=64, blank=True, default="")
+    comment = models.TextField(blank=True, default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "chat_feedback"
+        ordering = ["-created_at"]
+        verbose_name = "Feedback"
+        verbose_name_plural = "Feedback"
+
+    def __str__(self) -> str:
+        return f"{self.rating} @ {self.request_id}"

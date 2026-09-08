@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load static %}
 {% load ip_sakti_tags %}
 
-{% block title %}Ask IP-SAKTI — Chat | Ministry of Ayush{% endblock %}
+{% block title %}{% trans "Ask IP-SAKTI" %} — Chat | Ministry of Ayush{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/chat.css' %}" />
@@ -13,7 +14,6 @@
 
 {% block content %}
 
-{# ── Demo mode banner ── #}
 {% if DEMO_MODE %}
 <div class="chat-demo-banner" role="status" aria-live="polite">
   <span class="chat-demo-banner__icon" aria-hidden="true">⚠</span>
@@ -21,63 +21,64 @@
 </div>
 {% endif %}
 
-{# ── Jurisdiction + language bar ── #}
-<div class="chat-juri-bar" role="toolbar" aria-label="Jurisdiction and language settings">
-  <span class="chat-juri-bar__label">Jurisdiction</span>
-  <div class="chat-juri-bar__group" role="group" aria-label="Select jurisdiction">
+<div class="chat-privacy-banner" role="note">
+  <strong>{% trans "Privacy:" %}</strong>
+  {% blocktrans %}Do not paste personal or confidential data (names, Aadhaar, medical records, client files).
+  Under India’s DPDP Act, this demo stores only ephemeral session history and HMAC audit fingerprints — not your question text in the database.{% endblocktrans %}
+</div>
+
+<div class="chat-juri-bar" role="group" aria-label="{% trans 'Jurisdiction and language settings' %}">
+  <span class="chat-juri-bar__label">{% trans "Jurisdiction" %}</span>
+  <div class="chat-juri-bar__group" role="group" aria-label="{% trans 'Select jurisdiction' %}">
     <button type="button"
             class="chat-juri-btn {% if jurisdiction == 'india' or not jurisdiction %}active{% endif %}"
             onclick="setJurisdiction(this, 'india')"
             aria-pressed="{% if jurisdiction == 'india' or not jurisdiction %}true{% else %}false{% endif %}"
-            aria-label="India jurisdiction">
-      🇮🇳 India
+            aria-label="{% trans 'India jurisdiction' %}">
+      🇮🇳 {% trans "India" %}
     </button>
     <button type="button"
             class="chat-juri-btn {% if jurisdiction == 'international' %}active{% endif %}"
             onclick="setJurisdiction(this, 'international')"
             aria-pressed="{% if jurisdiction == 'international' %}true{% else %}false{% endif %}"
-            aria-label="International jurisdiction">
-      🌐 International
+            aria-label="{% trans 'International jurisdiction' %}">
+      🌐 {% trans "International" %}
     </button>
     <button type="button"
             class="chat-juri-btn {% if jurisdiction == 'both' %}active{% endif %}"
             onclick="setJurisdiction(this, 'both')"
             aria-pressed="{% if jurisdiction == 'both' %}true{% else %}false{% endif %}"
-            aria-label="Both India and International jurisdiction">
-      Both
+            aria-label="{% trans 'Both India and International jurisdiction' %}">
+      {% trans "Both" %}
     </button>
   </div>
-  <div class="chat-lang-indicator" aria-label="Current language">
-    <span class="chat-lang-indicator__badge" aria-label="Language: {{ LANGUAGE_CODE }}">{{ LANGUAGE_CODE|upper }}</span>
+  <div class="chat-lang-indicator" aria-label="{% trans 'Current language' %}">
+    <span class="chat-lang-indicator__badge" aria-label="{% blocktrans %}Language: {{ LANGUAGE_CODE }}{% endblocktrans %}">{{ LANGUAGE_CODE|upper }}</span>
     <span>{{ lang_name|default:"English" }}</span>
   </div>
 </div>
 
-{# ── Two-panel layout ── #}
 <div class="chat-layout">
 
-  {# ── Left sidebar (lg+) ── #}
-  <aside class="chat-sidebar" aria-label="Chat sidebar">
+  <aside class="chat-sidebar" aria-label="{% trans 'Chat sidebar' %}">
 
-    {# Corpus info #}
     <div>
-      <p class="chat-sidebar__section-title">Corpus</p>
+      <p class="chat-sidebar__section-title">{% trans "Corpus" %}</p>
       <div class="chat-corpus-info">
         <div class="chat-corpus-info__version">
-          Active version:
+          {% trans "Active version:" %}
           <strong class="chat-corpus-info__ver-badge">{{ active_corpus_version|default:"—" }}</strong>
         </div>
-        <a href="{% url 'corpus:about' %}" class="chat-corpus-info__link" aria-label="Learn about the legal corpus">
-          About this corpus →
+        <a href="{% url 'corpus:about' %}" class="chat-corpus-info__link" aria-label="{% trans 'Learn about the legal corpus' %}">
+          {% trans "About this corpus" %} →
         </a>
       </div>
     </div>
 
-    {# Session history ── last 4 Q&A pairs #}
     <div>
-      <p class="chat-sidebar__section-title">Session History</p>
+      <p class="chat-sidebar__section-title">{% trans "Session History" %}</p>
       {% if session_history %}
-        <ul class="chat-history-list" aria-label="Recent questions in this session">
+        <ul class="chat-history-list" aria-label="{% trans 'Recent questions in this session' %}">
           {% for turn in session_history|slice:":4" %}
           <li class="chat-history-item">
             <span class="chat-history-item__q" title="{{ turn.question }}">
@@ -92,66 +93,69 @@
           {% endfor %}
         </ul>
       {% else %}
-        <p class="chat-history-empty">No questions asked yet in this session.</p>
+        <p class="chat-history-empty">{% trans "No questions asked yet in this session." %}</p>
       {% endif %}
     </div>
 
-    {# Session clear #}
     <div>
       <button type="button"
               class="chat-clear-btn"
               hx-post="{% url 'chat:session_clear' %}"
-              hx-confirm="Clear all session data? This cannot be undone."
-              hx-target="body"
-              hx-swap="none"
-              aria-label="Clear chat session history">
-        🗑 Clear Session
+              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+              hx-confirm="{% trans 'Clear all session data? This cannot be undone.' %}"
+              aria-label="{% trans 'Clear chat session history' %}">
+        🗑 {% trans "Clear Session" %}
       </button>
     </div>
 
-    {# Quick-link to help #}
     <div>
       <a href="{% url 'core:help' %}" style="font-size:var(--text-xs); color:var(--color-text-muted);">
-        ❓ How to use IP-SAKTI →
+        ❓ {% trans "How to use IP-SAKTI" %} →
       </a>
     </div>
 
   </aside>
 
-  {# ── Main chat panel ── #}
-  <section class="chat-main" aria-label="IP-SAKTI chat">
+  <section class="chat-main" aria-label="{% trans 'IP-SAKTI chat' %}">
 
-    {# Thinking indicator (htmx-indicator — always in DOM, shown by HTMX) #}
-    <div id="thinking-indicator"
-         class="htmx-indicator"
+    {# Dedicated polite live region — more reliable than nesting aria-live inside the transcript #}
+    <div id="sr-live"
+         class="sr-only"
          role="status"
          aria-live="polite"
-         aria-label="Processing your question">
+         aria-atomic="true"></div>
+
+    <div id="thinking-indicator"
+         class="htmx-indicator"
+         aria-hidden="true">
       {% include "chat/partials/_thinking.html" %}
     </div>
 
-    {# Answer area (HTMX swap target) #}
     <div id="answer-area"
          class="chat-answer-area"
-         aria-live="polite"
-         aria-atomic="false"
-         tabindex="0"
-         aria-label="Answer area">
+         aria-label="{% trans 'Answer area' %}">
 
-      {# Empty state — replaced by HTMX on first ask #}
       <div class="chat-empty-state ip-fade-in" id="chat-empty-state">
-        <div class="chat-empty-state__stage" aria-hidden="true">
-          <div class="chat-empty-state__canvas" id="chat3d" data-scene3d="chat"></div>
+        <div class="chat-empty-mark" aria-hidden="true">
+          <img src="{% static 'images/ashoka-chakra.svg' %}"
+               alt=""
+               width="72" height="72"
+               class="chat-empty-mark__img" />
         </div>
-        <h2 class="chat-empty-state__title">Ask IP-SAKTI</h2>
+        <h2 class="chat-empty-state__title">{% trans "Ask IP-SAKTI" %}</h2>
         <p class="chat-empty-state__hint">
-          Patents, GI, biodiversity, traditional knowledge — every answer cites a source.
+          {% trans "Patents, GI, biodiversity, traditional knowledge — every answer cites a source." %}
         </p>
+        <div class="chat-chips" role="group" aria-label="{% trans 'Example questions' %}">
+          <button type="button" class="chat-chip" data-q="Can traditional knowledge be patented under Section 3(p)?">{% trans "Section 3(p) TK" %}</button>
+          <button type="button" class="chat-chip" data-q="How do I register a Geographical Indication in India?">{% trans "GI registration" %}</button>
+          <button type="button" class="chat-chip" data-q="Do I need NBA approval to use Indian medicinal plants?">{% trans "NBA / ABS" %}</button>
+          <button type="button" class="chat-chip" data-q="What is Ayurveda Aahara under the 2022 regulations?">{% trans "Ayurveda Aahara" %}</button>
+        </div>
       </div>
 
     </div>
 
-    {# ── Input area ── #}
     <div class="chat-input-area">
       <form id="chat-form"
             class="chat-input-form"
@@ -159,8 +163,9 @@
             hx-target="#answer-area"
             hx-swap="innerHTML"
             hx-indicator="#thinking-indicator"
-            hx-disabled-elt="find .chat-submit-btn"
-            hx-on::after-request="onAskDone(event)"
+            hx-disabled-elt="#chat-question, .chat-submit-btn"
+            hx-sync="this:replace"
+            hx-timeout="180000"
             novalidate
             aria-label="Ask a question">
         {% csrf_token %}
@@ -174,39 +179,38 @@
             id="chat-question"
             name="question"
             class="chat-textarea"
-            placeholder="Ask about patents, GI, biodiversity, TKDL…"
+            placeholder="{% trans 'Ask about patents, GI, biodiversity, TKDL…' %}"
             maxlength="1000"
             autocomplete="off"
-            aria-label="Type your legal question here"
+            aria-label="{% trans 'Type your legal question here' %}"
             aria-describedby="chat-input-hint"
             required
           />
 
-          {# Submit button #}
           <button type="submit"
                   class="gov-btn-primary chat-submit-btn"
-                  aria-label="Submit question to IP-SAKTI">
-            Ask
+                  aria-label="{% trans 'Submit question to IP-SAKTI' %}">
+            {% trans "Ask" %}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/>
             </svg>
           </button>
 
-          {# Cancel button (shown during in-flight request) #}
           <button type="button"
                   class="chat-cancel-btn"
                   hx-delete="{% url 'chat:cancel' %}"
+                  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                   hx-vals='{"request_id":"{{ current_request_id|default:'' }}"}'
                   hx-target="#answer-area"
                   hx-swap="innerHTML"
-                  aria-label="Cancel ongoing request">
-            Cancel
+                  aria-label="{% trans 'Cancel ongoing request' %}">
+            {% trans "Cancel" %}
           </button>
         </div>
 
         <div class="chat-input-hint" id="chat-input-hint">
-          <span>Corpus: <strong>{{ active_corpus_version|default:"none" }}</strong> &middot; Answers cite verified Indian statutes only</span>
-          <span id="char-counter" aria-live="polite" aria-atomic="true">0 / 1000</span>
+          <span>{% blocktrans with ver=active_corpus_version|default:"none" %}Corpus: <strong>{{ ver }}</strong> · Answers cite verified Indian statutes only{% endblocktrans %}</span>
+          <span id="char-counter">0 / 1000</span>
         </div>
       </form>
     </div>
@@ -217,9 +221,9 @@
 {% endblock %}
 
 {% block extra_js %}
-<script type="module" src="{% static 'js/scene3d.js' %}"></script>
 <script>
-  /* ── Jurisdiction toggle ── */
+  var _chatDraft = '';
+
   function setJurisdiction(btn, value) {
     document.querySelectorAll('.chat-juri-btn').forEach(function(b) {
       b.classList.remove('active');
@@ -230,9 +234,58 @@
     document.getElementById('jurisdiction-input').value = value;
   }
 
-  /* ── Character counter ── */
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function announceForScreenReader(message) {
+    var live = document.getElementById('sr-live');
+    if (!live) return;
+    live.textContent = '';
+    window.setTimeout(function () {
+      live.textContent = message;
+    }, 50);
+  }
+
+  function showPendingTurn(question) {
+    var area = document.getElementById('answer-area');
+    if (!area) return;
+    area.innerHTML =
+      '<div class="chat-turn ip-fade-in" id="chat-pending-turn">' +
+        '<div class="chat-user-msg">' +
+          '<span class="chat-user-msg__label">You asked</span>' +
+          '<p class="chat-user-msg__text">' + escapeHtml(question) + '</p>' +
+        '</div>' +
+        '<div class="chat-finding" aria-hidden="true">' +
+          '<div class="chat-finding__visual">' +
+            '<span class="chat-finding__ring"></span>' +
+            '<span class="chat-finding__ring chat-finding__ring--delay"></span>' +
+            '<span class="chat-finding__core"></span>' +
+          '</div>' +
+          '<div class="chat-finding__copy">' +
+            '<p class="chat-finding__title">Finding verified sources…</p>' +
+            '<p class="chat-finding__hint">Searching the active corpus and preparing a cited answer.</p>' +
+            '<div class="ip-thinking">' +
+              '<span class="ip-thinking__dot"></span>' +
+              '<span class="ip-thinking__dot"></span>' +
+              '<span class="ip-thinking__dot"></span>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    area.scrollTop = 0;
+    announceForScreenReader(
+      'You asked: ' + question + '. Finding verified sources. Please wait.'
+    );
+  }
+
   (function () {
-    var ta      = document.getElementById('chat-question');
+    var ta = document.getElementById('chat-question');
     var counter = document.getElementById('char-counter');
     if (!ta || !counter) return;
     function update() { counter.textContent = ta.value.length + ' / 1000'; }
@@ -240,26 +293,81 @@
     update();
   })();
 
-  /* ── After a successful ask: clear the composer ── */
-  function onAskDone(evt) {
-    var ok = evt.detail && (evt.detail.successful || (evt.detail.xhr && evt.detail.xhr.status === 200));
-    if (!ok) return;
-    var ta = document.getElementById('chat-question');
-    if (ta) {
-      ta.value = '';
+  document.querySelectorAll('.chat-chip').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var ta = document.getElementById('chat-question');
+      if (!ta) return;
+      ta.value = chip.getAttribute('data-q') || '';
       ta.dispatchEvent(new Event('input'));
       ta.focus();
-    }
-  }
+    });
+  });
 
-  /* ── Auto-scroll answer area after HTMX swap ── */
-  document.body.addEventListener('htmx:afterSwap', function (evt) {
-    if (evt.detail.target.id === 'answer-area') {
-      evt.detail.target.scrollTo({ top: 0, behavior: 'smooth' });
+  document.body.addEventListener('htmx:configRequest', function (evt) {
+    if (evt.detail.elt && evt.detail.elt.id === 'chat-form') {
+      var ta = document.getElementById('chat-question');
+      _chatDraft = ta ? ta.value.trim() : '';
+      if (_chatDraft) evt.detail.parameters.question = _chatDraft;
     }
   });
 
-  /* ── Citation accordion ── */
+  document.body.addEventListener('htmx:beforeRequest', function (evt) {
+    if (!(evt.detail.elt && evt.detail.elt.id === 'chat-form')) return;
+    var ta = document.getElementById('chat-question');
+    var q = _chatDraft || (ta ? ta.value.trim() : '');
+    if (q) showPendingTurn(q);
+    if (ta) {
+      ta.value = '';
+      ta.dispatchEvent(new Event('input'));
+    }
+  });
+
+  document.body.addEventListener('htmx:responseError', function (evt) {
+    if (evt.detail.elt && evt.detail.elt.id === 'chat-form') {
+      var ta = document.getElementById('chat-question');
+      if (ta && _chatDraft) {
+        ta.value = _chatDraft;
+        ta.dispatchEvent(new Event('input'));
+      }
+    }
+  });
+
+  document.body.addEventListener('htmx:sendError', function (evt) {
+    if (evt.detail.elt && evt.detail.elt.id === 'chat-form') {
+      var ta = document.getElementById('chat-question');
+      if (ta && _chatDraft) {
+        ta.value = _chatDraft;
+        ta.dispatchEvent(new Event('input'));
+      }
+    }
+  });
+
+  document.body.addEventListener('htmx:beforeSwap', function (evt) {
+    var status = evt.detail.xhr && evt.detail.xhr.status;
+    if (status === 422 || status === 429 || status === 500 || status === 503) {
+      evt.detail.shouldSwap = true;
+      evt.detail.isError = false;
+    }
+  });
+
+  document.body.addEventListener('htmx:afterSwap', function (evt) {
+    if (evt.detail.target.id !== 'answer-area') return;
+    evt.detail.target.scrollTo({ top: 0, behavior: 'smooth' });
+    var turn = evt.detail.target.querySelector('#chat-answer-turn, .chat-turn, [role="alert"]');
+    if (turn) {
+      if (!turn.hasAttribute('tabindex')) turn.setAttribute('tabindex', '-1');
+      try { turn.focus({ preventScroll: true }); } catch (e) { turn.focus(); }
+      var evidence = turn.getAttribute('data-evidence');
+      if (evidence) {
+        announceForScreenReader('Answer ready. Evidence quality: ' + evidence + '.');
+      } else if (turn.getAttribute('role') === 'alert') {
+        announceForScreenReader(turn.innerText || 'An error occurred.');
+      } else {
+        announceForScreenReader('Answer ready.');
+      }
+    }
+  });
+
   document.body.addEventListener('click', function (evt) {
     var toggle = evt.target.closest('.citations-toggle');
     if (!toggle) return;

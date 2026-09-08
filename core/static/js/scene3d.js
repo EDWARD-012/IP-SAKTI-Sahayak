@@ -130,16 +130,47 @@ function initScene(el) {
   const hubLight = new THREE.PointLight(0xffc857, 2.4, 18);
   scene.add(hubLight);
 
-  const scale = isHero ? 1.05 : 0.72;
+  const scale = isHero ? 1.15 : 0.72;
   const wheel = buildChakra(scale);
   if (isHero) {
-    wheel.position.set(3.6, 0.15, 0);
-    wheel.rotation.y = -0.55;
-    wheel.rotation.x = 0.18;
+    wheel.position.set(0, 0.2, -0.8);
+    wheel.rotation.y = 0;
+    wheel.rotation.x = 0.12;
   }
   scene.add(wheel);
 
-  const stars = starfield(isHero ? 520 : 180, isHero ? [36, 20, 16] : [16, 12, 10]);
+  // Orbiting Knowledge Halo Nodes (Ayurveda statutes, TKDL, Patents, ABS)
+  const nodeCount = isHero ? 36 : 12;
+  const nodeGeo = new THREE.BufferGeometry();
+  const nodePos = new Float32Array(nodeCount * 3);
+  const nodeCol = new Float32Array(nodeCount * 3);
+  const haloRadius = 6.2 * scale;
+  for (let i = 0; i < nodeCount; i++) {
+    const angle = (i / nodeCount) * Math.PI * 2;
+    nodePos[i * 3]     = Math.cos(angle) * haloRadius + (Math.random() - 0.5) * 0.8;
+    nodePos[i * 3 + 1] = Math.sin(angle) * haloRadius + (Math.random() - 0.5) * 0.8;
+    nodePos[i * 3 + 2] = (Math.random() - 0.5) * 1.5;
+    // Saffron, gold, cyan, white
+    if (i % 4 === 0) { nodeCol[i*3]=1.0; nodeCol[i*3+1]=0.6; nodeCol[i*3+2]=0.2; }
+    else if (i % 4 === 1) { nodeCol[i*3]=1.0; nodeCol[i*3+1]=0.85; nodeCol[i*3+2]=0.25; }
+    else if (i % 4 === 2) { nodeCol[i*3]=0.2; nodeCol[i*3+1]=0.8; nodeCol[i*3+2]=0.5; }
+    else { nodeCol[i*3]=0.8; nodeCol[i*3+1]=0.92; nodeCol[i*3+2]=1.0; }
+  }
+  nodeGeo.setAttribute('position', new THREE.BufferAttribute(nodePos, 3));
+  nodeGeo.setAttribute('color', new THREE.BufferAttribute(nodeCol, 3));
+  const nodeMat = new THREE.PointsMaterial({
+    size: 0.14,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.9,
+    sizeAttenuation: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+  const haloNodes = new THREE.Points(nodeGeo, nodeMat);
+  if (isHero) scene.add(haloNodes);
+
+  const stars = starfield(isHero ? 580 : 180, isHero ? [42, 24, 20] : [16, 12, 10]);
   scene.add(stars);
 
   let targetRX = wheel.rotation.x;
@@ -150,8 +181,8 @@ function initScene(el) {
       const rect = el.getBoundingClientRect();
       const nx = (e.clientX - rect.left) / Math.max(rect.width, 1) - 0.5;
       const ny = (e.clientY - rect.top) / Math.max(rect.height, 1) - 0.5;
-      targetRY = (isHero ? -0.55 : 0) + nx * 0.55;
-      targetRX = (isHero ? 0.18 : 0) + ny * 0.35;
+      targetRY = nx * 0.45;
+      targetRX = (isHero ? 0.12 : 0) + ny * 0.3;
     });
   }
 
@@ -171,16 +202,21 @@ function initScene(el) {
 
   function frame() {
     const t = clock.getElapsedTime();
-    wheel.rotation.z = t * 0.12;
+    wheel.rotation.z = t * 0.1;
     wheel.rotation.y += (targetRY - wheel.rotation.y) * 0.045;
     wheel.rotation.x += (targetRX - wheel.rotation.x) * 0.045;
-    wheel.position.y = (isHero ? 0.15 : 0) + Math.sin(t * 0.55) * 0.28;
-    if (wheel.userData.gyroA) wheel.userData.gyroA.rotation.z = t * 0.35;
-    if (wheel.userData.gyroB) wheel.userData.gyroB.rotation.x = t * -0.28;
+    wheel.position.y = (isHero ? 0.15 : 0) + Math.sin(t * 0.6) * 0.18;
+    if (wheel.userData.gyroA) wheel.userData.gyroA.rotation.z = t * 0.28;
+    if (wheel.userData.gyroB) wheel.userData.gyroB.rotation.x = t * -0.22;
+    if (haloNodes) {
+      haloNodes.rotation.z = -t * 0.05;
+      haloNodes.rotation.x = Math.sin(t * 0.2) * 0.15;
+      haloNodes.rotation.y = Math.cos(t * 0.2) * 0.15;
+    }
     hubLight.position.copy(wheel.position);
-    hubLight.intensity = 2.1 + Math.sin(t * 2.2) * 0.5;
-    stars.rotation.y = t * 0.012;
-    stars.rotation.x = Math.sin(t * 0.08) * 0.04;
+    hubLight.intensity = 2.2 + Math.sin(t * 2.0) * 0.6;
+    stars.rotation.y = t * 0.008;
+    stars.rotation.x = Math.sin(t * 0.06) * 0.03;
     renderer.render(scene, camera);
     if (running) rafId = requestAnimationFrame(frame);
   }

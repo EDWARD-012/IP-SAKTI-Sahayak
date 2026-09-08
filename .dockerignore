@@ -1,0 +1,12 @@
+.venv
+venv
+__pycache__
+.git
+chroma_db
+db.sqlite3
+.env
+data/raw
+data/staging
+*.pdf
+.agents
+.cursor

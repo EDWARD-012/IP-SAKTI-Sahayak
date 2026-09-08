@@ -150,7 +150,9 @@
    Missing scripts (Odia, Gurmukhi, Perso-Arabic, Meetei, Ol Chiki) fall back
    to system fonts until their @fontsource files are added — see FONTS.md. */
 :root {
-  --font-multilingual:
+  --font-sans:
+    "Plus Jakarta Sans",
+    "Outfit",
     "Noto Sans",
     "Noto Sans Devanagari",
     "Noto Sans Bengali",
@@ -159,9 +161,17 @@
     "Noto Sans Gujarati",
     "Noto Sans Kannada",
     "Noto Sans Malayalam",
-    system-ui, "Segoe UI", Arial, sans-serif;
+    system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-heading:
+    "Outfit",
+    "Plus Jakarta Sans",
+    "Noto Sans",
+    system-ui, -apple-system, sans-serif;
+  --font-multilingual: var(--font-sans);
 }
 
 body {
-  font-family: var(--font-multilingual);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

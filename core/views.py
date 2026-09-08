@@ -1,18 +1,20 @@
 """
 core/views.py — Core page views.
 
-Provides home, language switching, and static informational pages.
+Provides home, language switching, health, and static informational pages.
 All views are function-based for simplicity and testability.
 """
 from __future__ import annotations
 
 import logging
+import urllib.error
+import urllib.request
 
 from django.conf import settings
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import translation
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_GET, require_POST
 
 logger = logging.getLogger("ip_sakti")
 
@@ -30,34 +32,83 @@ def set_language(request: HttpRequest) -> HttpResponse:
 
     Expects POST field: ``language`` (BCP-47 code, e.g. "hi", "ta").
     """
+    from django.contrib import messages
+
+    # Django 5.x: LANGUAGE_SESSION_KEY lives on settings (default "django_language"),
+    # not django.utils.translation.
+    session_key = getattr(settings, "LANGUAGE_SESSION_KEY", "django_language")
+
     language = request.POST.get("language", "en").strip()
 
-    # Validate against configured LANGUAGES
     valid_codes = {code for code, _label in settings.LANGUAGES}
     if language not in valid_codes:
         language = settings.LANGUAGE_CODE
 
-    # Persist in session (LocaleMiddleware reads django_language key)
-    request.session["django_language"] = language
-
-    # Activate for the current response so any rendered content uses the new lang
+    request.session[session_key] = language
+    request.session.modified = True
     translation.activate(language)
+
+    if language not in ("en", "hi"):
+        messages.warning(
+            request,
+            "Language preference saved, but full UI translation is not available yet "
+            f"for this Pilot language ({language}). The interface stays in English — "
+            "see GAPS.md.",
+        )
+    elif language == "hi":
+        messages.success(
+            request,
+            "भाषा हिंदी पर सेट हो गई। मुख्य नेविगेशन और होम हीरो हिंदी में दिखेंगे।",
+        )
 
     referer = request.META.get("HTTP_REFERER") or "/"
     response = redirect(referer)
-
-    # Also write the language cookie so LocaleMiddleware picks it up on next request
     response.set_cookie(
         key=settings.LANGUAGE_COOKIE_NAME,
         value=language,
-        max_age=settings.LANGUAGE_COOKIE_AGE,
-        path=settings.LANGUAGE_COOKIE_PATH,
-        domain=settings.LANGUAGE_COOKIE_DOMAIN,
-        secure=settings.LANGUAGE_COOKIE_SECURE,
-        httponly=settings.LANGUAGE_COOKIE_HTTPONLY,
-        samesite=settings.LANGUAGE_COOKIE_SAMESITE,
+        max_age=getattr(settings, "LANGUAGE_COOKIE_AGE", 60 * 60 * 24 * 365),
+        path=getattr(settings, "LANGUAGE_COOKIE_PATH", "/"),
+        domain=getattr(settings, "LANGUAGE_COOKIE_DOMAIN", None),
+        secure=bool(getattr(settings, "LANGUAGE_COOKIE_SECURE", False)),
+        httponly=bool(getattr(settings, "LANGUAGE_COOKIE_HTTPONLY", False)),
+        samesite=getattr(settings, "LANGUAGE_COOKIE_SAMESITE", "Lax") or "Lax",
     )
     return response
+
+
+def _ollama_reachable() -> bool:
+    """Probe local Ollama /api/tags with a short timeout."""
+    base = getattr(settings, "OLLAMA_BASE_URL", "http://127.0.0.1:11434").rstrip("/")
+    url = f"{base}/api/tags"
+    try:
+        req = urllib.request.Request(url, method="GET")
+        with urllib.request.urlopen(req, timeout=2) as resp:
+            return 200 <= resp.status < 300
+    except (urllib.error.URLError, TimeoutError, OSError, ValueError) as exc:
+        logger.debug("Ollama health probe failed: %s", exc)
+        return False
+
+
+def _active_corpus_version() -> str:
+    try:
+        from corpus.models import CorpusVersion
+        cv = CorpusVersion.objects.filter(status="active").first()
+        return cv.version if cv else "none"
+    except Exception:
+        return "none"
+
+
+@require_GET
+def health(request: HttpRequest) -> JsonResponse:
+    """GET /health/ — lightweight readiness JSON for SIH laptop demo."""
+    payload = {
+        "status": "ok",
+        "demo_mode": bool(getattr(settings, "DEMO_MODE", True)),
+        "ollama_reachable": _ollama_reachable(),
+        "active_corpus_version": _active_corpus_version(),
+        "debug": bool(settings.DEBUG),
+    }
+    return JsonResponse(payload)
 
 
 def screen_reader(request: HttpRequest) -> HttpResponse:

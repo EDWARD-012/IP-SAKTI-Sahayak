@@ -11,6 +11,10 @@ demonstration; it is not a substitute for legal, regulatory or medical advice.
 
 **Build guide:** [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) — **v4.3**
 
+**SIH technical documentation (full):** [docs/SIH26045_Technical_Documentation.md](./docs/SIH26045_Technical_Documentation.md)
+
+**Open gaps:** [GAPS.md](./GAPS.md) — language UI + live model status included
+
 **End-user guide:** [USER_GUIDE.md](./USER_GUIDE.md)
 
 **Audit resolution:** [AUDIT_RESOLUTION.md](./AUDIT_RESOLUTION.md)

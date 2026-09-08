@@ -27,11 +27,11 @@ RUN python manage.py collectstatic --no-input
 RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
 USER appuser
 
-# Gunicorn: 1 worker (embedded Chroma read-only), 4 threads
-CMD ["gunicorn", "ip_sakti.wsgi:application", \
-     "--workers", "1", \
-     "--threads", "4", \
-     "--timeout", "120", \
-     "--bind", "0.0.0.0:8000"]
+# Railway / PaaS inject PORT; default 8000 for local docker
+ENV PORT=8000
+CMD sh -c "python manage.py migrate --noinput && \
+    gunicorn ip_sakti.wsgi:application \
+      --workers 1 --threads 4 --timeout 120 \
+      --bind 0.0.0.0:${PORT}"
 
 EXPOSE 8000

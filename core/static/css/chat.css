@@ -263,20 +263,33 @@ body.chat-lock .site-main.chat-page {
   text-align: center;
   padding: var(--space-4);
 }
-.chat-empty-state__stage {
-  width: min(100%, 220px);
-  height: 140px;
-  position: relative;
-  margin: 0 auto;
+.chat-empty-mark {
+  width: 88px;
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-2);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-primary-light) 80%, transparent);
+  border: 1px solid var(--color-border);
 }
-.chat-empty-state__canvas {
-  position: absolute;
-  inset: 0;
-}
-.chat-empty-state__canvas canvas {
-  width: 100% !important;
-  height: 100% !important;
+.chat-empty-mark__img {
+  width: 56px;
+  height: 56px;
   display: block;
+  opacity: 0.92;
+}
+
+/* Dark theme: navy chakra (#003087) disappears on navy bg — use light mark */
+html[data-theme="dark"] .chat-empty-mark {
+  background: color-mix(in srgb, #ffffff 12%, transparent);
+  border-color: color-mix(in srgb, #ffffff 28%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--gov-saffron) 35%, transparent);
+}
+html[data-theme="dark"] .chat-empty-mark__img {
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
 }
 .chat-empty-state__title {
   font-size: var(--text-lg);
@@ -290,6 +303,47 @@ body.chat-lock .site-main.chat-page {
   max-width: 40ch;
   line-height: var(--leading-relaxed);
   margin: 0;
+}
+
+/* Example question chips */
+.chat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
+  max-width: 42rem;
+  margin-top: var(--space-3);
+}
+.chat-chip {
+  appearance: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-family: inherit;
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: border-color var(--duration-fast), color var(--duration-fast), background var(--duration-fast);
+}
+.chat-chip:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+/* Compact DPDP / privacy banner */
+.chat-privacy-banner {
+  flex-shrink: 0;
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: var(--color-text-secondary);
+  background: var(--color-surface-raised);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-2) var(--space-6);
+}
+.chat-privacy-banner strong {
+  color: var(--color-text);
 }
 
 /* ── Chat input area ──────────────────────────────────────── */
@@ -383,17 +437,124 @@ body.chat-lock .site-main.chat-page {
   align-items: center;
   justify-content: center;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-6);
+  padding: var(--space-2) var(--space-6);
   color: var(--color-text);
   font-size: var(--text-sm);
-  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--color-border);
 }
-/* HTMX controls visibility: show when request active */
-.htmx-indicator { display: none; }
-.htmx-request .htmx-indicator { display: flex; }
-.htmx-request.htmx-indicator  { display: flex; }
+#thinking-indicator.htmx-request,
+.htmx-request #thinking-indicator {
+  display: flex !important;
+}
+.chat-finding-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* User question + finding animation */
+.chat-turn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 52rem;
+  margin: 0 auto;
+}
+.chat-user-msg {
+  align-self: flex-end;
+  max-width: min(100%, 36rem);
+  background: var(--color-primary);
+  color: #ffffff;
+  border-radius: 16px 16px 4px 16px;
+  padding: 12px 16px;
+  box-shadow: 0 6px 18px rgba(0, 48, 135, 0.18);
+}
+.chat-user-msg__label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+.chat-user-msg__text {
+  margin: 0;
+  font-size: var(--text-base);
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.chat-finding {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--gov-saffron);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+}
+.chat-finding__visual {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+}
+.chat-finding__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--gov-saffron);
+  border-right-color: var(--color-primary);
+  animation: chat-find-spin 1.1s linear infinite;
+}
+.chat-finding__ring--delay {
+  inset: 8px;
+  animation-duration: 1.6s;
+  animation-direction: reverse;
+  border-top-color: var(--gov-green);
+  border-right-color: var(--gov-saffron);
+}
+.chat-finding__core {
+  position: absolute;
+  inset: 18px;
+  border-radius: 50%;
+  background: var(--gov-saffron);
+  box-shadow: 0 0 0 0 rgba(255, 153, 51, 0.45);
+  animation: chat-find-pulse 1.4s ease-in-out infinite;
+}
+.chat-finding__copy { min-width: 0; }
+.chat-finding__title {
+  margin: 0 0 4px;
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+.chat-finding__hint {
+  margin: 0 0 10px;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.45;
+}
+@keyframes chat-find-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes chat-find-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 153, 51, 0.4); }
+  50% { transform: scale(1.08); box-shadow: 0 0 0 10px rgba(255, 153, 51, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chat-finding__ring,
+  .chat-finding__ring--delay,
+  .chat-finding__core { animation: none; }
+}
 
 /* ── Answer card ──────────────────────────────────────────── */
 .answer-card {

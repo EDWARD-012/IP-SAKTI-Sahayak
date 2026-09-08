@@ -5,56 +5,96 @@
 
 {% block content %}
 <div class="page-inner" style="padding-top:32px; padding-bottom:48px;">
-  <h1 class="gov-section-title ip-fade-in" style="font-size:1.6rem; margin-bottom:24px;">Screen Reader Accessibility</h1>
-  <p style="font-size:0.9rem; color:var(--color-text-secondary);">GIGW 3.0 compliant accessibility information.</p>
+  <h1 class="gov-section-title ip-fade-in" style="font-size:1.6rem; margin-bottom:12px;" id="sr-page-title">
+    Screen Reader Access
+  </h1>
+  <p style="font-size:0.95rem; color:var(--color-text-secondary); max-width:46rem; line-height:1.7;">
+    This website follows Guidelines for Indian Government Websites (GIGW) accessibility practices
+    and is designed to work with assistive technologies such as screen readers.
+  </p>
+
+  <div class="gov-card ip-fade-in" style="margin-top:24px; margin-bottom:20px;">
+    <h2 style="font-size:1.05rem; color:var(--color-primary); margin-top:0;">Compatible screen readers</h2>
+    <p style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.7;">
+      Visitors with visual impairments can access IP-SAKTI Sahayak using assistive technologies.
+      The following screen readers are commonly used with Indian government websites:
+    </p>
+    <div style="overflow-x:auto;">
+      <table class="gov-table" style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+        <caption class="sr-only">Information about different screen readers</caption>
+        <thead>
+          <tr style="background:var(--color-primary); color:#fff; text-align:left;">
+            <th scope="col" style="padding:10px 12px;">Screen Reader</th>
+            <th scope="col" style="padding:10px 12px;">Website</th>
+            <th scope="col" style="padding:10px 12px;">Free / Commercial</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--color-border);">
+            <td style="padding:10px 12px;">Non Visual Desktop Access (NVDA)</td>
+            <td style="padding:10px 12px;"><a href="https://www.nvaccess.org/" rel="noopener noreferrer" target="_blank">nvaccess.org</a></td>
+            <td style="padding:10px 12px;">Free</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--color-border);">
+            <td style="padding:10px 12px;">JAWS (Job Access With Speech)</td>
+            <td style="padding:10px 12px;"><a href="https://www.freedomscientific.com/products/software/jaws/" rel="noopener noreferrer" target="_blank">freedomscientific.com</a></td>
+            <td style="padding:10px 12px;">Commercial</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--color-border);">
+            <td style="padding:10px 12px;">Narrator (Windows)</td>
+            <td style="padding:10px 12px;"><a href="https://support.microsoft.com/windows/complete-guide-to-narrator" rel="noopener noreferrer" target="_blank">Microsoft Support</a></td>
+            <td style="padding:10px 12px;">Free (built-in)</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--color-border);">
+            <td style="padding:10px 12px;">VoiceOver (Apple)</td>
+            <td style="padding:10px 12px;"><a href="https://www.apple.com/accessibility/vision/" rel="noopener noreferrer" target="_blank">apple.com/accessibility</a></td>
+            <td style="padding:10px 12px;">Free (built-in)</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 12px;">TalkBack (Android)</td>
+            <td style="padding:10px 12px;"><a href="https://support.google.com/accessibility/android/answer/6283677" rel="noopener noreferrer" target="_blank">Google Accessibility</a></td>
+            <td style="padding:10px 12px;">Free (built-in)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
   <div class="gov-card ip-fade-in" style="margin-bottom:20px;">
-    <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">Keyboard Navigation</h2>
+    <h2 style="font-size:1.05rem; color:var(--color-primary); margin-top:0;">How to use this site with a screen reader</h2>
     <ul style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.8;">
-      <li><kbd>Tab</kbd> — Move to next interactive element</li>
-      <li><kbd>Shift</kbd>+<kbd>Tab</kbd> — Move to previous interactive element</li>
-      <li><kbd>Enter</kbd> / <kbd>Space</kbd> — Activate buttons and links</li>
-      <li><kbd>Ctrl</kbd>+<kbd>Enter</kbd> — Submit chat question (in chat interface)</li>
-      <li><kbd>Esc</kbd> — Close expanded sections</li>
+      <li>Press <kbd>Tab</kbd> on page load to reveal <strong>Skip to Main Content</strong>, then press <kbd>Enter</kbd>.</li>
+      <li>Use heading navigation (for example NVDA: <kbd>H</kbd> / <kbd>Shift</kbd>+<kbd>H</kbd>) to move between sections.</li>
+      <li>Font size controls (<strong>A+</strong> / <strong>A</strong> / <strong>A-</strong>) and theme toggle are in the accessibility bar at the top of every page.</li>
+      <li>Language can be changed from the main navigation; the page reloads in the selected language.</li>
     </ul>
   </div>
 
   <div class="gov-card ip-fade-in" style="margin-bottom:20px;">
-    <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">Skip Links</h2>
-    <p style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.7;">
-      A "Skip to Main Content" link appears at the top of every page when focused.
-      Press <kbd>Tab</kbd> on page load to reveal it.
-    </p>
-  </div>
-
-  <div class="gov-card ip-fade-in" style="margin-bottom:20px;">
-    <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">Language Selection</h2>
-    <p style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.7;">
-      The language selector is in the navigation bar. Use <kbd>Tab</kbd> to reach it,
-      arrow keys to select a language, and <kbd>Enter</kbd> to confirm.
-      The page reloads in the selected language.
-    </p>
-  </div>
-
-  <div class="gov-card ip-fade-in" style="margin-bottom:20px;">
-    <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">Font Size Controls</h2>
-    <p style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.7;">
-      The accessibility bar at the top offers A+, A, A- controls for increasing,
-      resetting, or decreasing the base font size. Your preference persists across pages.
-    </p>
+    <h2 style="font-size:1.05rem; color:var(--color-primary); margin-top:0;">Keyboard shortcuts</h2>
+    <ul style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.8;">
+      <li><kbd>Tab</kbd> — Next interactive element</li>
+      <li><kbd>Shift</kbd>+<kbd>Tab</kbd> — Previous interactive element</li>
+      <li><kbd>Enter</kbd> / <kbd>Space</kbd> — Activate buttons and links</li>
+      <li><kbd>Enter</kbd> — Submit the chat question when focus is in the Ask field</li>
+      <li><kbd>Esc</kbd> — Close expanded citation panels (where supported)</li>
+    </ul>
   </div>
 
   <div class="gov-card ip-fade-in">
-    <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">Chat Interface</h2>
-    <p style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.7;">
-      In the chat interface:
-    </p>
+    <h2 style="font-size:1.05rem; color:var(--color-primary); margin-top:0;">Chat assistant announcements</h2>
     <ul style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.8;">
-      <li>The answer area has <code>role="live"</code> and announces new answers to screen readers automatically.</li>
-      <li>Evidence labels are announced with full text (e.g. "Strong evidence").</li>
-      <li>Citations can be expanded with <kbd>Enter</kbd> or <kbd>Space</kbd>.</li>
-      <li>The "thinking" animation is hidden from screen readers (<code>aria-hidden="true"</code>).</li>
+      <li>After you submit a question, a live region announces that your question was received and that sources are being searched.</li>
+      <li>When the answer arrives, focus moves to the answer region and the evidence status is announced.</li>
+      <li>Evidence labels are read in full (for example “Strong evidence”).</li>
+      <li>Expand citations with <kbd>Enter</kbd> or <kbd>Space</kbd> on the citations button.</li>
+      <li>Decorative loading graphics are hidden from assistive technology; status text is announced instead.</li>
     </ul>
+    <p style="font-size:0.9rem; margin-bottom:0;">
+      <a href="{% url 'chat:chat' %}">Go to Ask IP-SAKTI</a>
+      ·
+      <a href="{% url 'core:help' %}">Help</a>
+    </p>
   </div>
 </div>
 {% endblock %}

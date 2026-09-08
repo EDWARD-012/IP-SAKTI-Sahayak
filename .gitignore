@@ -60,3 +60,7 @@ build/
 *.pem
 *.key
 secrets.json
+
+# Local agent tooling
+.agents/
+

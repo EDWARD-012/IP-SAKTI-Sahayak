@@ -1,0 +1,23 @@
+{# Reference markup for pending turn — chat.html injects the live version via JS #}
+<div class="chat-turn ip-fade-in" id="chat-pending-turn">
+  <div class="chat-user-msg">
+    <span class="chat-user-msg__label">You asked</span>
+    <p class="chat-user-msg__text">{{ question }}</p>
+  </div>
+  <div class="chat-finding" aria-hidden="true">
+    <div class="chat-finding__visual">
+      <span class="chat-finding__ring"></span>
+      <span class="chat-finding__ring chat-finding__ring--delay"></span>
+      <span class="chat-finding__core"></span>
+    </div>
+    <div class="chat-finding__copy">
+      <p class="chat-finding__title">Finding verified sources…</p>
+      <p class="chat-finding__hint">Searching the active corpus and preparing a cited answer.</p>
+      <div class="ip-thinking">
+        <span class="ip-thinking__dot"></span>
+        <span class="ip-thinking__dot"></span>
+        <span class="ip-thinking__dot"></span>
+      </div>
+    </div>
+  </div>
+</div>

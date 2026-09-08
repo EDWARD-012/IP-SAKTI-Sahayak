@@ -1,3 +1,5 @@
+{% load i18n %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE|default:'en' }}"
       dir="{% if LANGUAGE_CODE in 'ur,sd,ks' %}rtl{% else %}ltr{% endif %}">
@@ -8,7 +10,6 @@
   <meta name="color-scheme" content="light dark" />
   <title>{% block title %}IP-SAKTI Sahayak — Ministry of Ayush{% endblock %}</title>
 
-  {% load static %}
 
   {# Apply saved theme BEFORE CSS so the first paint is not a flash. #}
   <script>
@@ -22,7 +23,7 @@
     })();
   </script>
 
-  {# ── Design system ── #}
+  {# ── Design system (offline fonts — CSP blocks Google Fonts CDN) ── #}
   <link rel="stylesheet" href="{% static 'css/fonts.css' %}" />
   <link rel="stylesheet" href="{% static 'css/tokens.css' %}" />
   <link rel="stylesheet" href="{% static 'css/gov-style.css' %}" />
@@ -44,11 +45,12 @@
     *, *::before, *::after { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: system-ui, "Noto Sans", "Segoe UI", Arial, sans-serif;
+      font-family: var(--font-sans);
       background: var(--color-bg);
       color: var(--color-text);
       line-height: 1.6;
       font-size: 1rem;
+      -webkit-font-smoothing: antialiased;
     }
     .skip-link {
       position: absolute;
@@ -85,19 +87,19 @@
   </div>
 
   {# ── 2. Accessibility bar ── #}
-  <div class="gov-a11y-bar" role="toolbar" aria-label="Accessibility tools">
+  <nav class="gov-a11y-bar" aria-label="Accessibility tools">
     <a href="#main-content">Skip to Main Content</a>
-    <span class="gov-a11y-bar__sep">|</span>
-    <a href="{% url 'core:screen_reader' %}" aria-label="Screen reader access page">Screen Reader</a>
-    <span class="gov-a11y-bar__sep">|</span>
-    <span aria-label="Font size controls" class="gov-a11y-bar__font-btns">
-      <button type="button" class="js-font-btn" data-font-size="large" title="Increase font size" aria-label="Increase font size">A+</button>
-      <span class="gov-a11y-bar__sep">|</span>
-      <button type="button" class="js-font-btn" data-font-size="normal" title="Reset font size" aria-label="Reset font size">A</button>
-      <span class="gov-a11y-bar__sep">|</span>
-      <button type="button" class="js-font-btn" data-font-size="small" title="Decrease font size" aria-label="Decrease font size">A-</button>
+    <span class="gov-a11y-bar__sep" aria-hidden="true">|</span>
+    <a href="{% url 'core:screen_reader' %}">Screen Reader Access</a>
+    <span class="gov-a11y-bar__sep" aria-hidden="true">|</span>
+    <span class="gov-a11y-bar__font-btns" role="group" aria-label="Font size controls">
+      <button type="button" class="js-font-btn" data-font-size="large" title="Increase font size" aria-label="Increase font size" aria-pressed="false">A+</button>
+      <span class="gov-a11y-bar__sep" aria-hidden="true">|</span>
+      <button type="button" class="js-font-btn" data-font-size="normal" title="Reset font size" aria-label="Reset font size" aria-pressed="true">A</button>
+      <span class="gov-a11y-bar__sep" aria-hidden="true">|</span>
+      <button type="button" class="js-font-btn" data-font-size="small" title="Decrease font size" aria-label="Decrease font size" aria-pressed="false">A-</button>
     </span>
-    <span class="gov-a11y-bar__sep">|</span>
+    <span class="gov-a11y-bar__sep" aria-hidden="true">|</span>
     <button type="button" class="gov-theme-toggle" id="theme-toggle"
             aria-pressed="false" aria-label="Switch to dark theme">
       <span class="gov-theme-toggle__icon gov-theme-toggle__sun" aria-hidden="true">
@@ -113,7 +115,7 @@
       </span>
       <span class="gov-theme-toggle__text">Dark</span>
     </button>
-  </div>
+  </nav>
 
   {# ── 3. Main government header ── #}
   <header class="gov-header" role="banner">
@@ -156,16 +158,16 @@
     <ul class="gov-navbar__links" role="list">
       <li><a href="{% url 'core:home' %}"
              {% if request.resolver_match.url_name == 'home' %}class="active" aria-current="page"{% endif %}>
-        Home</a></li>
+        {% trans "Home" %}</a></li>
       <li><a href="{% url 'wizard:start' %}"
              {% if 'wizard' in request.resolver_match.namespace %}class="active" aria-current="page"{% endif %}>
-        Formulation Wizard</a></li>
+        {% trans "Formulation Wizard" %}</a></li>
       <li><a href="{% url 'chat:chat' %}"
              {% if 'chat' in request.resolver_match.namespace %}class="active" aria-current="page"{% endif %}>
-        Ask IP-SAKTI</a></li>
+        {% trans "Ask IP-SAKTI" %}</a></li>
       <li><a href="{% url 'corpus:about' %}"
              {% if 'corpus' in request.resolver_match.namespace %}class="active" aria-current="page"{% endif %}>
-        About Corpus</a></li>
+        {% trans "About Corpus" %}</a></li>
     </ul>
 
     {# Language selector ── all 22 Eighth Schedule + English #}
@@ -178,13 +180,28 @@
           {% for code, label in LANGUAGES %}
           <option value="{{ code }}"
                   {% if code == LANGUAGE_CODE %}selected{% endif %}>
-            {{ label }}
+            {{ label }} · {% if code == 'en' or code == 'hi' %}Verified{% else %}Pilot{% endif %}
           </option>
           {% endfor %}
         </select>
       </form>
     </div>
   </nav>
+
+  {% if LANGUAGE_CODE and LANGUAGE_CODE != 'en' and LANGUAGE_CODE != 'hi' %}
+  <div class="gov-lang-honesty" role="status" aria-live="polite">
+    <strong>Language note:</strong>
+    Preference saved as <code>{{ LANGUAGE_CODE|upper }}</code>.
+    Full UI translation is not shipped yet for this Pilot language (nav chrome is English;
+    IndicTrans2 query↔answer pivot is optional and not installed).
+    Verified UI path today is English; Hindi covers critical nav/chat chrome only —
+    see <code>GAPS.md</code>.
+  </div>
+  {% elif LANGUAGE_CODE == 'hi' %}
+  <div class="gov-lang-honesty" role="status" aria-live="polite">
+    <strong>भाषा:</strong> होम और मुख्य नेविगेशन हिंदी में हैं। Wizard के कुछ पृष्ठ अभी अंग्रेज़ी में रह सकते हैं।
+  </div>
+  {% endif %}
 
   {# ── Flash messages ── #}
   {% if messages %}
@@ -215,24 +232,24 @@
   {# FOOTER — GOI standard footer #}
   <footer class="gov-footer" role="contentinfo">
     <nav class="gov-footer__links" aria-label="Footer navigation">
-      <a href="{% url 'core:home' %}">Home</a>
-      <a href="{% url 'corpus:about' %}">About the Corpus</a>
-      <a href="{% url 'core:privacy' %}">Privacy Policy</a>
-      <a href="{% url 'core:terms' %}">Terms of Use</a>
-      <a href="{% url 'core:help' %}">Help</a>
-      <a href="{% url 'core:contact' %}">Contact Us</a>
+      <a href="{% url 'core:home' %}">{% trans "Home" %}</a>
+      <a href="{% url 'corpus:about' %}">{% trans "About the Corpus" %}</a>
+      <a href="{% url 'core:privacy' %}">{% trans "Privacy Policy" %}</a>
+      <a href="{% url 'core:terms' %}">{% trans "Terms of Use" %}</a>
+      <a href="{% url 'core:help' %}">{% trans "Help" %}</a>
+      <a href="{% url 'core:screen_reader' %}">{% trans "Screen Reader Access" %}</a>
+      <a href="{% url 'core:contact' %}">{% trans "Contact Us" %}</a>
     </nav>
 
     <p class="gov-footer__disclaimer">
-      IP-SAKTI Sahayak provides <strong>general information only</strong>, not legal advice.
-      Always verify with official sources and consult a qualified professional before acting.
+      {% blocktrans trimmed %}IP-SAKTI Sahayak provides <strong>general information only</strong>, not legal advice. Always verify with official sources and consult a qualified professional before acting.{% endblocktrans %}
       &mdash;
-      Corpus version: <code style="background:rgba(255,255,255,0.1); padding:0 4px; border-radius:2px;">{{ active_corpus_version|default:"none" }}</code>
+      {% trans "Corpus version:" %} <code style="background:rgba(255,255,255,0.1); padding:0 4px; border-radius:2px;">{{ active_corpus_version|default:"none" }}</code>
     </p>
 
     <p class="gov-footer__copyright">
-      &copy; {% now "Y" %} Ministry of Ayush, Government of India.
-      Content on this website is published and managed by All India Institute of Ayurveda (AIIA).
+      &copy; {% now "Y" %} {% trans "Ministry of Ayush, Government of India." %}
+      {% trans "Content on this website is published and managed by All India Institute of Ayurveda (AIIA)." %}
     </p>
   </footer>
 
