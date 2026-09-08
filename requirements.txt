@@ -29,10 +29,13 @@ ollama>=0.3                   # Python client for Ollama
 # ── Corpus ingestion ──────────────────────────────────────────
 pypdf>=4.3                    # Legal PDF parsing
 pdfminer.six>=20221105        # Fallback PDF text extraction
+PyYAML>=6.0                   # Source manifest files (data/manifests/*.yaml)
 
-# ── Optional: translation (IndicTrans2) ───────────────────────
-# ctranslate2>=4.3            # Uncomment after corpus sprint
-# sacremoses>=0.1.1
+# ── Optional: translation (IndicTrans2, all 22 languages) ─────
+# Heavy (torch + transformers, ~5 GB models on first run). Uncomment to enable:
+# torch>=2.2
+# transformers>=4.44
+# IndicTransToolkit @ git+https://github.com/VarunGumma/IndicTransToolkit
 
 # ── Utilities ─────────────────────────────────────────────────
 requests>=2.32

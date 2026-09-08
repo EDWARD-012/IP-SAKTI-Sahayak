@@ -182,7 +182,7 @@ RATE_LIMIT_ASK_PER_MIN: int = int(os.environ.get("RATE_LIMIT_ASK_PER_MIN", "10")
 
 # ── AI / RAG settings ──────────────────────────────────────────
 OLLAMA_BASE_URL: str = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
-OLLAMA_MODEL: str    = os.environ.get("OLLAMA_MODEL",    "qwen2.5:7b-instruct-q4_K_M")
+OLLAMA_MODEL: str    = os.environ.get("OLLAMA_MODEL",    "qwen2.5:3b-instruct-q4_K_M")
 OLLAMA_TIMEOUT: float = float(os.environ.get("OLLAMA_TIMEOUT", "45"))
 
 EMBED_MODEL: str  = os.environ.get("EMBED_MODEL",  "BAAI/bge-m3")

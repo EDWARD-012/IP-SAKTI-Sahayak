@@ -11,8 +11,10 @@ import logging
 
 logger = logging.getLogger("ai")
 
-# IndicTrans2 not installed by default (requires ctranslate2, sacremoses)
-# Activate after corpus sprint: pip install ctranslate2 sacremoses
+# IndicTrans2 not installed by default (heavy: torch + transformers + toolkit).
+# Activate after corpus sprint:
+#   pip install torch transformers
+#   pip install git+https://github.com/VarunGumma/IndicTransToolkit
 _it2_model: object | None = None
 _it2_available: bool | None = None  # None = not yet checked
 
@@ -23,15 +25,20 @@ def _check_availability() -> bool:
     if _it2_available is not None:
         return _it2_available
     try:
-        import ctranslate2  # noqa: F401
-        import sacremoses  # noqa: F401
+        import torch  # noqa: F401
+        import transformers  # noqa: F401
+        # IndicProcessor lives in IndicTransToolkit (import path varies by version)
+        try:
+            from IndicTransToolkit.processor import IndicProcessor  # noqa: F401
+        except ImportError:
+            from IndicTransToolkit import IndicProcessor  # noqa: F401
         _it2_available = True
         logger.info("IndicTrans2 dependencies available.")
     except ImportError:
         _it2_available = False
         logger.info(
-            "IndicTrans2 not installed (ctranslate2, sacremoses missing). "
-            "Install to enable multilingual translation."
+            "IndicTrans2 not installed (torch / transformers / IndicTransToolkit "
+            "missing). Install to enable multilingual translation."
         )
     return _it2_available
 
@@ -121,13 +128,79 @@ def is_pilot(lang_code: str) -> bool:
 
 def _init_model() -> object:
     """
-    Initialise IndicTrans2 model (called once, CPU-first).
-    Returns a wrapper object with a translate(text, src, tgt) method.
+    Initialise the IndicTrans2 wrapper (called once, CPU-first).
+    Returns an object exposing ``translate(text, src_tag, tgt_tag)``.
     """
-    # This is the stub initialisation path.
-    # Real implementation: download from ai4bharat/indictrans2 on HuggingFace,
-    # run with ctranslate2 in CPU mode (device="cpu").
-    raise NotImplementedError(
-        "IndicTrans2 model init not implemented. "
-        "See IMPLEMENTATION_PLAN.md §22 for setup instructions."
-    )
+    return _IndicTrans2Wrapper()
+
+
+# HuggingFace model IDs (1B distilled checkpoints — CPU-runnable).
+_EN_INDIC_MODEL = "ai4bharat/indictrans2-en-indic-1B"
+_INDIC_EN_MODEL = "ai4bharat/indictrans2-indic-en-1B"
+_EN_TAG = "eng_Latn"
+
+
+class _IndicTrans2Wrapper:
+    """
+    Thin wrapper around IndicTrans2 HF checkpoints.
+
+    - Loads the en→indic and indic→en models lazily, only when a direction is
+      first needed (keeps memory down on CPU-only boxes).
+    - indic→indic is handled by pivoting through English (avoids a third model).
+    - Runs fully on CPU with torch.no_grad(); safe to call from request threads
+      because generation is serialised upstream by the generate-semaphore, and
+      translation itself is short.
+    """
+
+    def __init__(self) -> None:
+        import torch  # local import — only when translation is actually used
+
+        try:
+            from IndicTransToolkit.processor import IndicProcessor
+        except ImportError:
+            from IndicTransToolkit import IndicProcessor
+
+        self._torch = torch
+        self._processor = IndicProcessor(inference=True)
+        self._device = "cpu"
+        # Lazily populated: direction key -> (tokenizer, model)
+        self._models: dict[str, tuple] = {}
+        logger.info("IndicTrans2 wrapper initialised (CPU, lazy model loading).")
+
+    def _get(self, model_id: str) -> tuple:
+        """Load (and cache) tokenizer + model for *model_id*."""
+        if model_id not in self._models:
+            from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+            logger.info("Loading IndicTrans2 model %s (CPU) …", model_id)
+            tok = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
+            mdl = AutoModelForSeq2SeqLM.from_pretrained(model_id, trust_remote_code=True)
+            mdl.to(self._device).eval()
+            self._models[model_id] = (tok, mdl)
+        return self._models[model_id]
+
+    def _translate_direction(self, text: str, src_tag: str, tgt_tag: str, model_id: str) -> str:
+        tok, mdl = self._get(model_id)
+        batch = self._processor.preprocess_batch([text], src_lang=src_tag, tgt_lang=tgt_tag)
+        enc = tok(
+            batch, truncation=True, padding="longest",
+            return_tensors="pt", max_length=256,
+        ).to(self._device)
+        with self._torch.no_grad():
+            out = mdl.generate(
+                **enc, max_length=256, num_beams=5,
+                num_return_sequences=1, use_cache=True,
+            )
+        decoded = tok.batch_decode(out, skip_special_tokens=True)
+        result = self._processor.postprocess_batch(decoded, lang=tgt_tag)
+        return result[0] if result else text
+
+    def translate(self, text: str, src_tag: str, tgt_tag: str) -> str:
+        if src_tag == tgt_tag:
+            return text
+        if src_tag == _EN_TAG:
+            return self._translate_direction(text, src_tag, tgt_tag, _EN_INDIC_MODEL)
+        if tgt_tag == _EN_TAG:
+            return self._translate_direction(text, src_tag, tgt_tag, _INDIC_EN_MODEL)
+        # indic → indic: pivot through English
+        english = self._translate_direction(text, src_tag, _EN_TAG, _INDIC_EN_MODEL)
+        return self._translate_direction(english, _EN_TAG, tgt_tag, _EN_INDIC_MODEL)

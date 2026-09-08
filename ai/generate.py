@@ -148,7 +148,7 @@ def _parse_json_response(raw: str) -> dict[str, Any]:
 def generate(
     prompt: str,
     request_id: str,
-    model: str = "qwen2.5:7b-instruct-q4_K_M",
+    model: str = "qwen2.5:3b-instruct-q4_K_M",
     base_url: str = "http://127.0.0.1:11434",
     timeout: float = 45.0,
 ) -> dict[str, Any]:

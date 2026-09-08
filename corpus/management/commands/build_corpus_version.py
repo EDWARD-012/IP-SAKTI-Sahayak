@@ -1,78 +1,96 @@
 """
-STUB management command for corpus ingestion.
+build_corpus_version — Ingest legal source documents into a Chroma vector index.
 
-Full implementation requires:
-  - pypdf               (PDF text extraction)
-  - sentence-transformers  (embedding model — BAAI/bge-m3 by default)
-  - chromadb            (vector store)
+Pipeline: PDF/TXT → text extraction → section-aware chunking → bge-m3 embeddings
+→ Chroma upsert → CorpusVersion (status='building') + SourceManifest rows.
 
 Usage:
-  python manage.py build_corpus_version --version 1.0
-  python manage.py build_corpus_version --version 1.0 --sources path/to/pdfs/
-"""
-import os
+    python manage.py build_corpus_version 1.0
+    python manage.py build_corpus_version 1.0 --sources data/raw --manifests data/manifests
+    python manage.py build_corpus_version 1.0 --force
 
+Requires: pypdf (or pdfminer.six), sentence-transformers, chromadb, PyYAML.
+After building:
+    python manage.py validate_corpus_version 1.0
+    python manage.py activate_corpus_version 1.0
+"""
+from __future__ import annotations
+
+from pathlib import Path
+
+from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
+from corpus.ingestion import IngestionError, build_corpus
 from corpus.models import CorpusVersion
 
 
 class Command(BaseCommand):
-    help = (
-        "STUB: Create a CorpusVersion record and print ingestion instructions. "
-        "Real PDF ingestion requires pypdf, sentence-transformers, and chromadb."
-    )
+    help = "Ingest legal source documents (PDF/TXT) into a Chroma vector index."
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            "--version",
-            required=True,
-            help="Version string for this corpus build (e.g. '1.0').",
-        )
+        parser.add_argument("version", help="Corpus version string, e.g. '1.0'.")
         parser.add_argument(
             "--sources",
-            default="data/corpus/",
-            help="Path to directory containing source PDFs (default: data/corpus/).",
+            default="data/raw",
+            help="Directory containing source PDF/TXT files (default: data/raw).",
+        )
+        parser.add_argument(
+            "--manifests",
+            default="data/manifests",
+            help="Directory containing *.yaml source manifests (default: data/manifests).",
+        )
+        parser.add_argument("--max-chars", type=int, default=1200, dest="max_chars")
+        parser.add_argument("--overlap-chars", type=int, default=150, dest="overlap_chars")
+        parser.add_argument("--batch-size", type=int, default=16, dest="batch_size")
+        parser.add_argument(
+            "--force",
+            action="store_true",
+            help="Rebuild even if this version already exists (overwrites the collection).",
         )
 
     def handle(self, *args, **options):
-        version_str = options["version"]
-        sources_dir = options["sources"]
+        version = options["version"]
+        sources_dir = Path(options["sources"]).resolve()
+        manifests_dir = Path(options["manifests"]).resolve()
 
-        if CorpusVersion.objects.filter(version=version_str).exists():
+        existing = CorpusVersion.objects.filter(version=version).first()
+        if existing and not options["force"]:
             raise CommandError(
-                f"CorpusVersion '{version_str}' already exists. "
-                "Choose a different version string or delete the existing record."
+                f"CorpusVersion '{version}' already exists (status={existing.status}). "
+                "Use --force to rebuild, or choose a new version string."
             )
 
-        sources_abs = os.path.abspath(sources_dir)
-        self.stdout.write(f"[STUB] Would ingest PDFs from: {sources_abs}")
-
-        collection_name = f"ip_sakti_v{version_str.replace('.', '_')}"
-        self.stdout.write(
-            f"[STUB] Creating CorpusVersion record: version='{version_str}', "
-            f"collection='{collection_name}', status='building' …"
-        )
-
-        cv = CorpusVersion.objects.create(
-            version=version_str,
-            status="building",
-            chroma_collection=collection_name,
-        )
-
-        self.stdout.write(
-            self.style.SUCCESS(
-                f"CorpusVersion '{version_str}' (pk={cv.pk}) created with status='building'."
-            )
-        )
+        self.stdout.write(self.style.MIGRATE_HEADING(
+            f"Building corpus v{version}"
+        ))
+        self.stdout.write(f"  sources:   {sources_dir}")
+        self.stdout.write(f"  manifests: {manifests_dir}")
+        self.stdout.write(f"  embed:     {settings.EMBED_MODEL} ({settings.EMBED_DEVICE})")
+        self.stdout.write(f"  chroma:    {settings.CHROMA_PERSIST_DIR}")
         self.stdout.write("")
-        self.stdout.write("Next steps for full implementation:")
-        self.stdout.write("  1. pip install pypdf sentence-transformers chromadb")
-        self.stdout.write(f"  2. Place source PDFs in:  {sources_abs}")
-        self.stdout.write("  3. Implement the ingestion pipeline (chunk, embed, upsert to Chroma).")
-        self.stdout.write(
-            f"  4. After ingestion, validate: python manage.py validate_corpus_version --version {version_str}"
-        )
-        self.stdout.write(
-            f"  5. After validation, activate: python manage.py activate_corpus_version --version {version_str}"
-        )
+
+        try:
+            result = build_corpus(
+                version=version,
+                sources_dir=sources_dir,
+                manifests_dir=manifests_dir,
+                max_chars=options["max_chars"],
+                overlap_chars=options["overlap_chars"],
+                batch_size=options["batch_size"],
+                on_progress=lambda m: self.stdout.write(f"  {m}"),
+            )
+        except IngestionError as exc:
+            raise CommandError(str(exc)) from exc
+
+        self.stdout.write("")
+        self.stdout.write(self.style.SUCCESS(
+            f"Built v{result.version}: {result.chunks_count} chunks "
+            f"from {result.sources_count} sources → collection '{result.collection}'."
+        ))
+        for sid, n in sorted(result.per_source.items()):
+            self.stdout.write(f"    {sid}: {n} chunks")
+        self.stdout.write("")
+        self.stdout.write("Next:")
+        self.stdout.write(f"  python manage.py validate_corpus_version {version}")
+        self.stdout.write(f"  python manage.py activate_corpus_version {version}")

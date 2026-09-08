@@ -8,8 +8,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "--version",
-            required=True,
+            "version",
             help="The corpus version string to activate (e.g. '1.0').",
         )
 
