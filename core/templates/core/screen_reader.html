@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Screen Reader Access — IP-SAKTI Sahayak{% endblock %}
+
+{% block content %}
+<div class="page-inner" style="padding-top:32px; padding-bottom:48px;">
+  <h1 class="gov-section-title ip-fade-in" style="font-size:1.6rem; margin-bottom:24px;">Screen Reader Accessibility</h1>
+  <p style="font-size:0.9rem; color:var(--color-text-secondary);">GIGW 3.0 compliant accessibility information.</p>
+
+  <div class="gov-card ip-fade-in" style="margin-bottom:20px;">
+    <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">Keyboard Navigation</h2>
+    <ul style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.8;">
+      <li><kbd>Tab</kbd> — Move to next interactive element</li>
+      <li><kbd>Shift</kbd>+<kbd>Tab</kbd> — Move to previous interactive element</li>
+      <li><kbd>Enter</kbd> / <kbd>Space</kbd> — Activate buttons and links</li>
+      <li><kbd>Ctrl</kbd>+<kbd>Enter</kbd> — Submit chat question (in chat interface)</li>
+      <li><kbd>Esc</kbd> — Close expanded sections</li>
+    </ul>
+  </div>
+
+  <div class="gov-card ip-fade-in" style="margin-bottom:20px;">
+    <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">Skip Links</h2>
+    <p style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.7;">
+      A "Skip to Main Content" link appears at the top of every page when focused.
+      Press <kbd>Tab</kbd> on page load to reveal it.
+    </p>
+  </div>
+
+  <div class="gov-card ip-fade-in" style="margin-bottom:20px;">
+    <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">Language Selection</h2>
+    <p style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.7;">
+      The language selector is in the navigation bar. Use <kbd>Tab</kbd> to reach it,
+      arrow keys to select a language, and <kbd>Enter</kbd> to confirm.
+      The page reloads in the selected language.
+    </p>
+  </div>
+
+  <div class="gov-card ip-fade-in" style="margin-bottom:20px;">
+    <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">Font Size Controls</h2>
+    <p style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.7;">
+      The accessibility bar at the top offers A+, A, A- controls for increasing,
+      resetting, or decreasing the base font size. Your preference persists across pages.
+    </p>
+  </div>
+
+  <div class="gov-card ip-fade-in">
+    <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">Chat Interface</h2>
+    <p style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.7;">
+      In the chat interface:
+    </p>
+    <ul style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.8;">
+      <li>The answer area has <code>role="live"</code> and announces new answers to screen readers automatically.</li>
+      <li>Evidence labels are announced with full text (e.g. "Strong evidence").</li>
+      <li>Citations can be expanded with <kbd>Enter</kbd> or <kbd>Space</kbd>.</li>
+      <li>The "thinking" animation is hidden from screen readers (<code>aria-hidden="true"</code>).</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

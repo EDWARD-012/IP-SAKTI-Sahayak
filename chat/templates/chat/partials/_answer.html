@@ -1,0 +1,128 @@
+{% load ip_sakti_tags %}
+{# ── _answer.html — HTMX response partial for a completed answer ──
+   Context: result (PipelineResult), form (ChatForm)
+   Loaded into #answer-area via hx-swap="innerHTML"
+── #}
+
+<div class="answer-card ip-fade-in" role="region" aria-label="Answer from IP-SAKTI">
+
+  {# ── Header: evidence label + question echo ── #}
+  <div class="answer-card__header">
+    <span class="ev-label ev-label--{{ result.outcome|outcome_css_class }}"
+          aria-label="Evidence quality: {{ result.outcome|outcome_label }}">
+      {% if result.outcome|outcome_css_class == 'strong' %}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+      {% elif result.outcome|outcome_css_class == 'limited' %}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+      {% else %}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      {% endif %}
+      {{ result.outcome|outcome_label }}
+    </span>
+
+    {% if result.question %}
+    <p class="answer-card__question" aria-label="Your question">
+      "{{ result.question|truncatechars:120 }}"
+    </p>
+    {% endif %}
+  </div>
+
+  {# ── Answer prose ── #}
+  <div class="answer-card__body">
+    <div class="answer-prose" role="article" aria-label="Answer text">
+      {{ result.answer|linebreaks }}
+    </div>
+
+    {# ── Citations section (collapsible) ── #}
+    {% if result.citations %}
+    <div class="citations-section" aria-label="Source citations">
+      <button class="citations-toggle"
+              type="button"
+              aria-expanded="false"
+              aria-controls="citations-list-{{ result.request_id|default:'0' }}"
+              aria-label="Show {{ result.citations|length }} source citation{{ result.citations|length|pluralize }}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        {{ result.citations|length }} Source Citation{{ result.citations|length|pluralize }}
+        <svg class="citations-toggle__chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      </button>
+
+      <ul class="citations-list"
+          id="citations-list-{{ result.request_id|default:'0' }}"
+          hidden
+          role="list"
+          aria-label="Source citations">
+        {% for citation in result.citations %}
+        <li class="citation-card" role="listitem">
+          <div class="citation-card__source">
+            <a href="{{ citation.source_url|default:'#' }}"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Open source: {{ citation.source_title }}">
+              {{ citation.source_title }}
+            </a>
+          </div>
+          {% if citation.section %}
+          <div class="citation-card__section">
+            Section: {{ citation.section }}
+          </div>
+          {% endif %}
+          {% if citation.quoted_text %}
+          <blockquote class="citation-card__quote">
+            {{ citation.quoted_text|truncatechars:400 }}
+          </blockquote>
+          {% endif %}
+          {% if citation.effective_date %}
+          <div class="citation-card__date">
+            Effective: {{ citation.effective_date }}
+          </div>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% else %}
+    {# No citations — note why #}
+    {% if result.outcome|outcome_css_class == 'unable' %}
+    <p style="font-size:var(--text-xs); color:var(--color-text-muted); margin-top:var(--space-4);">
+      No matching sources were found in the corpus for this question.
+      Try rephrasing or consult the <a href="{% url 'corpus:sources' %}">source list</a>.
+    </p>
+    {% endif %}
+    {% endif %}
+  </div>
+
+  {# ── Feedback row ── #}
+  <div class="answer-feedback" aria-label="Answer feedback">
+    <span class="answer-feedback__label">Was this helpful?</span>
+    <button type="button"
+            class="feedback-btn"
+            aria-label="Thumbs up — helpful answer"
+            data-feedback="up"
+            data-request-id="{{ result.request_id|default:'' }}">
+      👍 Yes
+    </button>
+    <button type="button"
+            class="feedback-btn"
+            aria-label="Thumbs down — not helpful"
+            data-feedback="down"
+            data-request-id="{{ result.request_id|default:'' }}">
+      👎 No
+    </button>
+  </div>
+
+  {# ── Disclaimer ── #}
+  <div class="answer-disclaimer" role="note">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+    </svg>
+    <span>
+      <strong>Not legal advice.</strong>
+      This is general information based on verified corpus sources. Always verify with official publications and consult a qualified IP professional.
+    </span>
+  </div>
+
+</div>

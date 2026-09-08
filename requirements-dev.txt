@@ -1,0 +1,16 @@
+-r requirements.txt
+
+# Testing
+pytest>=8.3
+pytest-django>=4.9
+pytest-cov>=5.0
+factory-boy>=3.3
+
+# Code quality
+ruff>=0.6
+mypy>=1.11
+django-stubs>=5.0
+types-requests
+
+# Dev server helpers
+django-debug-toolbar>=4.4

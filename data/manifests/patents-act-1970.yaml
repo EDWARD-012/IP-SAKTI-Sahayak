@@ -1,0 +1,19 @@
+source_id: patents-act-1970
+title: The Patents Act, 1970
+authority: Legislative Department / India Code
+jurisdiction: IN
+ip_types:
+  - patents
+landing_url: https://indiacode.gov.in/
+download_url: ""
+locator_status: pending
+retrieved_at: ""
+effective_from: "1970-09-19"
+effective_status: current
+reuse_basis: public-statute
+sha256: ""
+reviewer: ""
+notes: >
+  Search by title on indiacode.gov.in. Look for the consolidated / amended
+  Act version. Major amendments: Patents (Amendment) Act, 2005 (product
+  patents for pharmaceuticals), Patents (Amendment) Act, 2002.

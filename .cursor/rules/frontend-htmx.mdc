@@ -1,0 +1,65 @@
+---
+description: Frontend/template conventions for IP-SAKTI — applies to HTML templates and static files
+globs: **/templates/**/*.html,**/static/**/*.{css,js}
+alwaysApply: false
+---
+
+# Frontend Conventions
+
+## Template structure
+```
+templates/
+  base.html              ← loads tokens.css + gov-style.css, Lottie, HTMX
+                           GOI DBIM Header 1: tricolor → a11y bar → gov-header → gov-navbar
+  core/home.html         ← hero with Ashoka Chakra + 6 GOI-card service grid
+  chat/chat.html         ← chat bubble partials (chat-bubble--user / --bot classes)
+  wizard/step.html
+partials/
+  _answer.html           ← HTMX swap target
+  _source_drawer.html
+  _busy.html
+  _error.html
+static/
+  css/
+    tokens.css           ← GOI DBIM-aligned color tokens (--color-primary, --gov-saffron, etc.)
+    gov-style.css        ← GOI components (tricolor, a11y bar, header, navbar, cards, buttons)
+  images/
+    ashoka-chakra.svg    ← 24-spoke Dharma Wheel (decorative hero element)
+    national-emblem.svg  ← Placeholder; replace with official from india.gov.in before submission
+```
+
+## HTMX patterns
+- Swap target: `hx-target="#answer-area"` with `hx-swap="innerHTML"`
+- Show loading: `hx-indicator="#thinking-dots"` (CSS class `htmx-request`)
+- Cancel button: `hx-delete="/assistant/cancel/" hx-vals='{"request_id":"..."}'`
+- No Alpine.js; use vanilla JS for any interactivity beyond HTMX
+
+## CSS design system
+- Import `{% static 'css/tokens.css' %}` AND `{% static 'css/gov-style.css' %}` in base.html
+- All colors via CSS custom properties (`var(--color-primary)`, `var(--gov-saffron)`, `var(--gov-green)`)
+- Never hardcode hex in templates or component styles
+- 4px base grid; spacing scale: 4, 8, 12, 16, 24, 32, 48, 64px
+- GOI component classes: `.gov-card`, `.gov-btn-primary`, `.gov-btn-secondary`, `.gov-section-title`, `.ev-label`
+- GOI tricolor stripe always at top of page (`.gov-tricolor-bar`)
+- Flat surfaces — no decorative box-shadow (only subtle hover shadows on cards via `.gov-card:hover`)
+
+## Animation rules
+- Loading state: `#thinking-dots` uses CSS keyframe `bounce-dots`
+- Lottie animations via `<dotlottie-player>` web component (self-hosted CDN)
+- Decorative animations must respect `prefers-reduced-motion`:
+  ```css
+  @media (prefers-reduced-motion: reduce) { .lottie-anim, .animate { display: none; } }
+  ```
+- GSAP used only for the page-enter reveal (single tween, < 0.4s)
+- No animation on data or error states
+
+## RTL support
+- Urdu, Sindhi, Kashmiri (Perso-Arabic) → `<article dir="rtl" lang="ur">`
+- Source citation blocks always `dir="ltr"` (section numbers must not mirror)
+- Test RTL in Chrome DevTools "Emulation → Document direction"
+
+## Accessibility
+- Every interactive element has `aria-label` or visible text label
+- Focus visible outline: `outline: 2px solid var(--color-accent); outline-offset: 2px`
+- Screen reader: evidence label in `role="status"` live region
+- Keyboard: wizard step-through must work with Tab/Enter/Space alone

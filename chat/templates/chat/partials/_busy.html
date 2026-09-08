@@ -1,0 +1,35 @@
+{# ── _busy.html — Service busy partial ──
+   Loaded into #answer-area when the backend queue is at capacity.
+── #}
+
+<div class="chat-status-card chat-status-card--busy ip-fade-in"
+     role="alert"
+     aria-live="assertive"
+     aria-label="Service busy">
+
+  <div class="chat-status-card__title">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 6v6l4 2"/>
+    </svg>
+    Service is busy
+  </div>
+
+  <p class="chat-status-card__msg">
+    IP-SAKTI is currently handling many requests. Please wait a moment and try again.
+    Your question has <strong>not been lost</strong> — you can resubmit it below.
+  </p>
+
+  <div style="display:flex; gap:var(--space-3); flex-wrap:wrap;">
+    <button type="button"
+            class="gov-btn-primary"
+            onclick="document.getElementById('chat-form').requestSubmit()"
+            aria-label="Retry your question">
+      Retry
+    </button>
+    <a href="{% url 'core:help' %}" class="gov-btn-secondary" aria-label="Go to help page">
+      Help
+    </a>
+  </div>
+
+</div>

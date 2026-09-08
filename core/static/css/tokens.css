@@ -1,0 +1,209 @@
+/* IP-SAKTI Sahayak — Design Token System
+   GOI DBIM-aligned palette (Digital Brand Identity Manual, GoI 2025).
+   All colors, spacing, typography and animation via CSS custom properties.
+   No hardcoded hex in component styles — always use these tokens. */
+
+:root {
+  /* ── GOI Brand palette (NIC / DBIM standard) ── */
+  --color-primary:        #003087;   /* GOI deep navy — used on NIC portals */
+  --color-primary-hover:  #002060;
+  --color-primary-light:  #e8f0f9;   /* tint for backgrounds */
+  --color-nav:            #1a4a8a;   /* slightly lighter for nav bar */
+
+  /* ── Indian tricolor tokens ── */
+  --gov-saffron:          #FF9933;   /* India flag saffron — accents, borders */
+  --gov-saffron-dark:     #e07a00;   /* hover / pressed saffron */
+  --gov-green:            #138808;   /* India flag green — success, trust */
+  --gov-green-dark:       #0d6006;
+  --gov-chakra:           #003087;   /* Ashoka Chakra navy */
+
+  /* ── Semantic colors (re-mapped to GOI palette) ── */
+  --color-accent:         #FF9933;   /* saffron — CTAs, highlights */
+  --color-accent-light:   #fff4e0;
+
+  --color-success:        #138808;   /* GOI green — strong evidence */
+  --color-success-bg:     #e6f4e4;
+  --color-warning:        #7a5200;   /* amber — limited evidence */
+  --color-warning-bg:     #fff3cd;
+  --color-danger:         #c0392b;   /* red — errors */
+  --color-danger-bg:      #fce8e6;
+  --color-muted:          #555f6e;   /* grey — metadata */
+
+  /* ── Surface ── */
+  --color-bg:             #f5f5f5;   /* GOI portal light grey */
+  --color-surface:        #ffffff;
+  --color-surface-raised: #eef2f7;
+  --color-border:         #ccd5df;
+  --color-border-strong:  #a0afbe;
+  --color-a11y-bar:       #f0f0f0;   /* accessibility bar background */
+
+  /* ── Text ── */
+  --color-text:           #1a1f2e;
+  --color-text-secondary: #444c58;
+  --color-text-muted:     #666e7a;
+  --color-text-inverse:   #ffffff;
+
+  /* ── Evidence label tokens ── */
+  --evidence-strong-color: var(--color-success);
+  --evidence-strong-bg:    var(--color-success-bg);
+  --evidence-limited-color: var(--color-warning);
+  --evidence-limited-bg:   var(--color-warning-bg);
+  --evidence-unable-color: var(--color-muted);
+  --evidence-unable-bg:    var(--color-surface-raised);
+
+  /* ── Typography ── */
+  --font-sans:  system-ui, "Noto Sans", "Segoe UI", Arial, sans-serif;
+  --font-serif: Georgia, "Noto Serif", "Times New Roman", serif;
+  --font-mono:  "Cascadia Code", "Consolas", "Fira Code", monospace;
+
+  /* Noto Sans covers Devanagari, Bengali, Tamil, Telugu, Gujarati, Kannada,
+     Malayalam, Odia, Gurmukhi, Urdu (Nastaliq fallback), Meitei, etc.
+     Load via: <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&display=swap" rel="stylesheet">
+     For offline: bundle Noto Sans subset via fontsource npm package.  */
+
+  --text-xs:   0.75rem;   /* 12px */
+  --text-sm:   0.875rem;  /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg:   1.125rem;  /* 18px */
+  --text-xl:   1.25rem;   /* 20px */
+  --text-2xl:  1.5rem;    /* 24px */
+
+  --weight-normal:   400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  --leading-tight:  1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  /* ── Spacing (4px grid) ── */
+  --space-1:  0.25rem;  /*  4px */
+  --space-2:  0.5rem;   /*  8px */
+  --space-3:  0.75rem;  /* 12px */
+  --space-4:  1rem;     /* 16px */
+  --space-5:  1.25rem;  /* 20px */
+  --space-6:  1.5rem;   /* 24px */
+  --space-8:  2rem;     /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+
+  /* ── Layout ── */
+  --max-width-chat:  720px;
+  --max-width-page:  960px;
+  --sidebar-width:   280px;
+  --radius-sm:  2px;
+  --radius-md:  4px;
+  --radius-lg:  8px;
+
+  /* ── Elevation (border-only, no box-shadow) ── */
+  --border-width:    1px;
+
+  /* ── Animation ── */
+  --duration-fast:   150ms;
+  --duration-base:   250ms;
+  --duration-slow:   400ms;
+  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:   cubic-bezier(0.4, 0, 1, 1);
+
+  /* ── Z-index ── */
+  --z-base:    0;
+  --z-raised:  10;
+  --z-overlay: 100;
+  --z-modal:   200;
+}
+
+/* ── Dark mode ── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary:        #4a8abf;
+    --color-primary-hover:  #5a9fcf;
+    --color-primary-light:  #0f1e2e;
+    --color-accent:         #e09a38;
+    --color-accent-light:   #1e1200;
+    --color-success:        #4caf7a;
+    --color-success-bg:     #0a2015;
+    --color-warning:        #e0a040;
+    --color-warning-bg:     #1a1000;
+    --color-danger:         #e05050;
+    --color-danger-bg:      #1a0808;
+    --color-muted:          #8a9aaa;
+    --color-bg:             #0d1117;
+    --color-surface:        #161b22;
+    --color-surface-raised: #1c2230;
+    --color-border:         #2a3545;
+    --color-border-strong:  #3d4f63;
+    --color-text:           #e6edf3;
+    --color-text-secondary: #adbbc8;
+    --color-text-muted:     #7a8ea0;
+    --color-text-inverse:   #0d1117;
+  }
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+a { color: var(--color-primary); text-decoration: underline; }
+a:hover { color: var(--color-primary-hover); }
+code, pre { font-family: var(--font-mono); font-size: var(--text-sm); }
+
+/* ── Loading dots animation ── */
+.ip-thinking {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  padding: var(--space-2) var(--space-4);
+}
+.ip-thinking__dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  animation: ip-bounce 1.2s ease-in-out infinite;
+}
+.ip-thinking__dot:nth-child(2) { animation-delay: 0.2s; }
+.ip-thinking__dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes ip-bounce {
+  0%, 80%, 100% { transform: translateY(0);    opacity: 0.4; }
+  40%            { transform: translateY(-6px); opacity: 1;   }
+}
+
+/* ── Page entrance ── */
+.ip-fade-in {
+  animation: ip-fade-in var(--duration-slow) var(--ease-out) both;
+}
+@keyframes ip-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .ip-thinking__dot,
+  .ip-fade-in,
+  .lottie-anim { animation: none !important; }
+}
+
+/* ── Evidence label utilities ── */
+.evidence-strong  { color: var(--evidence-strong-color);  background: var(--evidence-strong-bg);  }
+.evidence-limited { color: var(--evidence-limited-color); background: var(--evidence-limited-bg); }
+.evidence-unable  { color: var(--evidence-unable-color);  background: var(--evidence-unable-bg);  }
+
+/* ── Focus ring ── */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ── Scrollbar (Webkit) ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 3px; }

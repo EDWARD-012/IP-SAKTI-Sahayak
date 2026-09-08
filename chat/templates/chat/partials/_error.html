@@ -1,0 +1,49 @@
+{# ── _error.html — Form validation or system error partial ──
+   Context: error_message (str, optional), form (ChatForm, optional)
+   Loaded into #answer-area on error.
+── #}
+
+<div class="chat-status-card chat-status-card--error ip-fade-in"
+     role="alert"
+     aria-live="assertive"
+     aria-label="Error">
+
+  <div class="chat-status-card__title">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M15 9l-6 6M9 9l6 6"/>
+    </svg>
+    Something went wrong
+  </div>
+
+  <p class="chat-status-card__msg">
+    {% if error_message %}
+      {{ error_message }}
+    {% elif form.errors %}
+      {% for field in form %}
+        {% for error in field.errors %}
+          {{ error }}
+        {% endfor %}
+      {% endfor %}
+      {% for error in form.non_field_errors %}
+        {{ error }}
+      {% endfor %}
+    {% else %}
+      An unexpected error occurred. Please try again. If the problem persists, check the
+      <a href="{% url 'core:contact' %}">contact page</a> for support.
+    {% endif %}
+  </p>
+
+  <div style="display:flex; gap:var(--space-3); flex-wrap:wrap;">
+    <button type="button"
+            class="gov-btn-primary"
+            onclick="document.getElementById('answer-area').innerHTML = document.getElementById('chat-empty-state-tpl')?.innerHTML || ''; document.getElementById('chat-question')?.focus();"
+            aria-label="Dismiss error and try again">
+      Try Again
+    </button>
+    <a href="{% url 'core:help' %}" class="gov-btn-secondary" aria-label="Go to help page">
+      Help
+    </a>
+  </div>
+
+</div>

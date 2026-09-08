@@ -1,0 +1,49 @@
+<!-- National Emblem of India  simplified stylised representation for GOI portal header -->
+<!-- Actual official emblem: download from https://india.gov.in/sites/default/files/2017-02/emblem_india.png -->
+<!-- This SVG is a placeholder; replace with official asset before submission -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" aria-label="National Emblem of India" role="img">
+  <title>National Emblem of India</title>
+  <defs>
+    <style>
+      .emb { fill: #ffffff; }
+      .emb-stroke { fill: none; stroke: #ffffff; stroke-width: 1.5; }
+    </style>
+  </defs>
+
+  <!-- Capital base platform -->
+  <rect x="15" y="90" width="70" height="8" rx="2" class="emb"/>
+
+  <!-- Abacus (middle band with animals implied) -->
+  <rect x="18" y="78" width="64" height="12" rx="2" class="emb"/>
+  <!-- Ashoka Chakra on abacus (simplified) -->
+  <circle cx="50" cy="84" r="4" fill="none" stroke="#003087" stroke-width="1"/>
+  <circle cx="50" cy="84" r="1.5" fill="#003087"/>
+  <!-- Bull and lion silhouette hints (dots) -->
+  <circle cx="28" cy="84" r="3.5" fill="none" stroke="#003087" stroke-width="0.8"/>
+  <circle cx="72" cy="84" r="3.5" fill="none" stroke="#003087" stroke-width="0.8"/>
+
+  <!-- Lion bodies (three visible, stylised) -->
+  <!-- Centre-front lion -->
+  <ellipse cx="50" cy="58" rx="12" ry="9" class="emb"/>
+  <!-- Left lion -->
+  <ellipse cx="35" cy="60" rx="10" ry="8" class="emb"/>
+  <!-- Right lion -->
+  <ellipse cx="65" cy="60" rx="10" ry="8" class="emb"/>
+
+  <!-- Lion heads -->
+  <circle cx="50" cy="46" r="9" class="emb"/>
+  <circle cx="34" cy="50" r="7.5" class="emb"/>
+  <circle cx="66" cy="50" r="7.5" class="emb"/>
+
+  <!-- Mane details (arcs) -->
+  <path d="M41,43 Q50,36 59,43" class="emb-stroke"/>
+  <path d="M27,47 Q34,40 42,47" class="emb-stroke"/>
+  <path d="M58,47 Q66,40 74,47" class="emb-stroke"/>
+
+  <!-- Satyamev Jayate text -->
+  <text x="50" y="108" text-anchor="middle"
+        font-family="Devanagari MT, Noto Sans Devanagari, serif"
+        font-size="6.5" fill="#ffffff" letter-spacing="0.5">
+    8$M/.G5 /$G
+  </text>
+</svg>

@@ -1,0 +1,88 @@
+[
+  {
+    "id": "gq-001",
+    "question": "Can I patent an Ayurvedic formulation based on a classical text?",
+    "jurisdiction": "IN",
+    "expected_sources": ["patents-act-1970"],
+    "expected_sections": ["Section 3(p)"],
+    "expected_outcome": "grounded",
+    "notes": "Should cite Section 3(p) exclusion for traditional knowledge"
+  },
+  {
+    "id": "gq-002",
+    "question": "What is the process for GI registration of an Ayurvedic product?",
+    "jurisdiction": "IN",
+    "expected_sources": ["gi-act-1999"],
+    "expected_sections": ["Section 11", "Section 12"],
+    "expected_outcome": "grounded",
+    "notes": "Should describe application + examination + opposition process"
+  },
+  {
+    "id": "gq-003",
+    "question": "Do I need NBA approval to use a medicinal plant in my product?",
+    "jurisdiction": "IN",
+    "expected_sources": ["biological-diversity-act-2002"],
+    "expected_sections": ["Section 3", "Section 7"],
+    "expected_outcome": "grounded",
+    "notes": "Depends on whether it's a result of research or commercial use"
+  },
+  {
+    "id": "gq-004",
+    "question": "What are the labelling requirements for an Ayurvedic food product?",
+    "jurisdiction": "IN",
+    "expected_sources": ["ayurveda-aahara-regs-2022"],
+    "expected_sections": [],
+    "expected_outcome": "grounded",
+    "notes": "Ayurveda Aahara Regulations 2022 cover this"
+  },
+  {
+    "id": "gq-005",
+    "question": "What is the Nagoya Protocol and how does it affect ABS agreements?",
+    "jurisdiction": "INT",
+    "expected_sources": ["nagoya-protocol"],
+    "expected_sections": ["Article 5", "Article 6"],
+    "expected_outcome": "grounded",
+    "notes": "International treaty — ABS framework"
+  },
+  {
+    "id": "gq-006",
+    "question": "Can traditional Ayurvedic medicine be protected under copyright?",
+    "jurisdiction": "IN",
+    "expected_sources": [],
+    "expected_outcome": "unable_to_answer",
+    "notes": "Copyright does not protect medicinal formulations — should say unable"
+  },
+  {
+    "id": "gq-007",
+    "question": "What is TKDL and how does it prevent bio-piracy?",
+    "jurisdiction": "IN",
+    "expected_sources": ["tkdl"],
+    "expected_outcome": "grounded",
+    "notes": "TKDL is the Traditional Knowledge Digital Library"
+  },
+  {
+    "id": "gq-008",
+    "question": "Is Chyawanprash eligible for patent protection?",
+    "jurisdiction": "IN",
+    "expected_sources": ["patents-act-1970"],
+    "expected_sections": ["Section 3(p)", "Section 25"],
+    "expected_outcome": "grounded",
+    "notes": "Classical formulation — likely excluded under 3(p)"
+  },
+  {
+    "id": "gq-009",
+    "question": "Tell me about cryptocurrency investments",
+    "jurisdiction": "IN",
+    "expected_outcome": "out_of_scope",
+    "notes": "Completely out of scope — should return out_of_scope state"
+  },
+  {
+    "id": "gq-010",
+    "question": "What is TRIPS and what obligations does India have under it?",
+    "jurisdiction": "INT",
+    "expected_sources": ["trips-agreement"],
+    "expected_sections": ["Article 27", "Article 28"],
+    "expected_outcome": "grounded",
+    "notes": "TRIPS minimum standards for patent protection"
+  }
+]

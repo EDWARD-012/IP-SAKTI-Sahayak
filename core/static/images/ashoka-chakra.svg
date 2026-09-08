@@ -1,0 +1,48 @@
+<!-- Ashoka Chakra  24-spoke Dharma Wheel (stylised, not official emblem) -->
+<!-- Used as decorative hero element for IP-SAKTI Sahayak -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+  <defs>
+    <style>
+      .chakra-ring { fill: none; stroke: #003087; }
+      .chakra-spoke { stroke: #003087; stroke-width: 3; stroke-linecap: round; }
+      .chakra-hub { fill: #003087; }
+    </style>
+  </defs>
+
+  <!-- Outer ring -->
+  <circle cx="100" cy="100" r="92" class="chakra-ring" stroke-width="6"/>
+  <!-- Inner ring -->
+  <circle cx="100" cy="100" r="72" class="chakra-ring" stroke-width="3"/>
+  <!-- Hub circle -->
+  <circle cx="100" cy="100" r="10" class="chakra-hub"/>
+  <!-- Hub ring -->
+  <circle cx="100" cy="100" r="16" class="chakra-ring" stroke-width="3"/>
+
+  <!-- 24 spokes  each rotated 15° -->
+  <g stroke="#003087" stroke-width="3" stroke-linecap="round">
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(0   100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(15  100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(30  100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(45  100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(60  100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(75  100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(90  100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(105 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(120 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(135 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(150 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(165 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(180 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(195 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(210 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(225 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(240 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(255 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(270 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(285 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(300 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(315 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(330 100 100)"/>
+    <line x1="100" y1="84" x2="100" y2="22" transform="rotate(345 100 100)"/>
+  </g>
+</svg>

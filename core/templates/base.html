@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}"
+      dir="{% if LANGUAGE_CODE in 'ur,sd,ks' %}rtl{% else %}ltr{% endif %}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>{% block title %}IP-SAKTI Sahayak — Ministry of Ayush{% endblock %}</title>
+
+  {% load static %}
+
+  {# ── Design system ── #}
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/gov-style.css' %}" />
+  {% block extra_css %}{% endblock %}
+
+  {# ── Noto Sans — multilingual (offline: see core/static/fonts/FONTS.md) ── #}
+  {# Online fallback: uncomment for dev; bundle offline via fontsource for demo #}
+  {# <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wdth,wght@0,75..125,100..900;1,75..125,100..900&family=Noto+Sans+Devanagari:wdth,wght@75..125,100..900&display=swap" rel="stylesheet"> #}
+
+  {# ── dotLottie player (self-hosted, offline-safe) ── #}
+  {# Download: https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs → core/static/js/ #}
+  <script type="module" src="{% static 'js/dotlottie-player.mjs' %}" defer></script>
+
+  {# ── HTMX ── #}
+  <script src="{% static 'js/htmx.min.js' %}" defer></script>
+
+  {# ── CSP nonce (set by django-csp) ── #}
+  {% if CSP_NONCE %}<meta name="csp-nonce" content="{{ CSP_NONCE }}" />{% endif %}
+
+  {# ── Minimal inline base styles for layout ── #}
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, "Noto Sans", "Segoe UI", Arial, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 6px;
+      background: var(--color-primary);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 0 0 4px 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      z-index: 9999;
+      transition: top 0.15s;
+    }
+    .skip-link:focus { top: 0; }
+    .site-main { min-height: calc(100vh - 200px); }
+    .page-inner { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+  </style>
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+
+  {# ── Skip link (accessibility — GIGW 3.0 requirement) ── #}
+  <a class="skip-link" href="#main-content">मुख्य सामग्री पर जाएं · Skip to Main Content</a>
+
+  {# ═══════════════════════════════════════════════════════════
+     HEADER — DBIM Header 1 (Central Ministries & Departments)
+     ═══════════════════════════════════════════════════════════ #}
+
+  {# ── 1. Tricolor strip ── #}
+  <div class="gov-tricolor-bar" role="presentation" aria-hidden="true">
+    <div class="gov-tricolor-bar__saffron"></div>
+    <div class="gov-tricolor-bar__white"></div>
+    <div class="gov-tricolor-bar__green"></div>
+  </div>
+
+  {# ── 2. Accessibility bar ── #}
+  <div class="gov-a11y-bar" role="toolbar" aria-label="Accessibility tools">
+    <a href="#main-content">Skip to Main Content</a>
+    <span class="gov-a11y-bar__sep">|</span>
+    <a href="{% url 'core:screen_reader' %}" aria-label="Screen reader access page">Screen Reader</a>
+    <span class="gov-a11y-bar__sep">|</span>
+    <span aria-label="Font size controls" class="gov-a11y-bar__font-btns">
+      <button onclick="document.documentElement.style.fontSize='112%'" title="Increase font size" aria-label="Increase font size">A+</button>
+      <span class="gov-a11y-bar__sep">|</span>
+      <button onclick="document.documentElement.style.fontSize='100%'" title="Reset font size" aria-label="Reset font size">A</button>
+      <span class="gov-a11y-bar__sep">|</span>
+      <button onclick="document.documentElement.style.fontSize='88%'"  title="Decrease font size" aria-label="Decrease font size">A-</button>
+    </span>
+  </div>
+
+  {# ── 3. Main government header ── #}
+  <header class="gov-header" role="banner">
+    {# National Emblem — replace SVG with official PNG from india.gov.in before submission #}
+    <div class="gov-header__emblem" aria-hidden="true">
+      <img src="{% static 'images/national-emblem.svg' %}"
+           alt=""
+           width="72" height="72"
+           aria-hidden="true" />
+    </div>
+
+    <div class="gov-header__identity">
+      <div class="gov-header__line-main">
+        <span class="devanagari" lang="hi">भारत सरकार</span>
+        <span class="gov-header__line-sep">|</span>
+        Government of India
+      </div>
+      <div class="gov-header__line-ministry">
+        <span class="devanagari" lang="hi">आयुष मंत्रालय</span>
+        &nbsp;|&nbsp; Ministry of Ayush
+      </div>
+      <div class="gov-header__line-sub">
+        All India Institute of Ayurveda (AIIA)
+      </div>
+    </div>
+
+    {# Co-branding area (optional logos for flagship programs) #}
+    <div class="gov-header__cobranding">
+      <div style="text-align:right; color:rgba(255,255,255,0.75); font-size:0.78rem; line-height:1.4;">
+        <strong style="color:#fff; font-size:0.9rem;">IP-SAKTI</strong><br/>
+        <span class="devanagari" lang="hi" style="font-size:0.7rem;">साहायक</span>
+        &nbsp;Sahayak
+      </div>
+    </div>
+  </header>
+
+  {# ── 4. Navigation bar ── #}
+  <nav class="gov-navbar" aria-label="Main navigation">
+    <ul class="gov-navbar__links" role="list">
+      <li><a href="{% url 'core:home' %}"
+             {% if request.resolver_match.url_name == 'home' %}class="active" aria-current="page"{% endif %}>
+        Home</a></li>
+      <li><a href="{% url 'wizard:start' %}"
+             {% if 'wizard' in request.resolver_match.namespace %}class="active" aria-current="page"{% endif %}>
+        Formulation Wizard</a></li>
+      <li><a href="{% url 'chat:chat' %}"
+             {% if 'chat' in request.resolver_match.namespace %}class="active" aria-current="page"{% endif %}>
+        Ask IP-SAKTI</a></li>
+      <li><a href="{% url 'corpus:about' %}"
+             {% if 'corpus' in request.resolver_match.namespace %}class="active" aria-current="page"{% endif %}>
+        About Corpus</a></li>
+    </ul>
+
+    {# Language selector ── all 22 Eighth Schedule + English #}
+    <div class="gov-navbar__lang">
+      <form method="post" action="{% url 'core:set_language' %}" aria-label="Language selection">
+        {% csrf_token %}
+        <select name="language"
+                onchange="this.form.submit()"
+                aria-label="Select interface language">
+          {% for code, label in LANGUAGES %}
+          <option value="{{ code }}"
+                  {% if code == LANGUAGE_CODE %}selected{% endif %}>
+            {{ label }}
+          </option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+  </nav>
+
+  {# ── Flash messages ── #}
+  {% if messages %}
+  <div role="alert" aria-live="polite" style="max-width:1100px; margin:0 auto; padding:0 20px;">
+    {% for message in messages %}
+    <div style="margin-top:12px; padding:10px 16px; border-radius:4px;
+                background:{% if message.tags == 'error' %}var(--color-danger-bg)
+                           {% elif message.tags == 'success' %}var(--color-success-bg)
+                           {% else %}var(--color-accent-light){% endif %};
+                border-left: 4px solid {% if message.tags == 'error' %}var(--color-danger)
+                              {% elif message.tags == 'success' %}var(--color-success)
+                              {% else %}var(--gov-saffron){% endif %};
+                font-size: 0.875rem;">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {# ══════════════════════════════════════════════════════════
+     MAIN CONTENT
+     ══════════════════════════════════════════════════════════ #}
+  <main id="main-content"
+        class="{% block main_class %}site-main{% endblock %}"
+        tabindex="-1"
+        role="main">
+    {% block content %}{% endblock %}
+  </main>
+
+  {# ══════════════════════════════════════════════════════════
+     FOOTER — GOI standard footer
+     ══════════════════════════════════════════════════════════ #}
+  <footer class="gov-footer" role="contentinfo">
+    <nav class="gov-footer__links" aria-label="Footer navigation">
+      <a href="{% url 'core:home' %}">Home</a>
+      <a href="{% url 'corpus:about' %}">About the Corpus</a>
+      <a href="{% url 'core:privacy' %}">Privacy Policy</a>
+      <a href="{% url 'core:terms' %}">Terms of Use</a>
+      <a href="{% url 'core:help' %}">Help</a>
+      <a href="{% url 'core:contact' %}">Contact Us</a>
+    </nav>
+
+    <p class="gov-footer__disclaimer">
+      IP-SAKTI Sahayak provides <strong>general information only</strong>, not legal advice.
+      Always verify with official sources and consult a qualified professional before acting.
+      &mdash;
+      Corpus version: <code style="background:rgba(255,255,255,0.1); padding:0 4px; border-radius:2px;">{{ active_corpus_version|default:"none" }}</code>
+    </p>
+
+    <p class="gov-footer__copyright">
+      &copy; {% now "Y" %} Ministry of Ayush, Government of India.
+      Content on this website is published and managed by All India Institute of Ayurveda (AIIA).
+    </p>
+  </footer>
+
+  {# ── GSAP page-entrance (one tween, < 0.4s) ── #}
+  <script type="module" src="{% static 'js/app.js' %}" defer></script>
+
+  {% block extra_js %}{% endblock %}
+
+</body>
+</html>

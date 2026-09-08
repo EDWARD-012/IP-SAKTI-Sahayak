@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Privacy Policy — IP-SAKTI Sahayak{% endblock %}
+
+{% block content %}
+<div class="page-inner" style="padding-top:32px; padding-bottom:48px;">
+
+  <nav aria-label="Breadcrumb" style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:20px;">
+    <a href="{% url 'core:home' %}" style="color:var(--color-primary);">Home</a>
+    <span style="margin:0 6px;">›</span>
+    <span>Privacy Policy</span>
+  </nav>
+
+  <h1 class="gov-section-title ip-fade-in" style="font-size:1.6rem; margin-bottom:24px;">
+    Privacy Policy
+  </h1>
+  <p style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:32px;">
+    Last updated: September 2026 &nbsp;|&nbsp; Version 4.3
+  </p>
+
+  <div class="gov-card ip-fade-in" style="margin-bottom:20px;">
+    <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">1. What We Collect</h2>
+    <p>IP-SAKTI Sahayak is designed to minimise personal data collection in alignment with the <strong>Digital Personal Data Protection Act, 2023 (DPDP Act)</strong>.</p>
+    <ul style="font-size:0.9rem; line-height:1.7; color:var(--color-text-secondary);">
+      <li><strong>Query fingerprint:</strong> We store a keyed HMAC-SHA256 hash of your question — not the question text itself. This fingerprint cannot be reversed to recover your query.</li>
+      <li><strong>Session data:</strong> Your last 4 conversation turns are stored temporarily in your browser session for context continuity. This data expires with your session and is never written to our permanent database.</li>
+      <li><strong>Audit metadata:</strong> Request ID, corpus version used, jurisdiction selected, response outcome code, citation IDs, and response latency are stored for quality monitoring.</li>
+      <li><strong>No personal identifiers:</strong> We do not collect your name, email, phone number, Aadhaar, or any other personal identifier unless you volunteer them in the contact form.</li>
+    </ul>
+  </div>
+
+  <div class="gov-card ip-fade-in" style="margin-bottom:20px;">
+    <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">2. DPDP Act 2023 Alignment</h2>
+    <p style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.7;">
+      This application implements the following DPDP-aligned practices:
+    </p>
+    <ul style="font-size:0.9rem; line-height:1.7; color:var(--color-text-secondary);">
+      <li><strong>Data minimisation:</strong> Only data necessary for service quality monitoring is stored.</li>
+      <li><strong>Purpose limitation:</strong> Audit data is used solely for improving answer quality and system monitoring.</li>
+      <li><strong>No query text storage:</strong> The HMAC key is rotated per deployment. Even with access to the database, your questions cannot be reconstructed.</li>
+      <li><strong>Session controls:</strong> You can delete your session data at any time using the <a href="{% url 'chat:session_clear' %}" style="color:var(--color-primary);">Delete Session</a> control in the chat interface.</li>
+    </ul>
+  </div>
+
+  <div class="gov-card ip-fade-in" style="margin-bottom:20px;">
+    <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">3. Cookies and Sessions</h2>
+    <p style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.7;">
+      This application uses a single session cookie to maintain your language preference, conversation context, and wizard progress.
+      No tracking cookies, analytics cookies, or third-party advertising cookies are used.
+    </p>
+  </div>
+
+  <div class="gov-card ip-fade-in" style="margin-bottom:20px;">
+    <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">4. Data Retention</h2>
+    <ul style="font-size:0.9rem; line-height:1.7; color:var(--color-text-secondary);">
+      <li><strong>Session data:</strong> Deleted when your session expires (7 days) or when you click "Delete session".</li>
+      <li><strong>Audit metadata:</strong> Retained for system monitoring as per deployment policy.</li>
+    </ul>
+  </div>
+
+  <div class="gov-card ip-fade-in" style="margin-bottom:20px;">
+    <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">5. Legal Disclaimer</h2>
+    <p style="font-size:0.9rem; color:var(--color-text-secondary); line-height:1.7;">
+      IP-SAKTI Sahayak provides <strong>general information only</strong>. It does not constitute legal advice.
+      Always verify information with official sources and consult a qualified IP professional before acting.
+    </p>
+  </div>
+
+  <div style="margin-top:32px; padding:16px; background:var(--color-primary-light); border-radius:4px; border-left:4px solid var(--gov-saffron);">
+    <p style="margin:0; font-size:0.85rem; color:var(--color-text-secondary);">
+      <strong>Contact:</strong> For privacy-related queries, contact All India Institute of Ayurveda (AIIA),
+      Ministry of Ayush, Government of India.
+      <a href="{% url 'core:contact' %}" style="color:var(--color-primary);">Contact page →</a>
+    </p>
+  </div>
+
+</div>
+{% endblock %}

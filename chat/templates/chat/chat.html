@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+{% load static %}
+{% load ip_sakti_tags %}
+
+{% block title %}Ask IP-SAKTI — Chat | Ministry of Ayush{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}" />
+{% endblock %}
+
+{% block main_class %}site-main chat-page{% endblock %}
+
+{% block content %}
+
+{# ── Demo mode banner ── #}
+{% if DEMO_MODE %}
+<div class="chat-demo-banner" role="status" aria-live="polite">
+  <span class="chat-demo-banner__icon" aria-hidden="true">⚠</span>
+  <span>Running in demo mode — connect Ollama for live answers. Responses are illustrative only.</span>
+</div>
+{% endif %}
+
+{# ── Jurisdiction + language bar ── #}
+<div class="chat-juri-bar" role="toolbar" aria-label="Jurisdiction and language settings">
+  <span class="chat-juri-bar__label">Jurisdiction</span>
+  <div class="chat-juri-bar__group" role="group" aria-label="Select jurisdiction">
+    <button type="button"
+            class="chat-juri-btn {% if jurisdiction == 'india' or not jurisdiction %}active{% endif %}"
+            onclick="setJurisdiction(this, 'india')"
+            aria-pressed="{% if jurisdiction == 'india' or not jurisdiction %}true{% else %}false{% endif %}"
+            aria-label="India jurisdiction">
+      🇮🇳 India
+    </button>
+    <button type="button"
+            class="chat-juri-btn {% if jurisdiction == 'international' %}active{% endif %}"
+            onclick="setJurisdiction(this, 'international')"
+            aria-pressed="{% if jurisdiction == 'international' %}true{% else %}false{% endif %}"
+            aria-label="International jurisdiction">
+      🌐 International
+    </button>
+    <button type="button"
+            class="chat-juri-btn {% if jurisdiction == 'both' %}active{% endif %}"
+            onclick="setJurisdiction(this, 'both')"
+            aria-pressed="{% if jurisdiction == 'both' %}true{% else %}false{% endif %}"
+            aria-label="Both India and International jurisdiction">
+      Both
+    </button>
+  </div>
+  <div class="chat-lang-indicator" aria-label="Current language">
+    <span class="chat-lang-indicator__badge" aria-label="Language: {{ LANGUAGE_CODE }}">{{ LANGUAGE_CODE|upper }}</span>
+    <span>{{ lang_name|default:"English" }}</span>
+  </div>
+</div>
+
+{# ── Two-panel layout ── #}
+<div class="chat-layout">
+
+  {# ── Left sidebar (lg+) ── #}
+  <aside class="chat-sidebar" aria-label="Chat sidebar">
+
+    {# Corpus info #}
+    <div>
+      <p class="chat-sidebar__section-title">Corpus</p>
+      <div class="chat-corpus-info">
+        <div class="chat-corpus-info__version">
+          Active version:
+          <strong class="chat-corpus-info__ver-badge">{{ active_corpus_version|default:"—" }}</strong>
+        </div>
+        <a href="{% url 'corpus:about' %}" class="chat-corpus-info__link" aria-label="Learn about the legal corpus">
+          About this corpus →
+        </a>
+      </div>
+    </div>
+
+    {# Session history ── last 4 Q&A pairs #}
+    <div>
+      <p class="chat-sidebar__section-title">Session History</p>
+      {% if session_history %}
+        <ul class="chat-history-list" aria-label="Recent questions in this session">
+          {% for turn in session_history|slice:":4" %}
+          <li class="chat-history-item">
+            <span class="chat-history-item__q" title="{{ turn.question }}">
+              {{ turn.question|truncatechars:60 }}
+            </span>
+            <span class="chat-history-item__meta">
+              <span class="ev-label ev-label--{{ turn.outcome|outcome_css_class }}" aria-label="Evidence: {{ turn.outcome|outcome_label }}">
+                {{ turn.outcome|outcome_label }}
+              </span>
+            </span>
+          </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="chat-history-empty">No questions asked yet in this session.</p>
+      {% endif %}
+    </div>
+
+    {# Session clear #}
+    <div>
+      <button type="button"
+              class="chat-clear-btn"
+              hx-post="{% url 'chat:session_clear' %}"
+              hx-confirm="Clear all session data? This cannot be undone."
+              hx-target="body"
+              hx-swap="none"
+              aria-label="Clear chat session history">
+        🗑 Clear Session
+      </button>
+    </div>
+
+    {# Quick-link to help #}
+    <div>
+      <a href="{% url 'core:help' %}" style="font-size:var(--text-xs); color:var(--color-text-muted);">
+        ❓ How to use IP-SAKTI →
+      </a>
+    </div>
+
+  </aside>
+
+  {# ── Main chat panel ── #}
+  <section class="chat-main" aria-label="IP-SAKTI chat">
+
+    {# Thinking indicator (htmx-indicator — always in DOM, shown by HTMX) #}
+    <div id="thinking-indicator"
+         class="htmx-indicator"
+         role="status"
+         aria-live="polite"
+         aria-label="Processing your question">
+      {% include "chat/partials/_thinking.html" %}
+    </div>
+
+    {# Answer area (HTMX swap target) #}
+    <div id="answer-area"
+         class="chat-answer-area"
+         aria-live="polite"
+         aria-atomic="false"
+         tabindex="0"
+         aria-label="Answer area">
+
+      {# Empty state — replaced by HTMX on first ask #}
+      <div class="chat-empty-state ip-fade-in" id="chat-empty-state">
+        <div class="chat-empty-state__lottie" aria-hidden="true">
+          {# dotLottie idle animation — falls back gracefully if JS missing #}
+          <dotlottie-player
+            src="{% static 'lottie/ip-idle.lottie' %}"
+            autoplay loop
+            style="width:140px;height:140px;"
+            aria-hidden="true">
+          </dotlottie-player>
+        </div>
+        <h2 class="chat-empty-state__title">Ask IP-SAKTI a question</h2>
+        <p class="chat-empty-state__hint">
+          Type your question about patents, GI, biodiversity, traditional knowledge,
+          or regulatory classification. Every answer cites verified sources.
+        </p>
+        <a href="{% url 'core:help' %}" class="gov-btn-secondary" style="font-size:var(--text-sm);">
+          See example questions →
+        </a>
+      </div>
+
+    </div>
+
+    {# ── Input area ── #}
+    <div class="chat-input-area">
+      <form id="chat-form"
+            class="chat-input-form"
+            hx-post="{% url 'chat:ask' %}"
+            hx-target="#answer-area"
+            hx-swap="innerHTML"
+            hx-indicator="#thinking-indicator"
+            hx-on::after-request="document.getElementById('chat-empty-state')?.remove()"
+            novalidate
+            aria-label="Ask a question">
+        {% csrf_token %}
+        <input type="hidden" name="jurisdiction" id="jurisdiction-input" value="{{ jurisdiction|default:'india' }}" />
+        <input type="hidden" name="language" value="{{ LANGUAGE_CODE }}" />
+
+        <div class="chat-textarea-row">
+          <label for="chat-question" class="sr-only">Your question</label>
+          <textarea
+            id="chat-question"
+            name="question"
+            class="chat-textarea"
+            placeholder="e.g. Can an Ayurvedic formulation derived from a classical text be patented in India?"
+            rows="2"
+            maxlength="2000"
+            aria-label="Type your legal question here"
+            aria-describedby="chat-input-hint"
+            required
+          >{% if form.question.value %}{{ form.question.value }}{% endif %}</textarea>
+
+          {# Submit button #}
+          <button type="submit"
+                  class="gov-btn-primary chat-submit-btn"
+                  aria-label="Submit question to IP-SAKTI">
+            Ask
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/>
+            </svg>
+          </button>
+
+          {# Cancel button (shown during in-flight request) #}
+          <button type="button"
+                  class="chat-cancel-btn"
+                  hx-delete="{% url 'chat:cancel' %}"
+                  hx-vals='{"request_id":"{{ current_request_id|default:'' }}"}'
+                  hx-target="#answer-area"
+                  hx-swap="innerHTML"
+                  aria-label="Cancel ongoing request">
+            Cancel
+          </button>
+        </div>
+
+        <div class="chat-input-hint" id="chat-input-hint">
+          <span>Corpus: <strong>{{ active_corpus_version|default:"none" }}</strong> &middot; Answers cite verified Indian statutes only</span>
+          <span id="char-counter" aria-live="polite" aria-atomic="true">0 / 2000</span>
+        </div>
+      </form>
+    </div>
+
+  </section>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  /* ── Jurisdiction toggle ── */
+  function setJurisdiction(btn, value) {
+    document.querySelectorAll('.chat-juri-btn').forEach(function(b) {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
+    document.getElementById('jurisdiction-input').value = value;
+  }
+
+  /* ── Character counter ── */
+  (function () {
+    var ta      = document.getElementById('chat-question');
+    var counter = document.getElementById('char-counter');
+    if (!ta || !counter) return;
+    function update() { counter.textContent = ta.value.length + ' / 2000'; }
+    ta.addEventListener('input', update);
+    update();
+  })();
+
+  /* ── Auto-scroll answer area after HTMX swap ── */
+  document.body.addEventListener('htmx:afterSwap', function (evt) {
+    if (evt.detail.target.id === 'answer-area') {
+      evt.detail.target.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  });
+
+  /* ── Citation accordion ── */
+  document.body.addEventListener('click', function (evt) {
+    var toggle = evt.target.closest('.citations-toggle');
+    if (!toggle) return;
+    var expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    var targetId = toggle.getAttribute('aria-controls');
+    if (targetId) {
+      var panel = document.getElementById(targetId);
+      if (panel) panel.hidden = expanded;
+    }
+  });
+</script>
+{% endblock %}

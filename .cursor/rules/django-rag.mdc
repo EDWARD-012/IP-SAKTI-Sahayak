@@ -1,0 +1,66 @@
+---
+description: Django + RAG coding patterns for IP-SAKTI — applies to all Python files
+globs: **/*.py
+alwaysApply: false
+---
+
+# Django + RAG Patterns
+
+## Concurrency
+- Ollama generation is guarded by `threading.BoundedSemaphore(1)` in `ai.generate`
+- At most 2 waiters with a 5-second wait; then return `busy` state
+- Never use Celery, Django Q, or Redis in the MVP
+- Gunicorn: `--workers 1 --threads 4` only; embedded Chroma is read-only at runtime
+
+## Database
+```python
+# settings.py — SQLite WAL mode + busy timeout
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+        "OPTIONS": {"timeout": 5},  # busy_timeout in seconds
+        "TEST": {"NAME": BASE_DIR / "test_db.sqlite3"},
+    }
+}
+
+# Activate WAL in AppConfig.ready()
+from django.db import connection
+connection.cursor().execute("PRAGMA journal_mode=WAL;")
+```
+
+## ai.generate contract
+```python
+# ai/generate.py pattern
+def generate(prompt: str, model: str, timeout: float = 45.0) -> str:
+    """Acquire semaphore → call Ollama → release → return raw text."""
+```
+
+## ai.citations contract
+```python
+# A citation is valid only when ALL three conditions hold:
+# 1. chunk_id is in the retrieved set for this request
+# 2. The cited section/locator string appears in the chunk text
+# 3. A relevance check finds overlapping legal terms
+```
+
+## HTMX views
+- Return `HttpResponse` with an HTML partial, never full page on HTMX requests
+- Check `request.htmx` (from `django-htmx`) before returning partials
+- All `POST` views require CSRF; do not exempt chat or wizard endpoints
+
+## AnswerAudit model
+```python
+# Never store question text.  Store only:
+# query_hmac  = HMAC-SHA256(question, key=settings.AUDIT_HMAC_KEY)
+# query_hmac_key_id  = identifier for key rotation
+```
+
+## Security checklist (run before any PR)
+- [ ] No secret in source; all in `.env`
+- [ ] `DEBUG=False` in non-runserver path
+- [ ] `ALLOWED_HOSTS` set
+- [ ] CSP header active (`django-csp`)
+- [ ] CSRF not exempted on chat/wizard
+- [ ] Ollama bound to 127.0.0.1 (check `check_system.ps1`)
+- [ ] Rate limit active on `/assistant/ask/`

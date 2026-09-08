@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact — IP-SAKTI Sahayak{% endblock %}
+
+{% block content %}
+<div class="page-inner" style="padding-top:32px; padding-bottom:48px;">
+
+  <nav aria-label="Breadcrumb" style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:20px;">
+    <a href="{% url 'core:home' %}" style="color:var(--color-primary);">Home</a>
+    <span style="margin:0 6px;">›</span>
+    <span>Contact</span>
+  </nav>
+
+  <h1 class="gov-section-title ip-fade-in" style="font-size:1.6rem; margin-bottom:24px;">Contact Us</h1>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px;">
+
+    <div class="gov-card ip-fade-in">
+      <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">
+        All India Institute of Ayurveda (AIIA)
+      </h2>
+      <address style="font-style:normal; font-size:0.9rem; color:var(--color-text-secondary); line-height:1.8;">
+        Mathura Road, Sarita Vihar<br/>
+        New Delhi — 110 076<br/>
+        India<br/><br/>
+        <strong>Ministry of Ayush</strong><br/>
+        Government of India<br/>
+        AYUSH Bhawan, B Block,<br/>
+        GPO Complex, INA,<br/>
+        New Delhi — 110 023
+      </address>
+    </div>
+
+    <div class="gov-card ip-fade-in">
+      <h2 style="font-size:1rem; color:var(--color-primary); margin-top:0;">Quick Links</h2>
+      <ul style="font-size:0.9rem; color:var(--color-text-secondary); line-height:2; list-style:none; padding:0; margin:0;">
+        <li><a href="https://aiia.gov.in" target="_blank" rel="noopener" style="color:var(--color-primary);">AIIA Official Website ↗</a></li>
+        <li><a href="https://ayush.gov.in" target="_blank" rel="noopener" style="color:var(--color-primary);">Ministry of Ayush ↗</a></li>
+        <li><a href="https://ipindia.gov.in" target="_blank" rel="noopener" style="color:var(--color-primary);">IPO India (Patents, GI, Trademarks) ↗</a></li>
+        <li><a href="https://nbaindia.org" target="_blank" rel="noopener" style="color:var(--color-primary);">National Biodiversity Authority ↗</a></li>
+        <li><a href="https://www.tkdl.res.in" target="_blank" rel="noopener" style="color:var(--color-primary);">Traditional Knowledge Digital Library ↗</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="gov-card ip-fade-in" style="background:var(--color-primary-light); border-top-color:var(--gov-saffron);">
+    <p style="font-size:0.875rem; color:var(--color-text-secondary); margin:0; line-height:1.7;">
+      <strong>Note:</strong> IP-SAKTI Sahayak is a prototype developed as part of Smart India Hackathon 2026 (SIH26045).
+      For IP registration, legal advice, or official queries, please contact the relevant authority directly:
+      <a href="https://ipindia.gov.in" target="_blank" rel="noopener" style="color:var(--color-primary);">IPO India</a>,
+      <a href="https://nbaindia.org" target="_blank" rel="noopener" style="color:var(--color-primary);">NBA</a>,
+      or <a href="https://cdsco.gov.in" target="_blank" rel="noopener" style="color:var(--color-primary);">CDSCO</a>.
+    </p>
+  </div>
+
+</div>
+{% endblock %}

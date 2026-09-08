@@ -1,0 +1,39 @@
+# IP-SAKTI Sahayak — Python dependencies
+# Python 3.11+ required
+# Install: pip install -r requirements.txt
+
+# ── Django core ──────────────────────────────────────────────
+Django>=5.1,<6
+django-htmx>=1.19
+django-csp>=3.8
+
+# ── Settings / config ─────────────────────────────────────────
+pydantic-settings>=2.4
+python-dotenv>=1.0
+
+# ── Static files in production ────────────────────────────────
+whitenoise[brotli]>=6.7
+
+# ── Production WSGI servers ───────────────────────────────────
+gunicorn>=22.0      # Linux / Docker / Render
+waitress>=3.0       # Windows demo
+
+# ── AI / RAG stack ────────────────────────────────────────────
+langchain-chroma>=0.1
+langchain-ollama>=0.2
+langchain-core>=0.3
+sentence-transformers>=3.2    # BAAI/bge-m3 embeddings
+chromadb>=0.5
+ollama>=0.3                   # Python client for Ollama
+
+# ── Corpus ingestion ──────────────────────────────────────────
+pypdf>=4.3                    # Legal PDF parsing
+pdfminer.six>=20221105        # Fallback PDF text extraction
+
+# ── Optional: translation (IndicTrans2) ───────────────────────
+# ctranslate2>=4.3            # Uncomment after corpus sprint
+# sacremoses>=0.1.1
+
+# ── Utilities ─────────────────────────────────────────────────
+requests>=2.32
+tqdm>=4.66

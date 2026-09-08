@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Formulation Wizard — IP-SAKTI Sahayak{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'wizard/css/wizard.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="wizard-page ip-fade-in">
+  <div class="wizard-inner">
+
+    {# ── Wizard page header ── #}
+    <header class="wizard-header">
+      <p class="wizard-header__eyebrow">Formulation Wizard</p>
+      <h1 class="wizard-header__title">IP Protection Pathway Finder</h1>
+      <p class="wizard-header__subtitle">
+        Answer 4 short questions about your Ayurvedic formulation to receive
+        tailored IP protection recommendations.
+      </p>
+    </header>
+
+    {# ── Progress bar (reflects current step from context) ── #}
+    <div class="wizard-progress" aria-label="Wizard progress">
+      <div class="wizard-progress__labels" aria-hidden="true">
+        <span class="wizard-progress__step-label {% if wizard_step >= 1 %}{% if wizard_step == 1 %}active{% else %}done{% endif %}{% endif %}">
+          1. Formulation
+        </span>
+        <span class="wizard-progress__step-label {% if wizard_step >= 2 %}{% if wizard_step == 2 %}active{% else %}done{% endif %}{% endif %}">
+          2. Novelty
+        </span>
+        <span class="wizard-progress__step-label {% if wizard_step >= 3 %}{% if wizard_step == 3 %}active{% else %}done{% endif %}{% endif %}">
+          3. Disclosure
+        </span>
+        <span class="wizard-progress__step-label {% if wizard_step >= 4 %}{% if wizard_step == 4 %}active{% else %}done{% endif %}{% endif %}">
+          4. Intent
+        </span>
+      </div>
+
+      <div class="wizard-progress__track" role="progressbar"
+           aria-valuenow="{{ wizard_step|default:1 }}"
+           aria-valuemin="1"
+           aria-valuemax="4"
+           aria-label="Step {{ wizard_step|default:1 }} of 4">
+        <div class="wizard-progress__fill"
+             style="width:{% widthratio wizard_step|default:1 4 100 %}%;"></div>
+      </div>
+
+      <div class="wizard-progress__text" aria-hidden="true">
+        Step {{ wizard_step|default:1 }} of 4
+      </div>
+
+      <div class="wizard-progress__dots" aria-hidden="true">
+        <span class="wizard-dot {% if wizard_step == 1 %}active{% elif wizard_step > 1 %}done{% endif %}"></span>
+        <span class="wizard-dot {% if wizard_step == 2 %}active{% elif wizard_step > 2 %}done{% endif %}"></span>
+        <span class="wizard-dot {% if wizard_step == 3 %}active{% elif wizard_step > 3 %}done{% endif %}"></span>
+        <span class="wizard-dot {% if wizard_step == 4 %}active{% endif %}"></span>
+      </div>
+    </div>
+
+    {# ── HTMX swap target for step content ── #}
+    <div id="wizard-content"
+         aria-live="polite"
+         aria-atomic="true"
+         aria-label="Wizard step content">
+
+      {# Initial step — Step 1 is rendered server-side on page load #}
+      {% if step_form %}
+        {% include "wizard/_step_form.html" %}
+      {% else %}
+        {# Fallback: direct user to start #}
+        <div style="text-align:center; padding:var(--space-8); color:var(--color-text-muted);">
+          <p>Loading step 1…</p>
+          <a href="{% url 'wizard:start' %}" class="gov-btn-primary" style="margin-top:var(--space-4);">
+            Begin →
+          </a>
+        </div>
+      {% endif %}
+
+    </div>
+
+    {# ── Reset link ── #}
+    <div style="text-align:center; margin-top:var(--space-8); padding-top:var(--space-6); border-top:1px solid var(--color-border);">
+      <a href="{% url 'wizard:reset' %}"
+         style="font-size:var(--text-sm); color:var(--color-text-muted);"
+         aria-label="Start the wizard over from the beginning">
+        Start over from the beginning →
+      </a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

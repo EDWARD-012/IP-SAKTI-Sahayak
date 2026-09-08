@@ -1,0 +1,83 @@
+{% load static %}
+{# HTMX partial — one wizard step form. Swapped into #wizard-content #}
+
+<div class="wizard-step ip-fade-in" role="region" aria-label="{{ step_title }}">
+
+  {# Progress bar #}
+  <div class="wizard-progress" role="progressbar"
+       aria-valuenow="{{ progress_pct }}" aria-valuemin="0" aria-valuemax="100"
+       aria-label="Step {{ step }} of {{ total_steps }}">
+    <div class="wizard-progress__bar" style="width: {{ progress_pct }}%;" id="wizard-progress-bar"></div>
+    <span class="wizard-progress__label">Step {{ step }} of {{ total_steps }}</span>
+  </div>
+
+  <h2 class="wizard-step__title">{{ step_title }}</h2>
+  <p class="wizard-step__desc">{{ step_description }}</p>
+
+  {% if form.errors %}
+  <div class="wizard-error" role="alert">
+    Please select an option before continuing.
+  </div>
+  {% endif %}
+
+  <form hx-post="{% url 'wizard:step' %}"
+        hx-target="#wizard-content"
+        hx-swap="innerHTML"
+        hx-indicator="#wizard-thinking"
+        method="post"
+        class="wizard-form">
+    {% csrf_token %}
+    <input type="hidden" name="current_step" value="{{ step }}" />
+
+    <div class="wizard-options" role="group" aria-labelledby="wizard-q-{{ step }}">
+      {% for radio in form.visible_fields.0 %}
+        <label class="wizard-option" for="{{ radio.id_for_label }}">
+          <input type="radio"
+                 name="{{ form.visible_fields.0.html_name }}"
+                 value="{{ radio.data.value }}"
+                 id="{{ radio.id_for_label }}"
+                 class="wizard-option__input"
+                 {% if radio.data.selected %}checked{% endif %}
+          />
+          <span class="wizard-option__card">
+            <span class="wizard-option__label">{{ radio.choice_label }}</span>
+          </span>
+        </label>
+      {% endfor %}
+
+      {# Notes field on step 4 #}
+      {% if step == 4 %}
+        <div class="wizard-notes-wrap">
+          {{ form.notes }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="wizard-actions">
+      {% if step > 1 %}
+      <button type="button"
+              hx-get="{% url 'wizard:start' %}"
+              hx-target="#wizard-content"
+              hx-swap="innerHTML"
+              class="gov-btn-secondary wizard-btn-back"
+              aria-label="Go back">
+        ← Back
+      </button>
+      {% endif %}
+
+      <button type="submit"
+              class="gov-btn-primary wizard-btn-next"
+              aria-label="{% if is_last_step %}See recommendations{% else %}Next step{% endif %}">
+        {% if is_last_step %}See Recommendations →{% else %}Next →{% endif %}
+      </button>
+    </div>
+  </form>
+
+  {# Thinking indicator #}
+  <div id="wizard-thinking" class="ip-thinking htmx-indicator" aria-hidden="true">
+    <span class="ip-thinking__dot"></span>
+    <span class="ip-thinking__dot"></span>
+    <span class="ip-thinking__dot"></span>
+  </div>
+
+</div>
