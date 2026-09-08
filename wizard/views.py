@@ -60,9 +60,12 @@ def _step_context(step: int, ws: WizardSession) -> dict[str, Any]:
         3: "Which markets are relevant to you?",
         4: "Do you have any existing IP protection?",
     }
+    form = form_class()
     return {
-        "form": form_class(),
+        "form": form,
+        "step_form": form,          # alias used by wizard.html shell
         "step": step,
+        "wizard_step": step,        # alias used by wizard.html progress bar
         "total_steps": TOTAL_STEPS,
         "progress_pct": int((step - 1) / TOTAL_STEPS * 100),
         "step_title": step_titles.get(step, f"Step {step}"),

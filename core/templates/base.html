@@ -10,15 +10,12 @@
   {% load static %}
 
   {# ── Design system ── #}
+  <link rel="stylesheet" href="{% static 'css/fonts.css' %}" />
   <link rel="stylesheet" href="{% static 'css/tokens.css' %}" />
   <link rel="stylesheet" href="{% static 'css/gov-style.css' %}" />
   {% block extra_css %}{% endblock %}
 
-  {# ── Noto Sans — multilingual (offline: see core/static/fonts/FONTS.md) ── #}
-  {# Online fallback: uncomment for dev; bundle offline via fontsource for demo #}
-  {# <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wdth,wght@0,75..125,100..900;1,75..125,100..900&family=Noto+Sans+Devanagari:wdth,wght@75..125,100..900&display=swap" rel="stylesheet"> #}
+  {# Noto Sans multilingual fonts are bundled offline via css/fonts.css — see core/static/fonts/FONTS.md #}
 
   {# ── dotLottie player (self-hosted, offline-safe) ── #}
   {# Download: https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs → core/static/js/ #}
@@ -66,9 +63,7 @@
   {# ── Skip link (accessibility — GIGW 3.0 requirement) ── #}
   <a class="skip-link" href="#main-content">मुख्य सामग्री पर जाएं · Skip to Main Content</a>
 
-  {# ═══════════════════════════════════════════════════════════
-     HEADER — DBIM Header 1 (Central Ministries & Departments)
-     ═══════════════════════════════════════════════════════════ #}
+  {# HEADER — DBIM Header 1 (Central Ministries & Departments) #}
 
   {# ── 1. Tricolor strip ── #}
   <div class="gov-tricolor-bar" role="presentation" aria-hidden="true">
@@ -94,11 +89,12 @@
 
   {# ── 3. Main government header ── #}
   <header class="gov-header" role="banner">
-    {# National Emblem — replace SVG with official PNG from india.gov.in before submission #}
+    {# National Emblem — official State Emblem (public domain, Wikimedia Commons) #}
     <div class="gov-header__emblem" aria-hidden="true">
-      <img src="{% static 'images/national-emblem.svg' %}"
+      <img src="{% static 'images/national-emblem-official.svg' %}"
            alt=""
            width="72" height="72"
+           style="filter: brightness(0) invert(1);"
            aria-hidden="true" />
     </div>
 
@@ -180,9 +176,7 @@
   </div>
   {% endif %}
 
-  {# ══════════════════════════════════════════════════════════
-     MAIN CONTENT
-     ══════════════════════════════════════════════════════════ #}
+  {# MAIN CONTENT #}
   <main id="main-content"
         class="{% block main_class %}site-main{% endblock %}"
         tabindex="-1"
@@ -190,9 +184,7 @@
     {% block content %}{% endblock %}
   </main>
 
-  {# ══════════════════════════════════════════════════════════
-     FOOTER — GOI standard footer
-     ══════════════════════════════════════════════════════════ #}
+  {# FOOTER — GOI standard footer #}
   <footer class="gov-footer" role="contentinfo">
     <nav class="gov-footer__links" aria-label="Footer navigation">
       <a href="{% url 'core:home' %}">Home</a>

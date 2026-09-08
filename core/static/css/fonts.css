@@ -1,0 +1,167 @@
+/* IP-SAKTI Sahayak — Offline Noto Sans fonts (OFL-1.1)
+   Bundled via @fontsource packages. See core/static/fonts/FONTS.md */
+
+/* ── Latin (base UI) ── */
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/noto-sans-latin-400-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212;
+}
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/noto-sans-latin-700-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212;
+}
+
+/* ── Devanagari (Hindi, Marathi, Nepali, Sanskrit, Konkani, Dogri, Maithili, Bodo) ── */
+@font-face {
+  font-family: "Noto Sans Devanagari";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/noto-sans-devanagari-devanagari-400-normal.woff2") format("woff2");
+  unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20A8, U+20B9, U+25CC, U+A830-A839, U+A8E0-A8FF;
+}
+@font-face {
+  font-family: "Noto Sans Devanagari";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/noto-sans-devanagari-devanagari-700-normal.woff2") format("woff2");
+  unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20A8, U+20B9, U+25CC, U+A830-A839, U+A8E0-A8FF;
+}
+
+/* ── Bengali (Bengali, Assamese) ── */
+@font-face {
+  font-family: "Noto Sans Bengali";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/noto-sans-bengali-bengali-400-normal.woff2") format("woff2");
+  unicode-range: U+0980-09FF, U+1CD0-1CF9, U+200C-200D, U+20B9, U+25CC, U+A8F1;
+}
+@font-face {
+  font-family: "Noto Sans Bengali";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/noto-sans-bengali-bengali-700-normal.woff2") format("woff2");
+  unicode-range: U+0980-09FF, U+1CD0-1CF9, U+200C-200D, U+20B9, U+25CC, U+A8F1;
+}
+
+/* ── Tamil ── */
+@font-face {
+  font-family: "Noto Sans Tamil";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/noto-sans-tamil-tamil-400-normal.woff2") format("woff2");
+  unicode-range: U+0B80-0BFF, U+200C-200D, U+20B9, U+25CC;
+}
+@font-face {
+  font-family: "Noto Sans Tamil";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/noto-sans-tamil-tamil-700-normal.woff2") format("woff2");
+  unicode-range: U+0B80-0BFF, U+200C-200D, U+20B9, U+25CC;
+}
+
+/* ── Telugu ── */
+@font-face {
+  font-family: "Noto Sans Telugu";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/noto-sans-telugu-telugu-400-normal.woff2") format("woff2");
+  unicode-range: U+0C00-0C7F, U+200C-200D, U+25CC;
+}
+@font-face {
+  font-family: "Noto Sans Telugu";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/noto-sans-telugu-telugu-700-normal.woff2") format("woff2");
+  unicode-range: U+0C00-0C7F, U+200C-200D, U+25CC;
+}
+
+/* ── Gujarati ── */
+@font-face {
+  font-family: "Noto Sans Gujarati";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/noto-sans-gujarati-gujarati-400-normal.woff2") format("woff2");
+  unicode-range: U+0A80-0AFF, U+200C-200D, U+20B9, U+25CC, U+A830-A839;
+}
+@font-face {
+  font-family: "Noto Sans Gujarati";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/noto-sans-gujarati-gujarati-700-normal.woff2") format("woff2");
+  unicode-range: U+0A80-0AFF, U+200C-200D, U+20B9, U+25CC, U+A830-A839;
+}
+
+/* ── Kannada ── */
+@font-face {
+  font-family: "Noto Sans Kannada";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/noto-sans-kannada-kannada-400-normal.woff2") format("woff2");
+  unicode-range: U+0C80-0CFF, U+1CD0-1CF9, U+200C-200D, U+25CC;
+}
+@font-face {
+  font-family: "Noto Sans Kannada";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/noto-sans-kannada-kannada-700-normal.woff2") format("woff2");
+  unicode-range: U+0C80-0CFF, U+1CD0-1CF9, U+200C-200D, U+25CC;
+}
+
+/* ── Malayalam ── */
+@font-face {
+  font-family: "Noto Sans Malayalam";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/noto-sans-malayalam-malayalam-400-normal.woff2") format("woff2");
+  unicode-range: U+0D00-0D7F, U+1CDA, U+200C-200D, U+25CC, U+A8F1;
+}
+@font-face {
+  font-family: "Noto Sans Malayalam";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/noto-sans-malayalam-malayalam-700-normal.woff2") format("woff2");
+  unicode-range: U+0D00-0D7F, U+1CDA, U+200C-200D, U+25CC, U+A8F1;
+}
+
+/* ── Composite font stack ──
+   Browsers pick the right face per glyph via unicode-range.
+   Missing scripts (Odia, Gurmukhi, Perso-Arabic, Meetei, Ol Chiki) fall back
+   to system fonts until their @fontsource files are added — see FONTS.md. */
+:root {
+  --font-multilingual:
+    "Noto Sans",
+    "Noto Sans Devanagari",
+    "Noto Sans Bengali",
+    "Noto Sans Tamil",
+    "Noto Sans Telugu",
+    "Noto Sans Gujarati",
+    "Noto Sans Kannada",
+    "Noto Sans Malayalam",
+    system-ui, "Segoe UI", Arial, sans-serif;
+}
+
+body {
+  font-family: var(--font-multilingual);
+}
