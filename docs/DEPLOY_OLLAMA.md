@@ -1,82 +1,58 @@
-# Deploy Ollama for IP-SAKTI (Railway)
+# Deploy Ollama for IP-SAKTI (Railway cloud)
 
-Railway hosts the Django app. Ollama runs on a **laptop (or other GPU/CPU host)** and is reached over an HTTPS tunnel.
+**Production path:** Ollama runs as its own Railway service in the same project as Django.
+No laptop tunnel required. Cloudflare Workers cannot host full Ollama; use Railway (or similar).
 
-Do **not** set `OLLAMA_BASE_URL=http://127.0.0.1:11434` on Railway — that loopback is the container itself.
-
-## Architecture
+## Architecture (live)
 
 ```text
 User browser
-    → https://ip-sakti-sahayak-production-4c21.up.railway.app
-    → Django (DEMO_MODE=False)
-    → OLLAMA_BASE_URL=https://<tunnel>
-    → Laptop Ollama :11434 (qwen2.5:3b-instruct-q4_K_M)
+  → https://ip-sakti-sahayak-production-4c21.up.railway.app
+  → Django (DEMO_MODE=False)
+  → OLLAMA_BASE_URL=http://ollama.railway.internal:11434
+  → Railway service "ollama" (qwen2.5:3b-instruct-q4_K_M on volume)
 ```
 
-## Prerequisites
+## What is already deployed
 
-- Ollama installed and model pulled:
+| Piece | Detail |
+|---|---|
+| Service | `ollama` (custom image from `deploy/ollama/`) |
+| Volume | `ollama-volume` → `/root/.ollama` (model cache) |
+| Model | `qwen2.5:3b-instruct-q4_K_M` (~1.9 GB, pulled at boot) |
+| Django var | `OLLAMA_BASE_URL=http://ollama.railway.internal:11434` |
+| Flag | `DEMO_MODE=False` |
 
-```powershell
-ollama pull qwen2.5:3b-instruct-q4_K_M
-ollama list
-# Optional check:
-Invoke-RestMethod http://127.0.0.1:11434/api/tags
-```
+## Redeploy / update Ollama
 
-- Railway CLI linked to project `ip-sakti-sahayak`.
-- Tunnel client: [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/installation/) **or** [ngrok](https://ngrok.com/download).
-
-## 1. Allow tunnel Host headers (Ollama)
-
-Ollama rejects non-local `Host` headers with bare **403** (DNS-rebinding guard). Either:
-
-```powershell
-# Preferred with tunnels: rewrite Host at the tunnel (see commands below), OR
-# Bind openly + allow origins (Windows User env, then restart Ollama):
-[System.Environment]::SetEnvironmentVariable("OLLAMA_HOST", "0.0.0.0:11434", "User")
-[System.Environment]::SetEnvironmentVariable("OLLAMA_ORIGINS", "*", "User")
-# Then restart Ollama / `ollama serve`
-```
-
-## 2. Start the tunnel
-
-### Option A — Cloudflare quick tunnel
-
-```powershell
-& "C:\Program Files (x86)\cloudflared\cloudflared.exe" tunnel --url http://127.0.0.1:11434 --http-host-header="localhost:11434"
-```
-
-Copy the printed `https://….trycloudflare.com` URL (no trailing slash).
-
-### Option B — ngrok
-
-```powershell
-ngrok http 11434 --host-header="localhost:11434"
-```
-
-Copy the `https://….ngrok-free.app` (or similar) forwarding URL.
-
-Leave the tunnel process running for the whole demo.
-
-## 3. Point Railway at the tunnel
+From the repo root:
 
 ```powershell
 cd C:\IP-SAKTI-Sahayak
-railway variables set OLLAMA_BASE_URL=https://YOUR-TUNNEL-HOST
-railway variables set DEMO_MODE=False
-railway variables set OLLAMA_MODEL=qwen2.5:3b-instruct-q4_K_M
+railway up .\deploy\ollama -s ollama -d -y --path-as-root --ci
 ```
 
-Redeploy or restart the web service so workers pick up env:
+Entrypoint starts `ollama serve`, then `ollama pull` for `OLLAMA_MODEL` (skipped if already on the volume).
+
+Service variables (on `ollama`):
+
+```text
+OLLAMA_HOST=0.0.0.0:11434
+OLLAMA_ORIGINS=*
+OLLAMA_MODEL=qwen2.5:3b-instruct-q4_K_M
+```
+
+Web service variables (on `ip-sakti-sahayak`):
 
 ```powershell
-railway up -y -d --ci
-# or: railway redeploy
+railway service link ip-sakti-sahayak
+railway variables set OLLAMA_BASE_URL=http://ollama.railway.internal:11434
+railway variables set DEMO_MODE=False
+railway variables set OLLAMA_MODEL=qwen2.5:3b-instruct-q4_K_M
+railway service restart -y
 ```
 
-## 4. Verify
+## Verify
 
 ```powershell
 Invoke-RestMethod https://ip-sakti-sahayak-production-4c21.up.railway.app/health/
@@ -86,31 +62,27 @@ Expect:
 
 | Field | Target |
 |---|---|
-| `ok` | `true` |
 | `demo_mode` | `false` |
 | `ollama_reachable` | `true` |
 
-Then ask a patent/GI question on the live site. If Ollama is slow on CPU, allow 30–120s.
+CPU inference on Railway is slow (often 30–120s per answer). Scale memory if the service OOMs.
 
-## 5. Rollback to stub demo
+## Fallback — laptop + tunnel (optional)
+
+Only if the cloud Ollama service is down:
 
 ```powershell
-railway variables set DEMO_MODE=True
+& "C:\Program Files (x86)\cloudflared\cloudflared.exe" tunnel --url http://127.0.0.1:11434 --http-host-header="localhost:11434"
+railway variables set OLLAMA_BASE_URL=https://YOUR-TUNNEL-HOST
 ```
+
+Ollama rejects non-local `Host` headers with **403** unless the tunnel rewrites Host (flag above) or `OLLAMA_HOST=0.0.0.0:11434`.
 
 ## Local Docker (optional)
 
-`docker-compose.yml` can start an `ollama` service beside `web` for local stacks. Railway production still uses the tunnel pattern above.
-
-## Jury day checklist
-
-- [ ] Laptop plugged in, sleep disabled
-- [ ] `ollama list` shows the Qwen model
-- [ ] Tunnel process alive; URL matches Railway `OLLAMA_BASE_URL`
-- [ ] `/health/` shows `demo_mode=false` and `ollama_reachable=true`
-- [ ] One warm-up Ask completed before the demo
+`docker-compose.yml` profile `ollama` runs Ollama beside `web` on a laptop. Production still uses the Railway `ollama` service.
 
 ## Limits
 
-- Tunneled Ollama enables **LLM generation** from the cloud app.
-- Full **cited RAG** also needs a Chroma index visible to the Django process. Cloud `seed_cloud_db` seeds statute metadata (`0.3-cloud`). For full retrieval, use the laptop-indexed corpus profile or sync vectors to the Railway volume in a later step.
+- Cloud Ollama enables **LLM generation** without a laptop.
+- Full **cited RAG** still needs a Chroma index visible to Django. `seed_cloud_db` seeds statute metadata (`0.3-cloud`). Sync vectors to the Railway `/data` volume for full retrieval.

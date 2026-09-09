@@ -15,7 +15,7 @@ IP-SAKTI Sahayak answers patents, GI, biodiversity/ABS, TKDL, and Ayush regulato
 | **Health** | https://ip-sakti-sahayak-production-4c21.up.railway.app/health/ |
 | **Repo** | https://github.com/EDWARD-012/IP-SAKTI-Sahayak |
 
-Railway runs the Django UI + Postgres. **Live LLM answers** need a reachable Ollama endpoint (see [docs/DEPLOY_OLLAMA.md](docs/DEPLOY_OLLAMA.md)). With `DEMO_MODE=True`, the cloud app serves illustrative answers only.
+Railway hosts Django + Postgres **and** a dedicated **Ollama** service (`qwen2.5:3b-instruct-q4_K_M`) on the private network — no laptop required. With `DEMO_MODE=True`, the app serves illustrative answers only. Details: [docs/DEPLOY_OLLAMA.md](docs/DEPLOY_OLLAMA.md).
 
 ---
 
@@ -25,7 +25,7 @@ Railway runs the Django UI + Postgres. **Live LLM answers** need a reachable Oll
 |---|---|
 | Web | Django 5 + HTMX + GOI-style UI |
 | RAG | LangChain-thin · Chroma · **bge-m3** |
-| LLM | **Ollama** · `qwen2.5:3b-instruct-q4_K_M` (CPU-friendly) |
+| LLM | **Ollama** on Railway · `qwen2.5:3b-instruct-q4_K_M` (CPU) |
 | Cloud DB | Railway Postgres (`DATABASE_URL`) |
 | Local DB | SQLite under `DATA_DIR` |
 
@@ -67,24 +67,24 @@ OLLAMA_MODEL=qwen2.5:3b-instruct-q4_K_M
 
 ---
 
-## Railway + Ollama (jury / public demo)
-
-Railway **cannot** use `http://127.0.0.1:11434` (that is inside the container). Expose laptop Ollama with a tunnel and point Railway at it:
+## Railway + Ollama (cloud — laptop optional)
 
 ```text
-Browser → Railway Django → HTTPS tunnel → Laptop Ollama (Qwen 3B)
+Browser → Railway Django → http://ollama.railway.internal:11434 → Railway Ollama (Qwen 3B)
 ```
 
-Full steps: **[docs/DEPLOY_OLLAMA.md](docs/DEPLOY_OLLAMA.md)**
+Image + entrypoint: [`deploy/ollama/`](deploy/ollama/). Full ops: **[docs/DEPLOY_OLLAMA.md](docs/DEPLOY_OLLAMA.md)**
 
-Summary:
+```powershell
+railway up .\deploy\ollama -s ollama -d -y --path-as-root --ci
+# Web already uses:
+#   OLLAMA_BASE_URL=http://ollama.railway.internal:11434
+#   DEMO_MODE=False
+```
 
-1. Keep Ollama running on the laptop.
-2. Start Cloudflare Tunnel or ngrok to port `11434`.
-3. Set Railway variables: `OLLAMA_BASE_URL=https://<tunnel-host>`, `DEMO_MODE=False`.
-4. Check `/health/` → `demo_mode: false`, `ollama_reachable: true`.
+Check `/health/` → `demo_mode: false`, `ollama_reachable: true`.
 
-**Note:** Cloud seed (`seed_cloud_db`) loads statute **metadata**. Full vector RAG needs a Chroma index on the process that answers (typically the laptop profile). Generation via tunneled Ollama can be enabled first; corpus volume sync is a follow-up.
+**Note:** `seed_cloud_db` loads statute **metadata** (`0.3-cloud`). Full cited RAG still needs a Chroma index on the Django volume (follow-up sync). CPU answers can take 30–120s.
 
 ---
 
