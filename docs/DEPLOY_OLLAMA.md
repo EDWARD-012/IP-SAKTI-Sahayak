@@ -85,4 +85,7 @@ Ollama rejects non-local `Host` headers with **403** unless the tunnel rewrites 
 ## Limits
 
 - Cloud Ollama enables **LLM generation** without a laptop.
-- Full **cited RAG** still needs a Chroma index visible to Django. `seed_cloud_db` seeds statute metadata (`0.3-cloud`). Sync vectors to the Railway `/data` volume for full retrieval.
+- Full **cited RAG** also needs a Chroma index + bge-m3 in the Django process.
+  `seed_cloud_db` only seeds statute **metadata** (`0.3-cloud`) — it does **not**
+  build vectors. See **[RAG.md](RAG.md)** for the pipeline and how to sync Chroma
+  to the Railway `/data` volume.

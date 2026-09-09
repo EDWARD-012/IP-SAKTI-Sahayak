@@ -84,7 +84,9 @@ railway up .\deploy\ollama -s ollama -d -y --path-as-root --ci
 
 Check `/health/` → `demo_mode: false`, `ollama_reachable: true`.
 
-**Note:** `seed_cloud_db` loads statute **metadata** (`0.3-cloud`). Full cited RAG still needs a Chroma index on the Django volume (follow-up sync). CPU answers can take 30–120s.
+**RAG on Railway:** Ollama (generation) is cloud-hosted. **Full cited RAG is not** —
+Chroma vectors are not on the Railway volume yet. Corpus `0.3-cloud` is metadata
+only (`seed_cloud_db`). Details: **[docs/RAG.md](docs/RAG.md)**. CPU answers can take 30–120s when retrieval exists.
 
 ---
 
@@ -94,6 +96,7 @@ Check `/health/` → `demo_mode: false`, `ollama_reachable: true`.
 |---|---|
 | [QUICKSTART.md](QUICKSTART.md) | Local setup detail |
 | [USER_GUIDE.md](USER_GUIDE.md) | End-user walkthrough |
+| [docs/RAG.md](docs/RAG.md) | How RAG works · what is / isn’t deployed |
 | [docs/DEPLOY_OLLAMA.md](docs/DEPLOY_OLLAMA.md) | Railway Ollama |
 | [docs/SIH26045_Technical_Documentation.md](docs/SIH26045_Technical_Documentation.md) | Full SIH tech doc |
 | [LICENCES.md](LICENCES.md) | Corpus licence notes |

@@ -260,6 +260,17 @@ flowchart TD
 
 UI maps these to distinct cards so the jury can see **refusal as a feature**.
 
+### 8.4 Local vs Railway (deploy truth)
+
+| Capability | Local (indexed) | Railway public app |
+|---|---|---|
+| UI + About corpus | Yes | Yes (`0.3-cloud` metadata) |
+| Ollama generation | Local Ollama | Cloud `ollama` service |
+| Chroma + bge-m3 retrieve | Yes, after `build_corpus_version` | **Not provisioned yet** |
+| Full cited RAG | Yes | **No** until Chroma is synced to `/data` |
+
+Operator detail: **[docs/RAG.md](RAG.md)**.
+
 ---
 
 ## 9. Corpus management
@@ -496,6 +507,7 @@ Approximate automated suite size: **43** pytest functions (`pytest tests/ -v`). 
 | `LICENCES.md` | Corpus & dependency licensing |
 | `data/CORPUS_SOURCES.md` | Source acquisition |
 | `docs/DEPLOY_OLLAMA.md` | Railway Ollama service |
+| `docs/RAG.md` | RAG pipeline · local vs Railway deploy status |
 | `docs/INDICTRANS.md` | Translation backend status |
 | **This file** | Consolidated SIH technical documentation |
 

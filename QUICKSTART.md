@@ -55,6 +55,7 @@ Expect `status=ok`. For live LLM: `demo_mode=false`, `ollama_reachable=true`.
 ## More
 
 - [USER_GUIDE.md](USER_GUIDE.md) — end-user guide  
+- [docs/RAG.md](docs/RAG.md) — RAG pipeline and deploy status  
 - [docs/SIH26045_Technical_Documentation.md](docs/SIH26045_Technical_Documentation.md) — SIH technical doc  
 - [LICENCES.md](LICENCES.md) — corpus licence notes  
 
