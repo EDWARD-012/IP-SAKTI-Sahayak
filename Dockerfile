@@ -23,13 +23,14 @@ COPY . .
 # Collect static files
 RUN python manage.py collectstatic --no-input
 
-# Create non-root user
+# Create non-root user for local docker; Railway volume /data is often root-owned
+# so the start command relaxes perms then drops to appuser when possible.
 RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
-USER appuser
 
-# Railway / PaaS inject PORT; default 8000 for local docker
 ENV PORT=8000
-CMD sh -c "python manage.py migrate --noinput && \
+CMD sh -c "chmod -R a+rwX /data/chroma_db /data/hf 2>/dev/null || true; \
+    mkdir -p /data/hf 2>/dev/null || true; \
+    python manage.py migrate --noinput && \
     python manage.py seed_cloud_db && \
     gunicorn ip_sakti.wsgi:application \
       --workers 1 --threads 4 --timeout 180 \
