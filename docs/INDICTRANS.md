@@ -1,32 +1,31 @@
 # Optional IndicTrans2 enablement
 
-Models cached locally after gated Agree + `HF_TOKEN`:
+IP-SAKTI can use IndicTrans2 for query/answer translation. Default production
+path uses Ollama (`TRANSLATE_BACKEND=ollama` or `auto`).
+
+## Models
+
+After Hugging Face access + `HF_TOKEN` in `.env`:
 
 - `ai4bharat/indictrans2-indic-en-1B`
 - `ai4bharat/indictrans2-en-indic-1B`
 
-Adapter: `ai/translate.py` (transformers 5 remote-code patches + Ollama fallback).
+Adapter: `ai/translate.py`.
 
-Token: `.env` → `HF_TOKEN` (gitignored). **Revoke any token that was pasted in chat** and create a fresh one.
+## Configuration
 
-## Status (transformers 5.16)
-
-Load path works after local patches (`tokenization_indictrans.py` special-token map,
-`tie_weights(**kwargs)`, `_supports_default_dynamic_cache → False`).
-
-**Inference quality is still broken** on this stack (degenerate “Convention…”
-repetition even under teacher forcing). sentence-transformers 6 requires
-`transformers>=5`, so we cannot pin 4.x in the same venv.
-
-## Demo backend
-
-`.env`:
-
-```
+```env
 TRANSLATE_BACKEND=ollama
+# or: auto | indictrans2
+HF_TOKEN=
 ```
 
-(or omit / `auto` — IndicTrans is tried first, then Ollama if output looks degenerate)
+With `auto`, IndicTrans2 is tried first; if output looks degenerate the pipeline
+falls back to Ollama.
 
-Smoke: Hindi → English via `translate()` should return English through Ollama
-while the jury laptop already has Qwen warm.
+## Notes
+
+- `HF_TOKEN` must never be committed (`.env` is gitignored).
+- sentence-transformers 6 expects `transformers>=5`; pin choices affect both
+  embeddings and IndicTrans2 in the same environment.
+- For jury demos, keep Qwen warm and prefer the Ollama translation backend.

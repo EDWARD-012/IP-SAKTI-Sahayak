@@ -38,9 +38,12 @@ data/corpus/
 node_modules/
 package-lock.json
 
-# IDE
+# IDE / agent tooling (local only — not for GitHub)
 .idea/
 .vscode/
+.cursor/
+.agents/
+skills-lock.json
 *.swp
 *.swo
 .DS_Store
@@ -60,7 +63,4 @@ build/
 *.pem
 *.key
 secrets.json
-
-# Local agent tooling
-.agents/
 

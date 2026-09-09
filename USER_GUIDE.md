@@ -1,10 +1,10 @@
 # IP-SAKTI Sahayak — User Guide
 
-**Guide version:** 4.3  
-**Updated:** 2026-09-08
-
 IP-SAKTI Sahayak provides source-based general information about intellectual
 property, biodiversity/ABS and regulatory topics related to Ayurveda.
+
+Live demo: https://ip-sakti-sahayak-production-4c21.up.railway.app
+
 
 It does **not** replace a patent agent, lawyer, regulator or medical
 professional.

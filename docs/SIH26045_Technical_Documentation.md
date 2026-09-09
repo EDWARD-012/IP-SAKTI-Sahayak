@@ -4,8 +4,7 @@
 **Product name:** IP-SAKTI Sahayak  
 **Sponsoring organisation:** Ministry of Ayush / All India Institute of Ayurveda (AIIA)  
 **Document type:** Technical & product documentation (jury / evaluators)  
-**Implementation baseline:** IMPLEMENTATION_PLAN v4.3 · Jury corpus `0.3-demo`  
-**Repository workspace:** `C:\IP-SAKTI-Sahayak`
+**Corpus profile (demo):** `0.3-demo` · Cloud metadata seed: `0.3-cloud`  
 
 ---
 
@@ -442,7 +441,7 @@ Fresh install outline: create venv → `pip install -r requirements.txt` → cop
 
 ## 15. Demonstration script (summary)
 
-Full timing card: `DEMO_SCRIPT.md`. Condensed flow (~8–10 minutes):
+Condensed live flow (~8–10 minutes):
 
 1. Home — optional Hindi switch; GOI chrome.  
 2. Ask — Section 3(p) / TK chip → pending UX → grounded + Patents Act citation.  
@@ -453,9 +452,9 @@ Full timing card: `DEMO_SCRIPT.md`. Condensed flow (~8–10 minutes):
 7. Optional Wizard header (pathway, not deep examination).  
 
 **If Ask is slow:** state CPU latency (~1–2 min warm); `evidence_only` with quotes remains a valid outcome.  
-**If Ollama dies:** set `DEMO_MODE=True`, restart Waitress, show stub and explain live path separately.
+**If Ollama is unavailable:** set `DEMO_MODE=True`, restart the app, show stub answers and explain the live path separately.
 
-**Do not claim:** equal Pilot-language UI quality; full statute PDFs in-repo; instant cold-start answers; production public HTTPS unless separately provisioned.
+**Do not claim:** equal Pilot-language UI quality; full statute PDFs in-repo; instant cold-start answers.
 
 ---
 
@@ -485,23 +484,18 @@ Approximate automated suite size: **43** pytest functions (`pytest tests/ -v`). 
 | Network-off | Prefer warm models + optional backup video |
 | Multi-process Chroma | Avoid multiple writers; single Waitress process |
 
-Gap tracker for the team: `GAPS.md` (jury-closed items vs deferred).
-
 ---
 
 ## 18. Repository documentation map
 
 | Document | Use |
 |----------|-----|
-| `README.md` | Entry point |
-| `IMPLEMENTATION_PLAN.md` | Architecture & build plan v4.3 |
-| `GAPS.md` | Closed vs open gaps |
-| `DEMO_SCRIPT.md` | Live jury choreography |
-| `QUICKSTART.md` | Fast setup |
+| `README.md` | Entry point · live demo links |
+| `QUICKSTART.md` | Local setup |
 | `USER_GUIDE.md` | End-user oriented |
-| `AUDIT_RESOLUTION.md` | Audit remediation notes |
 | `LICENCES.md` | Corpus & dependency licensing |
 | `data/CORPUS_SOURCES.md` | Source acquisition |
+| `docs/DEPLOY_OLLAMA.md` | Railway Ollama service |
 | `docs/INDICTRANS.md` | Translation backend status |
 | **This file** | Consolidated SIH technical documentation |
 
