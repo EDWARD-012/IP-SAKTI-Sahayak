@@ -37,7 +37,30 @@ class Command(BaseCommand):
         self.stdout.write(f"  EMBED_MODEL={settings.EMBED_MODEL} ({settings.EMBED_DEVICE})")
         self.stdout.write(f"  OLLAMA_MODEL={settings.OLLAMA_MODEL}")
         self.stdout.write(f"  DEMO_MODE={getattr(settings, 'DEMO_MODE', True)}")
+        self.stdout.write(f"  CHROMA_PERSIST_DIR={settings.CHROMA_PERSIST_DIR}")
         self.stdout.write("")
+
+        # ── Chroma active collection ──────────────────────────
+        try:
+            from corpus.models import CorpusVersion
+            import chromadb
+
+            cv = CorpusVersion.objects.filter(status="active").first()
+            if not cv:
+                self.stdout.write(self.style.WARNING("[WARN] No active CorpusVersion"))
+            else:
+                client = chromadb.PersistentClient(path=settings.CHROMA_PERSIST_DIR)
+                col = client.get_collection(cv.chroma_collection)
+                n = int(col.count())
+                self.stdout.write(self.style.SUCCESS(
+                    f"[OK]   Chroma {cv.chroma_collection} → {n} chunks "
+                    f"(corpus {cv.version})"
+                ))
+                if n > 0 and cv.chunks_count != n:
+                    cv.chunks_count = n
+                    cv.save(update_fields=["chunks_count"])
+        except Exception as exc:
+            self.stdout.write(self.style.ERROR(f"[FAIL] Chroma probe: {exc}"))
 
         # ── Embeddings ────────────────────────────────────────
         t0 = time.monotonic()

@@ -152,6 +152,7 @@ def test_health_200(client):
     assert data['status'] == 'ok'
     assert 'demo_mode' in data
     assert 'ollama_reachable' in data
+    assert 'chroma_reachable' in data
     assert 'active_corpus_version' in data
     assert data['active_corpus_version'] not in ('', None)
     assert 'debug' in data

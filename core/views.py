@@ -89,6 +89,23 @@ def _ollama_reachable() -> bool:
         return False
 
 
+def _chroma_reachable() -> bool:
+    """True when active corpus Chroma collection exists and has chunks."""
+    try:
+        import chromadb
+        from corpus.models import CorpusVersion
+
+        cv = CorpusVersion.objects.filter(status="active").first()
+        if not cv or not cv.chroma_collection:
+            return False
+        client = chromadb.PersistentClient(path=settings.CHROMA_PERSIST_DIR)
+        col = client.get_collection(cv.chroma_collection)
+        return int(col.count()) > 0
+    except Exception as exc:
+        logger.debug("Chroma health probe failed: %s", exc)
+        return False
+
+
 def _active_corpus_version() -> str:
     try:
         from corpus.models import CorpusVersion
@@ -100,11 +117,12 @@ def _active_corpus_version() -> str:
 
 @require_GET
 def health(request: HttpRequest) -> JsonResponse:
-    """GET /health/ — lightweight readiness JSON for SIH laptop demo."""
+    """GET /health/ — lightweight readiness JSON for SIH / Railway."""
     payload = {
         "status": "ok",
         "demo_mode": bool(getattr(settings, "DEMO_MODE", True)),
         "ollama_reachable": _ollama_reachable(),
+        "chroma_reachable": _chroma_reachable(),
         "active_corpus_version": _active_corpus_version(),
         "debug": bool(settings.DEBUG),
     }

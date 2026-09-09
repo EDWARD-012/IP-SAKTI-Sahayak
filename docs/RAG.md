@@ -34,71 +34,64 @@ Internal states: `grounded` · `evidence_only` · `unable_to_answer` · `out_of_
 With `DEMO_MODE=True`, retrieval and generation are skipped; the app returns an
 illustrative stub (safe for UI-only demos).
 
-## What must exist for full cited RAG
+## Deploy status (Railway production)
 
-1. **Indexed Chroma collection** for the active corpus version  
-   (built by `build_corpus_version` / activate — not by `seed_cloud_db`).
-2. **Embedding model** loadable in the Django process (`sentence-transformers` + bge-m3).
-3. **Reachable Ollama** with the project model tag.
-4. **`DEMO_MODE=False`**.
+| Layer | Status |
+|---|---|
+| Django UI | Live |
+| Postgres metadata | Active corpus **`0.3-demo`** (seeded by `seed_cloud_db`) |
+| Ollama / Qwen | Live — private service `ollama` |
+| Chroma vectors | Live — volume `/data/chroma_db` · collection `ip_sakti_v0_3-demo` (~43 chunks / 8 sources) |
+| Embedding cache | `/data/hf` (`HF_HOME` / `TRANSFORMERS_CACHE`) |
+| Full cited RAG | **Yes** — after warmup / first Ask loads bge-m3 |
 
-If Chroma has no usable chunks, the pipeline returns `unable_to_answer` even when
-Ollama is healthy (generation never invents law without evidence).
+Health check:
 
-## Deploy status (honest)
+```text
+GET /health/
+→ demo_mode=false, ollama_reachable=true, chroma_reachable=true,
+  active_corpus_version=0.3-demo
+```
 
-| Layer | Local laptop | Railway (public demo) |
-|---|---|---|
-| Django UI | Yes | Yes |
-| Postgres / SQLite metadata | SQLite | Postgres · corpus **`0.3-cloud`** |
-| Statute list (About corpus) | Yes | Yes (`seed_cloud_db`) |
-| Ollama / Qwen | Local install | **Yes** — service `ollama` on private network |
-| Chroma vector index | Yes, if you built/activated a version | **Not deployed yet** |
-| Full cited RAG | Yes, with indexed corpus | **No** — metadata + LLM only |
-
-### Railway today
-
-- `DEMO_MODE=False`
-- `OLLAMA_BASE_URL=http://ollama.railway.internal:11434`
-- Active corpus: **`0.3-cloud`** (manifests / About page metadata)
-- `seed_cloud_db` **does not** write Chroma vectors
-- Without a synced `chroma_db` (or `CHROMA_PERSIST_DIR` on `/data`), Ask cannot
-  retrieve passages → answers stay in the **unable / under-evidenced** path, not
-  full grounded citations
-
-### Local full RAG
+## Local full RAG
 
 ```powershell
-# 1. Corpus files under data/raw/ (see data/CORPUS_SOURCES.md)
 python manage.py build_corpus_version 0.3-demo
 python manage.py validate_corpus_version 0.3-demo
 python manage.py activate_corpus_version 0.3-demo
 
-# 2. .env
-# DEMO_MODE=False
-# OLLAMA_BASE_URL=http://127.0.0.1:11434
-# CHROMA_PERSIST_DIR=./chroma_db
-
+# .env: DEMO_MODE=False, OLLAMA_BASE_URL=http://127.0.0.1:11434, CHROMA_PERSIST_DIR=./chroma_db
 ollama pull qwen2.5:3b-instruct-q4_K_M
 python manage.py runserver
 ```
 
-### How to bring full RAG to Railway (follow-up)
+## Refreshing the cloud index
 
-1. Build and validate the corpus **locally** (Chroma under `chroma_db/` or `DATA_DIR`).
-2. Copy the Chroma persist directory onto the Railway volume (e.g. `/data/chroma_db`).
-3. Set `CHROMA_PERSIST_DIR=/data/chroma_db` on the web service.
-4. Ensure the active `CorpusVersion.chroma_collection` name matches the uploaded collection.
-5. Confirm embedding deps are in the web image (`sentence-transformers`, model download on first Ask — cold start can be large/slow on CPU).
-6. Re-check `/health/` and run a Section 3(p) Ask — expect `grounded` + citations.
+1. Rebuild locally (`build_corpus_version`).
+2. Upload: `railway volume files -v ip-sakti-sahayak-volume upload ./chroma_db /chroma_db --overwrite`
+3. Redeploy / restart web; `seed_cloud_db` keeps `0.3-demo` / `ip_sakti_v0_3-demo` active.
+4. Optional: `railway run python manage.py warmup --no-generate`
 
-Until that sync is done, treat Railway as: **UI + corpus metadata + cloud Ollama**;
-treat **full RAG** as the laptop-indexed profile (or the post-sync cloud profile).
+Do **not** run full embedding builds inside every container boot.
+
+## Edge cases (pipeline)
+
+| Situation | State |
+|---|---|
+| Fewer than 2 retrieved chunks | `unable_to_answer` |
+| Safety blocks foreign / unsafe input | `out_of_scope` |
+| Invented citation `chunk_id` | citations stripped → often `unable_to_answer` |
+| Ollama generate timeout | `evidence_only` (quotes still shown) |
+| Ollama down | `unavailable` |
+| Generate queue full | `busy` |
+| `DEMO_MODE=True` | stub demo card |
+
+Automated coverage: `tests/test_pipeline.py` (mocked).
 
 ## Related docs
 
-- [README.md](../README.md) — entry + live URLs  
-- [QUICKSTART.md](../QUICKSTART.md) — local setup  
-- [DEPLOY_OLLAMA.md](DEPLOY_OLLAMA.md) — Railway Ollama service  
-- [data/CORPUS_SOURCES.md](../data/CORPUS_SOURCES.md) — source acquisition  
-- [SIH26045_Technical_Documentation.md](SIH26045_Technical_Documentation.md) — full SIH write-up  
+- [README.md](../README.md)
+- [QUICKSTART.md](../QUICKSTART.md)
+- [DEPLOY_OLLAMA.md](DEPLOY_OLLAMA.md)
+- [data/CORPUS_SOURCES.md](../data/CORPUS_SOURCES.md)
+- [SIH26045_Technical_Documentation.md](SIH26045_Technical_Documentation.md)

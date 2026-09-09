@@ -15,7 +15,10 @@ IP-SAKTI Sahayak answers patents, GI, biodiversity/ABS, TKDL, and Ayush regulato
 | **Health** | https://ip-sakti-sahayak-production-4c21.up.railway.app/health/ |
 | **Repo** | https://github.com/EDWARD-012/IP-SAKTI-Sahayak |
 
-Railway hosts Django + Postgres **and** a dedicated **Ollama** service (`qwen2.5:3b-instruct-q4_K_M`) on the private network — no laptop required. With `DEMO_MODE=True`, the app serves illustrative answers only. Details: [docs/DEPLOY_OLLAMA.md](docs/DEPLOY_OLLAMA.md).
+Railway hosts Django + Postgres, a dedicated **Ollama** service, and a **Chroma**
+index (`0.3-demo`) on the web volume for full cited RAG. Details:
+[docs/RAG.md](docs/RAG.md) · [docs/DEPLOY_OLLAMA.md](docs/DEPLOY_OLLAMA.md).
+With `DEMO_MODE=True`, the app serves illustrative answers only.
 
 ---
 
@@ -82,11 +85,12 @@ railway up .\deploy\ollama -s ollama -d -y --path-as-root --ci
 #   DEMO_MODE=False
 ```
 
-Check `/health/` → `demo_mode: false`, `ollama_reachable: true`.
+Check `/health/` → `demo_mode: false`, `ollama_reachable: true`,
+`chroma_reachable: true`, `active_corpus_version: 0.3-demo`.
 
-**RAG on Railway:** Ollama (generation) is cloud-hosted. **Full cited RAG is not** —
-Chroma vectors are not on the Railway volume yet. Corpus `0.3-cloud` is metadata
-only (`seed_cloud_db`). Details: **[docs/RAG.md](docs/RAG.md)**. CPU answers can take 30–120s when retrieval exists.
+**RAG on Railway:** Ollama (generation) + Chroma `0.3-demo` on `/data/chroma_db`
++ bge-m3 cache under `/data/hf`. See **[docs/RAG.md](docs/RAG.md)**. First Ask after
+a cold cache may be slow while embeddings download; then CPU answers often take 30–120s.
 
 ---
 

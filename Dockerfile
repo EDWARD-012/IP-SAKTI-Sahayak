@@ -32,7 +32,7 @@ ENV PORT=8000
 CMD sh -c "python manage.py migrate --noinput && \
     python manage.py seed_cloud_db && \
     gunicorn ip_sakti.wsgi:application \
-      --workers 1 --threads 4 --timeout 120 \
+      --workers 1 --threads 4 --timeout 180 \
       --bind 0.0.0.0:${PORT}"
 
 EXPOSE 8000

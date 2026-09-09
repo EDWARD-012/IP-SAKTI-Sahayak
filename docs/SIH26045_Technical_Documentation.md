@@ -264,10 +264,10 @@ UI maps these to distinct cards so the jury can see **refusal as a feature**.
 
 | Capability | Local (indexed) | Railway public app |
 |---|---|---|
-| UI + About corpus | Yes | Yes (`0.3-cloud` metadata) |
+| UI + About corpus | Yes | Yes (`0.3-demo` metadata + manifests) |
 | Ollama generation | Local Ollama | Cloud `ollama` service |
-| Chroma + bge-m3 retrieve | Yes, after `build_corpus_version` | **Not provisioned yet** |
-| Full cited RAG | Yes | **No** until Chroma is synced to `/data` |
+| Chroma + bge-m3 retrieve | Yes, after `build_corpus_version` | Yes — `/data/chroma_db` + `/data/hf` |
+| Full cited RAG | Yes | Yes (demo corpus · 8 sources / ~43 chunks) |
 
 Operator detail: **[docs/RAG.md](RAG.md)**.
 
