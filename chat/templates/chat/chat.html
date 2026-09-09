@@ -147,7 +147,7 @@
             hx-indicator="#thinking-indicator"
             hx-disabled-elt="#chat-question, .chat-submit-btn"
             hx-sync="this:replace"
-            hx-timeout="300000"
+            hx-timeout="120000"
             novalidate
             aria-label="Ask a question">
         {% csrf_token %}
@@ -251,7 +251,8 @@
           '</div>' +
           '<div class="chat-finding__copy">' +
             '<p class="chat-finding__title">Finding verified sources…</p>' +
-            '<p class="chat-finding__hint">Searching the active corpus and preparing a cited answer.</p>' +
+            '<p class="chat-finding__hint">Searching the corpus. On cloud CPU this can take 1–2 minutes; ' +
+            'if the model is slow you still get cited excerpts.</p>' +
             '<div class="ip-thinking">' +
               '<span class="ip-thinking__dot"></span>' +
               '<span class="ip-thinking__dot"></span>' +
@@ -302,6 +303,27 @@
       ta.value = '';
       ta.dispatchEvent(new Event('input'));
     }
+  });
+
+  document.body.addEventListener('htmx:timeout', function (evt) {
+    if (!(evt.detail.elt && evt.detail.elt.id === 'chat-form')) return;
+    var area = document.getElementById('answer-area');
+    if (!area) return;
+    area.innerHTML =
+      '<div class="chat-turn" role="alert">' +
+        '<div class="answer-card">' +
+          '<div class="answer-card__body">' +
+            '<p><strong>Still working or timed out.</strong> Cloud CPU answers can exceed two minutes. ' +
+            'Please wait a moment and ask again, or use a shorter question. Cited excerpts appear if the model is slow.</p>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    var ta = document.getElementById('chat-question');
+    if (ta && _chatDraft) {
+      ta.value = _chatDraft;
+      ta.dispatchEvent(new Event('input'));
+    }
+    announceForScreenReader('Request timed out. Please retry.');
   });
 
   document.body.addEventListener('htmx:responseError', function (evt) {

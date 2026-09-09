@@ -238,7 +238,9 @@ RATE_LIMIT_ASK_PER_MIN: int = int(os.environ.get("RATE_LIMIT_ASK_PER_MIN", "10")
 # ── AI / RAG settings ──────────────────────────────────────────
 OLLAMA_BASE_URL: str = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
 OLLAMA_MODEL: str    = os.environ.get("OLLAMA_MODEL",    "qwen2.5:3b-instruct-q4_K_M")
-OLLAMA_TIMEOUT: float = float(os.environ.get("OLLAMA_TIMEOUT", "45"))
+# Keep modest on Railway CPU — timeout falls back to evidence_only with citations.
+OLLAMA_TIMEOUT: float = float(os.environ.get("OLLAMA_TIMEOUT", "75"))
+OLLAMA_NUM_PREDICT: int = int(os.environ.get("OLLAMA_NUM_PREDICT", "256"))
 # Translation: ollama (demo-safe) | auto (IndicTrans then Ollama) | indictrans
 TRANSLATE_BACKEND: str = os.environ.get("TRANSLATE_BACKEND", "auto").strip().lower()
 

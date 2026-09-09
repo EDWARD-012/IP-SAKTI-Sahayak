@@ -80,13 +80,19 @@ Return JSON only — no preamble, no markdown:
 
 
 def build_prompt(question: str, jurisdiction: str, chunks: list[dict[str, Any]]) -> str:
-    """Format the system prompt with evidence chunks."""
-    evidence_text = "\n\n".join(
-        f"[{c['chunk_id']}] {c.get('source_id', '')} § {c.get('section_ref', '')}\n"
-        f"Effective from: {c.get('effective_from', 'unknown')}\n"
-        f"{c.get('text', '')}"
-        for c in chunks
-    )
+    """Format the system prompt with evidence chunks (capped for CPU latency)."""
+    trimmed = chunks[:4]
+    parts: list[str] = []
+    for c in trimmed:
+        text = (c.get("text") or "").strip()
+        if len(text) > 450:
+            text = text[:450] + "…"
+        parts.append(
+            f"[{c['chunk_id']}] {c.get('source_id', '')} § {c.get('section_ref', '')}\n"
+            f"Effective from: {c.get('effective_from', 'unknown')}\n"
+            f"{text}"
+        )
+    evidence_text = "\n\n".join(parts)
     return _SYSTEM_PROMPT.format(
         jurisdiction=jurisdiction,
         evidence_chunks=evidence_text or "(no chunks retrieved)",
@@ -101,11 +107,19 @@ def _call_ollama(prompt: str, model: str, base_url: str, timeout: float) -> str:
     """
     import urllib.request
 
+    from django.conf import settings
+
+    # Cap tokens so CPU Qwen finishes before the HTTP timeout on Railway.
+    num_predict = int(getattr(settings, "OLLAMA_NUM_PREDICT", 256) or 256)
     payload = json.dumps({
         "model": model,
         "messages": [{"role": "user", "content": prompt}],
         "stream": False,
-        "options": {"temperature": 0.1, "top_p": 0.9},
+        "options": {
+            "temperature": 0.1,
+            "top_p": 0.9,
+            "num_predict": max(64, min(num_predict, 512)),
+        },
     }).encode()
 
     req = urllib.request.Request(
