@@ -1,0 +1,30 @@
+{% load i18n %}
+{% load ip_sakti_tags %}
+{# Shared session-history list (sidebar + HTMX OOB refresh). #}
+<div id="chat-history-panel">
+  <p class="chat-sidebar__section-title">{% trans "Session History" %}</p>
+  {% if session_history %}
+    <ul class="chat-history-list" aria-label="{% trans 'Recent questions in this session' %}">
+      {% for turn in session_history reversed %}
+      <li class="chat-history-item">
+        <button type="button"
+                class="chat-history-item__btn"
+                hx-get="{% url 'chat:history_turn' forloop.revcounter0 %}"
+                hx-target="#answer-area"
+                hx-swap="innerHTML"
+                title="{{ turn.question }}"
+                aria-label="{% blocktrans with q=turn.question|truncatechars:80 %}Open previous answer: {{ q }}{% endblocktrans %}">
+          <span class="chat-history-item__q">{{ turn.question|truncatechars:60 }}</span>
+          <span class="chat-history-item__meta">
+            <span class="ev-label ev-label--{{ turn.state|outcome_css_class }}">
+              {{ turn.state|outcome_label }}
+            </span>
+          </span>
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="chat-history-empty">{% trans "No questions asked yet in this session." %}</p>
+  {% endif %}
+</div>

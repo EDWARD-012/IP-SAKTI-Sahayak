@@ -87,6 +87,30 @@ def test_ask_requires_htmx(client):
 
 
 @pytest.mark.django_db
+def test_history_turn_restores_answer(client, settings):
+    """GET /assistant/history/<i>/ reopens a stored session turn."""
+    settings.DEMO_MODE = True
+    session = client.session
+    session["chat_history"] = [
+        {
+            "request_id": "11111111-1111-1111-1111-111111111111",
+            "question": "What is Ayurveda Aahara under the 2022 regulations?",
+            "answer": "Ayurveda Aahara is defined in the FSSAI 2022 regulations.",
+            "citations": [],
+            "state": "unable_to_answer",
+            "confidence_note": "",
+            "demo_mode": True,
+        }
+    ]
+    session.save()
+    response = client.get(reverse("chat:history_turn", args=[0]))
+    assert response.status_code == 200
+    html = response.content.decode()
+    assert "Ayurveda Aahara" in html
+    assert "FSSAI 2022" in html
+
+
+@pytest.mark.django_db
 def test_ask_demo_mode(client, settings):
     """POST /assistant/ask/ with a valid form and DEMO_MODE=True returns 200."""
     settings.DEMO_MODE = True
@@ -107,6 +131,7 @@ def test_ask_demo_mode(client, settings):
     assert "ev-label" in html
     assert "demonstration" in html.lower() or "Patents Act" in html
     assert "{#" not in html
+    assert 'id="chat-history-panel"' in html
 
 
 @pytest.mark.django_db

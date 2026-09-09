@@ -193,6 +193,27 @@ body.chat-lock .site-main.chat-page {
   flex-direction: column;
   gap: 2px;
 }
+.chat-history-item__btn {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  padding: var(--space-2);
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  transition: border-color var(--duration-fast), background var(--duration-fast);
+}
+.chat-history-item__btn:hover,
+.chat-history-item__btn:focus-visible {
+  border-color: var(--color-border);
+  background: var(--color-surface-muted, rgba(0, 0, 0, 0.03));
+  outline: none;
+}
 .chat-history-item__q {
   font-size: var(--text-sm);
   color: var(--color-text);

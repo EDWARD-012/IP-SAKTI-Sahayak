@@ -19,10 +19,10 @@ from typing import Any
 from urllib.parse import parse_qs
 
 from django.conf import settings
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_GET, require_POST
 
 from ai import generate as ai_generate
 from ai import pipeline as ai_pipeline
@@ -202,9 +202,50 @@ def ask(request: HttpRequest) -> HttpResponse:
         "demo_mode": result.demo_mode,
     })
 
-    return render(request, "chat/partials/_answer.html", {
+    response = render(request, "chat/partials/_answer.html", {
         "result": result,
         "question": question,
+    })
+    # Refresh sidebar history without a full page reload (HTMX OOB).
+    history_html = render(request, "chat/partials/_history_panel.html", {
+        "session_history": _get_history(request),
+    }).content.decode("utf-8")
+    # Inject hx-swap-oob onto the panel root.
+    history_html = history_html.replace(
+        'id="chat-history-panel"',
+        'id="chat-history-panel" hx-swap-oob="true"',
+        1,
+    )
+    response.content = response.content + history_html.encode("utf-8")
+    return response
+
+
+@require_GET
+def history_turn(request: HttpRequest, index: int) -> HttpResponse:
+    """
+    GET /assistant/history/<index>/ — re-open a prior turn from this session.
+
+    Index is into the chronological session list (0 = oldest retained turn).
+    """
+    history = _get_history(request)
+    if index < 0 or index >= len(history):
+        return HttpResponseBadRequest("Unknown history item.")
+
+    turn = history[index]
+    from types import SimpleNamespace
+
+    result = SimpleNamespace(
+        request_id=turn.get("request_id") or "",
+        state=turn.get("state") or "unable_to_answer",
+        answer=turn.get("answer") or "",
+        citations=turn.get("citations") or [],
+        confidence_note=turn.get("confidence_note") or "",
+        demo_mode=bool(turn.get("demo_mode")),
+        latency_ms=0,
+    )
+    return render(request, "chat/partials/_answer.html", {
+        "result": result,
+        "question": turn.get("question") or "",
     })
 
 

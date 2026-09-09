@@ -76,25 +76,7 @@
     </div>
 
     <div>
-      <p class="chat-sidebar__section-title">{% trans "Session History" %}</p>
-      {% if session_history %}
-        <ul class="chat-history-list" aria-label="{% trans 'Recent questions in this session' %}">
-          {% for turn in session_history|slice:":4" %}
-          <li class="chat-history-item">
-            <span class="chat-history-item__q" title="{{ turn.question }}">
-              {{ turn.question|truncatechars:60 }}
-            </span>
-            <span class="chat-history-item__meta">
-              <span class="ev-label ev-label--{{ turn.state|outcome_css_class }}" aria-label="Evidence: {{ turn.state|outcome_label }}">
-                {{ turn.state|outcome_label }}
-              </span>
-            </span>
-          </li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <p class="chat-history-empty">{% trans "No questions asked yet in this session." %}</p>
-      {% endif %}
+      {% include "chat/partials/_history_panel.html" %}
     </div>
 
     <div>
@@ -165,7 +147,7 @@
             hx-indicator="#thinking-indicator"
             hx-disabled-elt="#chat-question, .chat-submit-btn"
             hx-sync="this:replace"
-            hx-timeout="180000"
+            hx-timeout="300000"
             novalidate
             aria-label="Ask a question">
         {% csrf_token %}
