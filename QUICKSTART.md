@@ -186,5 +186,4 @@ The following are placeholders and will be needed for full live functionality:
 ## Contacts
 
 - **Problem Statement:** SIH26045 — Ministry of Ayush / AIIA
-- **Build guide:** `IMPLEMENTATION_PLAN.md` v4.3
 - **Audit:** `AUDIT_RESOLUTION.md`
