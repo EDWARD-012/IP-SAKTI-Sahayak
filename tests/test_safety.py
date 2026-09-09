@@ -142,3 +142,15 @@ class TestSafetyResultType:
         r = SafetyResult(ok=True)
         with pytest.raises((AttributeError, TypeError)):
             r.ok = False  # type: ignore[misc]
+
+
+class TestForeignJurisdiction:
+    def test_uspto_probe_fails(self):
+        result = check("How do I file a USPTO patent for my invention?")
+        assert result.ok is False
+        assert result.reason == "foreign_jurisdiction"
+
+    def test_crypto_token_probe_fails(self):
+        result = check("How do I file a USPTO patent for my cryptocurrency token?")
+        assert result.ok is False
+        assert result.reason == "foreign_jurisdiction"

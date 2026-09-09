@@ -18,6 +18,7 @@ Reason codes (SafetyResult.reason)
 "pii_aadhaar"  — Aadhaar-like 12-digit number detected (plain, spaced, or hyphenated)
 "pii_phone"    — Indian phone number detected
 "prompt_injection" — known adversarial injection pattern
+"foreign_jurisdiction" — foreign domestic filing / non-India IP office probe
 """
 from __future__ import annotations
 
@@ -30,6 +31,17 @@ logger = logging.getLogger("ai")
 # ── Constants ─────────────────────────────────────────────────────────────────
 MIN_LENGTH: int = 5
 MAX_LENGTH: int = 1000
+
+_FOREIGN_JURISDICTION_RE = re.compile(
+    r"\b("
+    r"uspto|epo|european\s+patent\s+office|"
+    r"china\s+patent|cnipa|"
+    r"us\s+patent\s+fil(?:e|ing)|"
+    r"foreign\s+counsel\s+filing|"
+    r"cryptocurrency\s+token"
+    r")\b",
+    re.I,
+)
 
 
 # ── Result type ───────────────────────────────────────────────────────────────
@@ -121,6 +133,10 @@ def check(text: str) -> SafetyResult:
                 pattern.pattern,
             )
             return SafetyResult(ok=False, reason="prompt_injection")
+
+    # ── 4. Foreign domestic / out-of-corpus probes ───────────────
+    if _FOREIGN_JURISDICTION_RE.search(text):
+        return SafetyResult(ok=False, reason="foreign_jurisdiction")
 
     return SafetyResult(ok=True, reason="")
 
