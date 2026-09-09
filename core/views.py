@@ -77,12 +77,13 @@ def set_language(request: HttpRequest) -> HttpResponse:
 
 
 def _ollama_reachable() -> bool:
-    """Probe local Ollama /api/tags with a short timeout."""
+    """Probe Ollama /api/tags (allow tunnel RTT to laptop)."""
     base = getattr(settings, "OLLAMA_BASE_URL", "http://127.0.0.1:11434").rstrip("/")
     url = f"{base}/api/tags"
     try:
         req = urllib.request.Request(url, method="GET")
-        with urllib.request.urlopen(req, timeout=2) as resp:
+        # 2s is fine for localhost; tunneled Railway→laptop needs more headroom.
+        with urllib.request.urlopen(req, timeout=10) as resp:
             return 200 <= resp.status < 300
     except (urllib.error.URLError, TimeoutError, OSError, ValueError) as exc:
         logger.debug("Ollama health probe failed: %s", exc)
