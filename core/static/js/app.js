@@ -50,25 +50,26 @@ function prefersReducedMotion() {
 // ── Page entrance animation ──────────────────────────────────────────────────
 
 /**
- * Runs the staggered entrance animation on all `.ip-fade-in` elements.
- * Silently skips when prefers-reduced-motion is active or GSAP fails to load.
+ * Runs the staggered entrance animation on `.ip-fade-in` elements.
+ * Home page motion is owned by home-scroll.js — skip entirely there.
  *
  * @returns {Promise<void>}
  */
 async function pageEntrance() {
   if (prefersReducedMotion()) return;
-
-  const elements = document.querySelectorAll('.ip-fade-in');
-  if (!elements.length) return;
+  if (document.querySelector('.home-hero')) return;
 
   if (!gsap) gsap = await loadGsap();
   if (!gsap) return;
 
+  const elements = document.querySelectorAll('.ip-fade-in');
+  if (!elements.length) return;
+
   gsap.from(elements, {
-    y: 8,
+    y: 16,
     opacity: 0,
-    duration: 0.4,
-    stagger: 0.08,
+    duration: 0.55,
+    stagger: 0.07,
     ease: 'power2.out',
     clearProps: 'transform,opacity',
   });
@@ -365,8 +366,11 @@ document.addEventListener('DOMContentLoaded', () => {
   setupHtmxListeners();
   setupFontSizeControls();
   setupRequestId();
-  setupCardTilt();
-  setupScrollReveal();
-  setupPointerGlow();
-  setupMagneticButtons();
+  // Home page owns its own scroll/tilt via home-scroll.js
+  if (!document.querySelector('.home-hero')) {
+    setupCardTilt();
+    setupScrollReveal();
+    setupPointerGlow();
+    setupMagneticButtons();
+  }
 });

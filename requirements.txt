@@ -18,6 +18,9 @@ whitenoise[brotli]>=6.7
 gunicorn>=22.0      # Linux / Docker / Render
 waitress>=3.0       # Windows demo
 
+# ── Database (optional Postgres on Railway) ───────────────────
+psycopg[binary]>=3.1
+
 # ── AI / RAG stack ────────────────────────────────────────────
 langchain-chroma>=0.1
 langchain-ollama>=0.2

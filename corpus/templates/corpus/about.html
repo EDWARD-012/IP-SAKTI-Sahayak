@@ -4,169 +4,145 @@
 
 {% block title %}{% trans "About the Legal Corpus" %} — IP-SAKTI Sahayak{% endblock %}
 
-{% block content %}
-<div class="page-inner ip-fade-in" style="padding-top:var(--space-8); padding-bottom:var(--space-12);">
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/corpus.css' %}" />
+{% endblock %}
 
-  {# ── Page title ── #}
-  <header style="margin-bottom:var(--space-8);">
-    <p style="font-size:var(--text-xs); color:var(--color-text-muted); text-transform:uppercase; letter-spacing:0.07em; font-weight:600; margin:0 0 var(--space-2);">
-      {% trans "Corpus Information" %}
-    </p>
-    <h1 class="gov-section-title" style="font-size:var(--text-2xl); margin-bottom:var(--space-3);">
-      {% trans "About the Legal Corpus" %}
-    </h1>
-    <p style="font-size:var(--text-base); color:var(--color-text-secondary); max-width:68ch; margin:0; line-height:var(--leading-relaxed);">
+{% block content %}
+<div class="page-inner ip-fade-in corpus-page">
+
+  <header class="corpus-page__header">
+    <p class="corpus-page__eyebrow">{% trans "Corpus Information" %}</p>
+    <h1 class="gov-section-title corpus-page__title">{% trans "About the Legal Corpus" %}</h1>
+    <p class="corpus-page__lede">
       {% blocktrans %}IP-SAKTI Sahayak answers questions exclusively from a curated, version-controlled corpus of verified Indian statutes, rules, and international treaties. All answers cite their source.{% endblocktrans %}
     </p>
   </header>
 
   {% if active_corpus_version %}
-  {# ── Active corpus info card ── #}
-  <section aria-labelledby="corpus-version-title" style="margin-bottom:var(--space-8);">
-    <h2 id="corpus-version-title" class="gov-section-title" style="font-size:var(--text-lg);">{% trans "Active Corpus Version" %}</h2>
-    <div class="gov-card" style="max-width:560px;">
-      <div style="display:grid; grid-template-columns:auto 1fr; gap:var(--space-2) var(--space-6); font-size:var(--text-sm); align-items:baseline;">
-        <span style="font-weight:var(--weight-semibold); color:var(--color-text-muted);">{% trans "Version" %}</span>
-        <span style="font-family:var(--font-mono); color:var(--color-primary); font-weight:var(--weight-bold);">
-          {{ active_corpus_version }}
-        </span>
+  <section aria-labelledby="corpus-version-title" class="corpus-section">
+    <h2 id="corpus-version-title" class="gov-section-title corpus-section__title">{% trans "Active Corpus Version" %}</h2>
+    <div class="gov-card corpus-meta-card">
+      <div class="corpus-meta-grid">
+        <span class="corpus-meta-grid__k">{% trans "Version" %}</span>
+        <span class="corpus-meta-grid__v corpus-meta-grid__v--mono">{{ active_corpus_version }}</span>
 
-        {% if corpus_stats.chunks_count %}
-        <span style="font-weight:var(--weight-semibold); color:var(--color-text-muted);">{% trans "Indexed Chunks" %}</span>
-        <span>{{ corpus_stats.chunks_count|default:"—" }}</span>
-        {% endif %}
+        <span class="corpus-meta-grid__k">{% trans "Source Documents" %}</span>
+        <span class="corpus-meta-grid__v">{{ corpus_stats.source_count|default:"—" }}</span>
+
+        <span class="corpus-meta-grid__k">{% trans "Indexed Chunks" %}</span>
+        <span class="corpus-meta-grid__v">{% if corpus_stats.chunks_count %}{{ corpus_stats.chunks_count }}{% else %}{% trans "Metadata only (vectors on live laptop profile)" %}{% endif %}</span>
 
         {% if corpus_stats.last_updated %}
-        <span style="font-weight:var(--weight-semibold); color:var(--color-text-muted);">{% trans "Last Updated" %}</span>
-        <span>{{ corpus_stats.last_updated }}</span>
+        <span class="corpus-meta-grid__k">{% trans "Last Updated" %}</span>
+        <span class="corpus-meta-grid__v">{{ corpus_stats.last_updated }}</span>
         {% endif %}
 
-        {% if corpus_stats.source_count %}
-        <span style="font-weight:var(--weight-semibold); color:var(--color-text-muted);">{% trans "Source Documents" %}</span>
-        <span>{{ corpus_stats.source_count }}</span>
+        {% if corpus_stats.chroma_collection %}
+        <span class="corpus-meta-grid__k">{% trans "Collection" %}</span>
+        <span class="corpus-meta-grid__v corpus-meta-grid__v--mono">{{ corpus_stats.chroma_collection }}</span>
         {% endif %}
       </div>
+      {% if demo_mode %}
+      <p class="corpus-meta-card__hint">
+        {% trans "Cloud demo lists curated statutes below. Live RAG retrieval uses the laptop-indexed Chroma corpus." %}
+      </p>
+      {% endif %}
     </div>
   </section>
   {% else %}
-  {# ── No active corpus ── #}
-  <section aria-labelledby="no-corpus-title" style="margin-bottom:var(--space-8);">
+  <section aria-labelledby="no-corpus-title" class="corpus-section">
     <div class="gov-card" style="max-width:560px; border-top-color:var(--gov-saffron);">
-      <div class="gov-card__icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-      </div>
       <h2 id="no-corpus-title" class="gov-card__title">{% trans "Corpus not yet indexed" %}</h2>
       <p class="gov-card__desc">
         {% blocktrans %}No active corpus version was found. The system requires an indexed vector store to answer questions.{% endblocktrans %}
       </p>
-      <div style="margin-top:var(--space-4); font-size:var(--text-sm); color:var(--color-text-secondary);">
-        <p style="margin:0 0 var(--space-2);"><strong>{% trans "To set up the corpus:" %}</strong></p>
-        <ol style="margin:0; padding-left:var(--space-5); line-height:var(--leading-relaxed);">
-          <li>{% blocktrans %}Obtain the SourceManifest list from <code>corpus/fixtures/</code>{% endblocktrans %}</li>
-          <li>{% blocktrans %}Run <code>python manage.py ingest_corpus --all</code>{% endblocktrans %}</li>
-          <li>{% trans "Activate the resulting corpus version in the admin panel" %}</li>
-        </ol>
-      </div>
     </div>
   </section>
   {% endif %}
 
-  {# ── Source priority table ── #}
-  <section aria-labelledby="source-priority-title" style="margin-bottom:var(--space-8);">
-    <h2 id="source-priority-title" class="gov-section-title" style="font-size:var(--text-lg);">{% trans "Source Priority Tiers" %}</h2>
-    <p style="font-size:var(--text-sm); color:var(--color-text-muted); margin:0 0 var(--space-5); line-height:var(--leading-relaxed);">
+  <section aria-labelledby="source-priority-title" class="corpus-section">
+    <h2 id="source-priority-title" class="gov-section-title corpus-section__title">{% trans "Source Priority Tiers" %}</h2>
+    <p class="corpus-section__lede">
       {% blocktrans %}Sources are ranked by authority. P0 sources (primary legislation) are always preferred over P1 (secondary legislation, guidelines).{% endblocktrans %}
     </p>
 
-    <div style="overflow-x:auto;">
-      <table style="width:100%; border-collapse:collapse; font-size:var(--text-sm);"
-             aria-label="{% trans 'Corpus source priority tiers' %}">
+    <div class="corpus-table-wrap">
+      <table class="corpus-table" aria-label="{% trans 'Corpus source priority tiers' %}">
         <thead>
-          <tr style="background:var(--color-primary); color:var(--color-text-inverse);">
-            <th scope="col" style="padding:var(--space-3) var(--space-4); text-align:left; font-weight:var(--weight-semibold);">{% trans "Tier" %}</th>
-            <th scope="col" style="padding:var(--space-3) var(--space-4); text-align:left; font-weight:var(--weight-semibold);">{% trans "Source" %}</th>
-            <th scope="col" style="padding:var(--space-3) var(--space-4); text-align:left; font-weight:var(--weight-semibold);">{% trans "Authority" %}</th>
-            <th scope="col" style="padding:var(--space-3) var(--space-4); text-align:left; font-weight:var(--weight-semibold);">{% trans "IP Types" %}</th>
-            <th scope="col" style="padding:var(--space-3) var(--space-4); text-align:left; font-weight:var(--weight-semibold);">{% trans "Status" %}</th>
+          <tr>
+            <th scope="col">{% trans "Tier" %}</th>
+            <th scope="col">{% trans "Source" %}</th>
+            <th scope="col">{% trans "Authority" %}</th>
+            <th scope="col">{% trans "IP Types" %}</th>
+            <th scope="col">{% trans "Status" %}</th>
           </tr>
         </thead>
         <tbody>
-          {# P0 — Primary legislation #}
-          <tr style="background:var(--color-surface-raised);">
-            <td colspan="5" style="padding:var(--space-2) var(--space-4); font-size:var(--text-xs); font-weight:var(--weight-bold); color:var(--color-primary); text-transform:uppercase; letter-spacing:0.06em;">
-              {% trans "P0 — Primary Legislation (Highest Authority)" %}
-            </td>
+          <tr class="corpus-table__band">
+            <td colspan="5">{% trans "P0 — Primary Legislation (Highest Authority)" %}</td>
           </tr>
           {% for source in p0_sources %}
-          <tr style="border-bottom:1px solid var(--color-border);">
-            <td style="padding:var(--space-3) var(--space-4); white-space:nowrap;">
-              <span style="background:var(--color-primary-light); color:var(--color-primary); font-size:var(--text-xs); font-weight:var(--weight-bold); border-radius:3px; padding:2px 6px;">P0</span>
+          <tr>
+            <td><span class="corpus-tier corpus-tier--p0">P0</span></td>
+            <td>
+              <div class="corpus-source-name"{% if source.name_en %} title="{{ source.name_en }}" lang="en"{% endif %}>{{ source.name }}</div>
             </td>
-            <td style="padding:var(--space-3) var(--space-4); font-weight:var(--weight-medium); color:var(--color-text);">{{ source.name }}</td>
-            <td style="padding:var(--space-3) var(--space-4); color:var(--color-text-secondary);">{{ source.authority }}</td>
-            <td style="padding:var(--space-3) var(--space-4); color:var(--color-text-secondary);">{{ source.ip_types }}</td>
-            <td style="padding:var(--space-3) var(--space-4);">
+            <td>{{ source.authority }}</td>
+            <td>{{ source.ip_types }}</td>
+            <td>
               {% if source.is_active %}
-                <span style="color:var(--gov-green); font-weight:var(--weight-semibold);">{% trans "✓ Active" %}</span>
+                <span class="corpus-status corpus-status--active">{% trans "✓ Active" %}</span>
               {% else %}
-                <span style="color:var(--color-text-muted);">{% trans "Pending" %}</span>
+                <span class="corpus-status">{% trans "Pending" %}</span>
               {% endif %}
             </td>
           </tr>
           {% empty %}
           <tr>
-            <td colspan="5" style="padding:var(--space-4); color:var(--color-text-muted); font-style:italic; text-align:center;">
-              {% trans "No P0 sources configured." %}
-            </td>
+            <td colspan="5" class="corpus-table__empty">{% trans "No P0 sources configured." %}</td>
           </tr>
           {% endfor %}
 
-          {# P1 — Secondary legislation #}
-          <tr style="background:var(--color-surface-raised);">
-            <td colspan="5" style="padding:var(--space-2) var(--space-4); font-size:var(--text-xs); font-weight:var(--weight-bold); color:var(--color-primary); text-transform:uppercase; letter-spacing:0.06em;">
-              {% trans "P1 — Secondary Legislation, Rules & International Treaties" %}
-            </td>
+          <tr class="corpus-table__band">
+            <td colspan="5">{% trans "P1 — Secondary Legislation, Rules & International Treaties" %}</td>
           </tr>
           {% for source in p1_sources %}
-          <tr style="border-bottom:1px solid var(--color-border);">
-            <td style="padding:var(--space-3) var(--space-4);">
-              <span style="background:#e8f0f9; color:#1a4a8a; font-size:var(--text-xs); font-weight:var(--weight-bold); border-radius:3px; padding:2px 6px;">P1</span>
+          <tr>
+            <td><span class="corpus-tier corpus-tier--p1">P1</span></td>
+            <td>
+              <div class="corpus-source-name">{{ source.name }}</div>
+              {% if source.name_en %}<div class="corpus-source-en" lang="en">{{ source.name_en }}</div>{% endif %}
             </td>
-            <td style="padding:var(--space-3) var(--space-4); font-weight:var(--weight-medium); color:var(--color-text);">{{ source.name }}</td>
-            <td style="padding:var(--space-3) var(--space-4); color:var(--color-text-secondary);">{{ source.authority }}</td>
-            <td style="padding:var(--space-3) var(--space-4); color:var(--color-text-secondary);">{{ source.ip_types }}</td>
-            <td style="padding:var(--space-3) var(--space-4);">
+            <td>{{ source.authority }}</td>
+            <td>{{ source.ip_types }}</td>
+            <td>
               {% if source.is_active %}
-                <span style="color:var(--gov-green); font-weight:var(--weight-semibold);">{% trans "✓ Active" %}</span>
+                <span class="corpus-status corpus-status--active">{% trans "✓ Active" %}</span>
               {% else %}
-                <span style="color:var(--color-text-muted);">{% trans "Pending" %}</span>
+                <span class="corpus-status">{% trans "Pending" %}</span>
               {% endif %}
             </td>
           </tr>
           {% empty %}
           <tr>
-            <td colspan="5" style="padding:var(--space-4); color:var(--color-text-muted); font-style:italic; text-align:center;">
-              {% trans "No P1 sources configured." %}
-            </td>
+            <td colspan="5" class="corpus-table__empty">{% trans "No P1 sources configured." %}</td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
-    <p style="margin-top:var(--space-3);">
-      <a href="{% url 'corpus:sources' %}" class="gov-btn-secondary" style="font-size:var(--text-sm);">
-        {% trans "View Full Source List →" %}
-      </a>
+    <p class="corpus-table-note">{% trans "Official English statute names appear on hover. Citation quotes stay in English." %}</p>
+    <p class="corpus-actions">
+      <a href="{% url 'corpus:sources' %}" class="gov-btn-secondary">{% trans "View Full Source List →" %}</a>
     </p>
   </section>
 
-  {# ── Legal disclaimer ── #}
-  <section aria-labelledby="corpus-disclaimer-title" style="margin-bottom:var(--space-8);">
-    <h2 id="corpus-disclaimer-title" class="gov-section-title" style="font-size:var(--text-lg);">{% trans "Corpus Coverage & Limitations" %}</h2>
-    <div role="note"
-         style="background:var(--color-warning-bg); border-left:4px solid var(--gov-saffron); padding:var(--space-4) var(--space-5); border-radius:0 var(--radius-md) var(--radius-md) 0; font-size:var(--text-sm); color:var(--color-text-secondary); line-height:var(--leading-relaxed);">
-      <p style="margin:0 0 var(--space-3);"><strong>{% trans "Important limitations to note:" %}</strong></p>
-      <ul style="margin:0; padding-left:var(--space-5); display:flex; flex-direction:column; gap:var(--space-2);">
+  <section aria-labelledby="corpus-disclaimer-title" class="corpus-section">
+    <h2 id="corpus-disclaimer-title" class="gov-section-title corpus-section__title">{% trans "Corpus Coverage & Limitations" %}</h2>
+    <div class="corpus-note" role="note">
+      <p><strong>{% trans "Important limitations to note:" %}</strong></p>
+      <ul>
         <li>{% blocktrans %}The corpus is periodically updated but may not reflect the very latest amendments or notifications.{% endblocktrans %}</li>
         <li>{% blocktrans %}State-level regulations, departmental circulars, and unpublished guidelines are <strong>not</strong> included.{% endblocktrans %}</li>
         <li>{% blocktrans %}Court judgments, case law, and tribunal orders are not part of the corpus.{% endblocktrans %}</li>

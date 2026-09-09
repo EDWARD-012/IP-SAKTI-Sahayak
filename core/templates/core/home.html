@@ -4,139 +4,171 @@
 
 {% block title %}{% trans "IP-SAKTI Sahayak — IPR Assistant for Ayurveda | Ministry of Ayush" %}{% endblock %}
 
+{% block body_class %}page-home{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}" />
+{% endblock %}
+
 {% block content %}
 
-{# ── Hero (no WebGL / no blur orbs) ── #}
-<section class="gov-hero gov-hero--cinematic ip-fade-in" aria-labelledby="hero-title">
-  <div class="gov-hero__vignette" aria-hidden="true"></div>
+<section class="home-hero" aria-labelledby="hero-title">
+  <div class="home-hero__atmosphere" aria-hidden="true">
+    <div class="home-hero__wash home-hero__wash--sage"></div>
+    <div class="home-hero__wash home-hero__wash--saffron"></div>
+    <div class="home-hero__motif"></div>
+  </div>
+  <div class="home-hero__tricolor" aria-hidden="true"></div>
 
-  <div class="gov-hero__center-wrap">
-    <div class="gov-hero__glass-center ip-fade-in">
-      <div class="gov-hero__badge">
-        <span class="gov-hero__badge-pulse" aria-hidden="true"></span>
-        <span class="gov-hero__badge-text">SIH26045 · AIIA · {% trans "Ministry of Ayush" %}</span>
-      </div>
-
-      <h1 id="hero-title" class="gov-hero__title">
-        IP-SAKTI <span class="gov-hero__title-accent">Sahayak</span>
+  <div class="home-hero__layout">
+    <div class="home-hero__copy">
+      <p class="home-hero__kicker js-home-hero">
+        SIH26045 · AIIA · {% trans "Ministry of Ayush" %}
+      </p>
+      <h1 id="hero-title" class="home-hero__title js-home-hero">
+        IP-SAKTI
+        <span class="home-hero__title-accent">Sahayak</span>
       </h1>
-
-      <p class="gov-hero__subtitle">
+      <p class="home-hero__subtitle js-home-hero">
         {% trans "Multilingual IPR Assistant for Ayurveda & Traditional Knowledge" %}
       </p>
-
-      <p class="gov-hero__desc">
+      <p class="home-hero__desc js-home-hero">
         {% blocktrans %}Source-cited guidance on patents, GI, biodiversity & ABS, and Ayurveda regulation — from verified Indian statutes and treaties.{% endblocktrans %}
       </p>
-
-      <div class="gov-hero__actions">
-        <a href="{% url 'chat:chat' %}" class="gov-btn-primary gov-btn-glow" id="btn-hero-chat">
+      <div class="home-hero__actions js-home-hero">
+        <a href="{% url 'chat:chat' %}" class="home-btn home-btn--primary" id="btn-hero-chat">
           <span>{% trans "Ask a Question" %}</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
         </a>
-        <a href="{% url 'wizard:start' %}" class="gov-btn-secondary gov-btn-secondary--onDark" id="btn-hero-wizard">
+        <a href="{% url 'wizard:start' %}" class="home-btn home-btn--ghost" id="btn-hero-wizard">
           <span>{% trans "Formulation Wizard" %}</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       </div>
+    </div>
 
-      <div class="gov-hero__prompts" aria-label="{% trans 'Sample questions' %}">
-        <span class="gov-hero__prompts-label">{% trans "Quick suggestions" %}:</span>
-        <div class="gov-hero__prompts-list">
-          <a href="{% url 'chat:chat' %}?q=Can+I+patent+a+herbal+formulation+with+Tulsi+and+Ashwagandha%3F" class="gov-prompt-chip">
-            <span>{% trans "Patenting herbal formulations" %}</span>
-          </a>
-          <a href="{% url 'chat:chat' %}?q=What+are+the+Section+3%28p%29+exclusions+under+Patents+Act+1970%3F" class="gov-prompt-chip">
-            <span>{% trans "Section 3(p) TK exclusions" %}</span>
-          </a>
-          <a href="{% url 'chat:chat' %}?q=When+is+NBA+approval+mandatory+under+Biological+Diversity+Act%3F" class="gov-prompt-chip">
-            <span>{% trans "NBA approval for ABS" %}</span>
-          </a>
-        </div>
-      </div>
-
-      <ul class="gov-hero__stats" aria-label="{% trans 'Platform highlights' %}">
-        <li><strong>22</strong> {% trans "Indian languages" %}</li>
-        <li><strong>{% trans "On-device RAG" %}</strong> · {% trans "Local model" %}</li>
-        <li><strong>{% trans "Cited statutes" %}</strong></li>
-      </ul>
+    <div class="home-hero__visual js-home-hero">
+      <figure class="home-emblem" data-home-emblem>
+        <div class="home-emblem__glow" aria-hidden="true"></div>
+        <img class="home-emblem__img"
+             src="{% static 'images/national-emblem-official.svg' %}"
+             alt="{% trans 'State Emblem of India' %}"
+             width="280" height="320"
+             decoding="async" />
+        <figcaption class="home-emblem__caption" lang="sa">सत्यमेव जयते</figcaption>
+      </figure>
     </div>
   </div>
 </section>
 
-<div class="gov-marquee" aria-hidden="true">
-  <div class="gov-marquee__track">
-    <span>Patents Act 1970</span><span>Section 3(p)</span><span>GI Act 1999</span>
-    <span>Biological Diversity Act 2002</span><span>NBA · ABS</span>
-    <span>Drugs &amp; Cosmetics Act 1940</span><span>Schedule T</span>
-    <span>Ayurveda Aahara 2022</span><span>Nagoya Protocol</span>
-    <span>TRIPS</span><span>TKDL</span><span>WIPO GRATK</span>
-    <span>Patents Act 1970</span><span>Section 3(p)</span><span>GI Act 1999</span>
-    <span>Biological Diversity Act 2002</span><span>NBA · ABS</span>
-    <span>Drugs &amp; Cosmetics Act 1940</span><span>Schedule T</span>
-    <span>Ayurveda Aahara 2022</span><span>Nagoya Protocol</span>
-    <span>TRIPS</span><span>TKDL</span><span>WIPO GRATK</span>
+<section class="home-rail" aria-label="{% trans 'Corpus statutes' %}">
+  <div class="home-rail__viewport">
+    <div class="home-rail__track">
+      <span>Patents Act 1970</span><span>Section 3(p)</span><span>GI Act 1999</span>
+      <span>Biological Diversity Act 2002</span><span>NBA · ABS</span>
+      <span>Drugs &amp; Cosmetics Act 1940</span><span>Schedule T</span>
+      <span>Ayurveda Aahara 2022</span><span>Nagoya Protocol</span>
+      <span>TRIPS</span><span>TKDL</span><span>WIPO GRATK</span>
+      <span>Patents Act 1970</span><span>Section 3(p)</span><span>GI Act 1999</span>
+      <span>Biological Diversity Act 2002</span><span>NBA · ABS</span>
+      <span>Drugs &amp; Cosmetics Act 1940</span><span>Schedule T</span>
+      <span>Ayurveda Aahara 2022</span><span>Nagoya Protocol</span>
+      <span>TRIPS</span><span>TKDL</span><span>WIPO GRATK</span>
+    </div>
   </div>
-</div>
+</section>
 
-<section class="gov-section" aria-labelledby="services-title">
-  <div class="gov-section-header">
-    <span class="gov-section-eyebrow">{% trans "Statutory intelligence" %}</span>
-    <h2 id="services-title" class="gov-section-title">{% trans "What can IP-SAKTI help you with?" %}</h2>
-    <p class="gov-section-subtitle">{% trans "Guidance across Indian traditional medicine and intellectual property — always with source citations." %}</p>
+<section class="home-section home-section--prompts" aria-labelledby="prompts-title">
+  <div class="home-section__header">
+    <span class="home-section__eyebrow">{% trans "Quick start" %}</span>
+    <h2 id="prompts-title" class="home-section__title">{% trans "Quick suggestions" %}</h2>
+  </div>
+  <div class="home-prompts">
+    <a href="{% url 'chat:chat' %}?q=Can+I+patent+a+herbal+formulation+with+Tulsi+and+Ashwagandha%3F" class="home-prompt js-home-prompt">
+      {% trans "Patenting herbal formulations" %}
+    </a>
+    <a href="{% url 'chat:chat' %}?q=What+are+the+Section+3%28p%29+exclusions+under+Patents+Act+1970%3F" class="home-prompt js-home-prompt">
+      {% trans "Section 3(p) TK exclusions" %}
+    </a>
+    <a href="{% url 'chat:chat' %}?q=When+is+NBA+approval+mandatory+under+Biological+Diversity+Act%3F" class="home-prompt js-home-prompt">
+      {% trans "NBA approval for ABS" %}
+    </a>
+  </div>
+  <ul class="home-stats" aria-label="{% trans 'Platform highlights' %}">
+    <li><strong>22</strong> {% trans "Indian languages" %}</li>
+    <li><strong>{% trans "On-device RAG" %}</strong> · {% trans "Local model" %}</li>
+    <li><strong>{% trans "Cited statutes" %}</strong></li>
+  </ul>
+</section>
+
+<section class="home-section home-section--services" aria-labelledby="services-title">
+  <div class="home-section__header" data-home-pin>
+    <span class="home-section__eyebrow">{% trans "Statutory intelligence" %}</span>
+    <h2 id="services-title" class="home-section__title">{% trans "What can IP-SAKTI help you with?" %}</h2>
+    <p class="home-section__lede">{% trans "Guidance across Indian traditional medicine and intellectual property — always with source citations." %}</p>
   </div>
 
-  <div class="gov-card-grid">
-    <article class="gov-card ip-fade-in">
-      <h3 class="gov-card__title">{% trans "Patent guidance" %}</h3>
-      <p class="gov-card__desc">{% trans "Patentability under the Patents Act 1970, Section 3(p) traditional-knowledge exclusions, and filing orientation." %}</p>
-      <div class="gov-card__tag">Patents Act 1970 · Sec 3(p)</div>
+  <div class="home-card-grid">
+    <article class="home-card">
+      <span class="home-card__rail" aria-hidden="true"></span>
+      <h3 class="home-card__title">{% trans "Patent guidance" %}</h3>
+      <p class="home-card__desc">{% trans "Patentability under the Patents Act 1970, Section 3(p) traditional-knowledge exclusions, and filing orientation." %}</p>
+      <p class="home-card__cite">Patents Act 1970 · Sec 3(p)</p>
     </article>
-    <article class="gov-card ip-fade-in">
-      <h3 class="gov-card__title">{% trans "Geographical Indications" %}</h3>
-      <p class="gov-card__desc">{% trans "GI registration under the GI Act 1999 — eligibility, process, and authorised-user basics." %}</p>
-      <div class="gov-card__tag">GI Act 1999</div>
+    <article class="home-card">
+      <span class="home-card__rail" aria-hidden="true"></span>
+      <h3 class="home-card__title">{% trans "Geographical Indications" %}</h3>
+      <p class="home-card__desc">{% trans "GI registration under the GI Act 1999 — eligibility, process, and authorised-user basics." %}</p>
+      <p class="home-card__cite">GI Act 1999</p>
     </article>
-    <article class="gov-card ip-fade-in">
-      <h3 class="gov-card__title">{% trans "Biodiversity & ABS" %}</h3>
-      <p class="gov-card__desc">{% trans "Access and Benefit Sharing under the Biological Diversity Act 2002 and NBA approval orientation." %}</p>
-      <div class="gov-card__tag">BDA 2002 · ABS</div>
+    <article class="home-card">
+      <span class="home-card__rail" aria-hidden="true"></span>
+      <h3 class="home-card__title">{% trans "Biodiversity & ABS" %}</h3>
+      <p class="home-card__desc">{% trans "Access and Benefit Sharing under the Biological Diversity Act 2002 and NBA approval orientation." %}</p>
+      <p class="home-card__cite">BDA 2002 · ABS</p>
     </article>
-    <article class="gov-card ip-fade-in">
-      <h3 class="gov-card__title">{% trans "Regulatory classification" %}</h3>
-      <p class="gov-card__desc">{% trans "Drugs & Cosmetics Act pathways, Ayurveda Aahara, and related Ayush regulatory demarcation." %}</p>
-      <div class="gov-card__tag">Drugs & Cosmetics</div>
+    <article class="home-card">
+      <span class="home-card__rail" aria-hidden="true"></span>
+      <h3 class="home-card__title">{% trans "Regulatory classification" %}</h3>
+      <p class="home-card__desc">{% trans "Drugs & Cosmetics Act pathways, Ayurveda Aahara, and related Ayush regulatory demarcation." %}</p>
+      <p class="home-card__cite">Drugs & Cosmetics</p>
     </article>
-    <article class="gov-card ip-fade-in">
-      <h3 class="gov-card__title">{% trans "Traditional Knowledge" %}</h3>
-      <p class="gov-card__desc">{% trans "TKDL’s public role and defensive prior-art orientation against bio-piracy claims." %}</p>
-      <div class="gov-card__tag">TKDL</div>
+    <article class="home-card">
+      <span class="home-card__rail" aria-hidden="true"></span>
+      <h3 class="home-card__title">{% trans "Traditional Knowledge" %}</h3>
+      <p class="home-card__desc">{% trans "TKDL’s public role and defensive prior-art orientation against bio-piracy claims." %}</p>
+      <p class="home-card__cite">TKDL</p>
     </article>
-    <article class="gov-card ip-fade-in">
-      <h3 class="gov-card__title">{% trans "International treaties" %}</h3>
-      <p class="gov-card__desc">{% trans "Treaty-level orientation on TRIPS, CBD, Nagoya, and WIPO GRATK — not foreign domestic filing advice." %}</p>
-      <div class="gov-card__tag">TRIPS · Nagoya · GRATK</div>
+    <article class="home-card">
+      <span class="home-card__rail" aria-hidden="true"></span>
+      <h3 class="home-card__title">{% trans "International treaties" %}</h3>
+      <p class="home-card__desc">{% trans "Treaty-level orientation on TRIPS, CBD, Nagoya, and WIPO GRATK — not foreign domestic filing advice." %}</p>
+      <p class="home-card__cite">TRIPS · Nagoya · GRATK</p>
     </article>
   </div>
 </section>
 
-<section class="gov-corpus-strip" aria-label="{% trans 'Verified corpus' %}">
-  <div class="gov-corpus-strip__info">
-    <div class="gov-corpus-strip__badge">{% trans "Statutory integrity" %}</div>
-    <p class="gov-corpus-strip__text">
-      {% blocktrans with ver=active_corpus_version|default:"none" %}Answers drawn from verified statutes and treaties. Corpus version: {{ ver }}{% endblocktrans %}
-    </p>
+<section class="home-corpus" data-home-corpus aria-label="{% trans 'Verified corpus' %}">
+  <div class="home-corpus__inner">
+    <div class="home-corpus__info">
+      <p class="home-corpus__badge">{% trans "Statutory integrity" %}</p>
+      <p class="home-corpus__text">
+        {% blocktrans with ver=active_corpus_version|default:"none" %}Answers drawn from verified statutes and treaties. Corpus version: {{ ver }}{% endblocktrans %}
+      </p>
+    </div>
+    <a href="{% url 'corpus:about' %}" class="home-btn home-btn--ghost home-btn--sm">
+      {% trans "Browse source corpus" %} →
+    </a>
   </div>
-  <a href="{% url 'corpus:about' %}" class="gov-btn-secondary gov-btn-secondary--sm">
-    <span>{% trans "Browse source corpus" %} →</span>
-  </a>
 </section>
 
-<div role="note" class="gov-note">
-  <div class="gov-note__content">
-    <strong>{% trans "Legal notice" %}:</strong>
-    {% blocktrans %}IP-SAKTI Sahayak provides general information only, not legal advice. Verify with official sources and a qualified professional before acting.{% endblocktrans %}
-  </div>
+<div role="note" class="home-note">
+  <strong>{% trans "Legal notice" %}:</strong>
+  {% blocktrans %}IP-SAKTI Sahayak provides general information only, not legal advice. Verify with official sources and a qualified professional before acting.{% endblocktrans %}
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/gsap.min.js' %}" defer></script>
+<script src="{% static 'js/ScrollTrigger.min.js' %}" defer></script>
+<script type="module" src="{% static 'js/home-scroll.js' %}"></script>
 {% endblock %}

@@ -42,3 +42,8 @@ Write-Host "All vendor JS downloaded."
 - HTMX: https://unpkg.com/htmx.org@2.0.2/dist/htmx.min.js
 - GSAP: https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js
 - dotLottie: https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs
+
+### 4. GSAP ScrollTrigger 3.12
+```nURL: https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js
+Save as: core/static/js/ScrollTrigger.min.js
+```

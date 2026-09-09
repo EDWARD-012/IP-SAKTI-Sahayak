@@ -102,15 +102,48 @@ TEMPLATES = [
 WSGI_APPLICATION: str = "ip_sakti.wsgi.application"
 ASGI_APPLICATION: str = "ip_sakti.asgi.application"
 
-# ── Database (SQLite with WAL mode) ───────────────────────────
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-        "OPTIONS": {"timeout": 5},          # busy_timeout = 5s
-        "TEST": {"NAME": BASE_DIR / "test_db.sqlite3"},
+# ── Database ───────────────────────────────────────────────────
+# Local default: SQLite (DATA_DIR / db.sqlite3).
+# Cloud: set DATABASE_URL=postgresql://... (Railway Postgres service).
+_DATA_DIR = Path(os.environ.get("DATA_DIR", str(BASE_DIR))).resolve()
+try:
+    _DATA_DIR.mkdir(parents=True, exist_ok=True)
+except OSError:
+    pass
+
+_DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
+if _DATABASE_URL.startswith(("postgres://", "postgresql://")):
+    import urllib.parse as _urlparse
+
+    # django-postgres expects postgresql://
+    if _DATABASE_URL.startswith("postgres://"):
+        _DATABASE_URL = "postgresql://" + _DATABASE_URL[len("postgres://"):]
+    _u = _urlparse.urlparse(_DATABASE_URL)
+    _q = dict(_urlparse.parse_qsl(_u.query))
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": (_u.path or "/railway").lstrip("/") or "railway",
+            "USER": _urlparse.unquote(_u.username or ""),
+            "PASSWORD": _urlparse.unquote(_u.password or ""),
+            "HOST": _u.hostname or "",
+            "PORT": str(_u.port or 5432),
+            "CONN_MAX_AGE": int(os.environ.get("DB_CONN_MAX_AGE", "60")),
+            "OPTIONS": {
+                **({"sslmode": _q["sslmode"]} if _q.get("sslmode") else {}),
+            },
+        }
     }
-}
+else:
+    _sqlite_name = os.environ.get("SQLITE_PATH", str(_DATA_DIR / "db.sqlite3"))
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": _sqlite_name,
+            "OPTIONS": {"timeout": 5},
+            "TEST": {"NAME": str(_DATA_DIR / "test_db.sqlite3")},
+        }
+    }
 # WAL mode is activated in CoreConfig.ready() — see core/apps.py
 
 # ── Password validation ─────────────────────────────────────────
@@ -161,12 +194,12 @@ LOCALE_PATHS = [BASE_DIR / "locale"]
 SESSION_ENGINE: str = "django.contrib.sessions.backends.db"
 SESSION_COOKIE_AGE: int = 86400 * 7          # 7 days
 SESSION_COOKIE_HTTPONLY: bool = True
-SESSION_COOKIE_SAMESITE: str = "Strict"
+SESSION_COOKIE_SAMESITE: str = "Lax"
 SESSION_COOKIE_SECURE: bool = not DEBUG       # HTTPS only in production
 
 # ── CSRF ────────────────────────────────────────────────────────
 CSRF_COOKIE_HTTPONLY: bool = False            # JS reads CSRF for HTMX
-CSRF_COOKIE_SAMESITE: str = "Strict"
+CSRF_COOKIE_SAMESITE: str = "Lax"
 CSRF_COOKIE_SECURE: bool = not DEBUG
 
 # ── Static files ───────────────────────────────────────────────

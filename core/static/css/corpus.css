@@ -1,0 +1,170 @@
+/* Corpus about / sources — GOI tokens, works in light + dark */
+
+.corpus-page {
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-12);
+}
+
+.corpus-page__header { margin-bottom: var(--space-8); }
+.corpus-page__eyebrow {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 600;
+  margin: 0 0 var(--space-2);
+}
+.corpus-page__title {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-3);
+}
+.corpus-page__lede,
+.corpus-section__lede {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  max-width: 68ch;
+  margin: 0;
+  line-height: var(--leading-relaxed);
+}
+.corpus-section__lede {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-5);
+}
+.corpus-section { margin-bottom: var(--space-8); }
+.corpus-section__title { font-size: var(--text-lg); }
+
+.corpus-meta-card { max-width: 640px; }
+.corpus-meta-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2) var(--space-6);
+  font-size: var(--text-sm);
+  align-items: baseline;
+}
+.corpus-meta-grid__k {
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+}
+.corpus-meta-grid__v { color: var(--color-text); }
+.corpus-meta-grid__v--mono {
+  font-family: var(--font-mono);
+  color: var(--color-fill);
+  font-weight: var(--weight-bold);
+}
+html[data-theme="dark"] .corpus-meta-grid__v--mono {
+  color: var(--color-primary);
+}
+.corpus-meta-card__notes,
+.corpus-meta-card__hint {
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+}
+.corpus-meta-card__hint {
+  margin-top: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.corpus-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.corpus-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+.corpus-table thead tr {
+  background: var(--color-chrome);
+  color: #ffffff;
+}
+.corpus-table th {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  font-weight: var(--weight-semibold);
+  border-bottom: 1px solid var(--color-border-strong);
+}
+.corpus-table td {
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+.corpus-table tbody tr:last-child td { border-bottom: none; }
+.corpus-table__band td {
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+.corpus-table__empty {
+  color: var(--color-text-muted);
+  font-style: italic;
+  text-align: center;
+}
+
+.corpus-source-name {
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+}
+.corpus-source-en { display: none; }
+
+.corpus-tier {
+  display: inline-block;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  border-radius: 3px;
+  padding: 2px 7px;
+  border: 1px solid var(--color-border);
+}
+.corpus-tier--p0 {
+  background: color-mix(in srgb, var(--gov-saffron) 16%, var(--color-surface));
+  color: var(--gov-saffron-dark);
+  border-color: color-mix(in srgb, var(--gov-saffron) 40%, var(--color-border));
+}
+html[data-theme="dark"] .corpus-tier--p0 {
+  color: var(--gov-saffron);
+  background: color-mix(in srgb, var(--gov-saffron) 12%, var(--color-surface-raised));
+}
+.corpus-tier--p1 {
+  background: var(--color-surface-raised);
+  color: var(--color-text-secondary);
+}
+
+.corpus-status { color: var(--color-text-muted); }
+.corpus-status--active {
+  color: var(--gov-green);
+  font-weight: var(--weight-semibold);
+}
+
+.corpus-table-note {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.corpus-actions { margin-top: var(--space-4); }
+
+.corpus-note {
+  background: var(--color-warning-bg);
+  border-left: 4px solid var(--gov-saffron);
+  padding: var(--space-4) var(--space-5);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+}
+.corpus-note ul {
+  margin: var(--space-3) 0 0;
+  padding-left: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.corpus-note p { margin: 0; }
