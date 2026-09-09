@@ -52,8 +52,7 @@ def set_language(request: HttpRequest) -> HttpResponse:
         messages.warning(
             request,
             "Language preference saved, but full UI translation is not available yet "
-            f"for this Pilot language ({language}). The interface stays in English — "
-            "see GAPS.md.",
+            f"for this Pilot language ({language}). The interface stays in English.",
         )
     elif language == "hi":
         messages.success(

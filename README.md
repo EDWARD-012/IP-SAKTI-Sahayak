@@ -94,10 +94,8 @@ Check `/health/` → `demo_mode: false`, `ollama_reachable: true`.
 |---|---|
 | [QUICKSTART.md](QUICKSTART.md) | Local setup detail |
 | [USER_GUIDE.md](USER_GUIDE.md) | End-user walkthrough |
-| [docs/DEPLOY_OLLAMA.md](docs/DEPLOY_OLLAMA.md) | Tunnel + Railway Ollama |
+| [docs/DEPLOY_OLLAMA.md](docs/DEPLOY_OLLAMA.md) | Railway Ollama |
 | [docs/SIH26045_Technical_Documentation.md](docs/SIH26045_Technical_Documentation.md) | Full SIH tech doc |
-| [GAPS.md](GAPS.md) | Known gaps |
-| [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | Build plan |
 | [LICENCES.md](LICENCES.md) | Corpus licence notes |
 
 ---
